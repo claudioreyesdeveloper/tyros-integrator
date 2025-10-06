@@ -2,6 +2,7 @@
 import { getVoiceIcon } from "@/lib/voice-icons"
 import type { Voice } from "@/lib/voice-data"
 import { Music } from "lucide-react"
+import { StylesSelector } from "./styles-selector"
 
 interface HomeScreenProps {
   onSelectVoice: (partNumber: number) => void
@@ -22,7 +23,7 @@ export function HomeScreen({ onSelectVoice, partVoices }: HomeScreenProps) {
           <p className="text-xl text-white drop-shadow-lg">Select a voice to begin</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl w-full mb-8">
           {[1, 2, 3, 4].map((partNumber) => {
             const voice = partVoices[partNumber]
             const Icon = voice ? getVoiceIcon(voice.sub) : Music
@@ -51,6 +52,10 @@ export function HomeScreen({ onSelectVoice, partVoices }: HomeScreenProps) {
               </button>
             )
           })}
+        </div>
+
+        <div className="max-w-md w-full">
+          <StylesSelector />
         </div>
 
         <div className="mt-12 flex items-center gap-6 text-sm glossy-panel px-8 py-4">

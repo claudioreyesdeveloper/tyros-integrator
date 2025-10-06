@@ -121,7 +121,7 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
         </Button>
       </div>
 
-      <div className="flex-1 grid grid-cols-3 gap-4 min-h-0">
+      <div className="flex-1 grid grid-cols-3 gap-4">
         {/* Column 1: Categories */}
         <div className="glossy-panel overflow-hidden flex flex-col">
           <div className="px-6 py-4 bg-gradient-to-r from-amber-500/20 to-yellow-500/20 border-b-2 border-amber-500/30">
@@ -140,17 +140,10 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                       : "bg-zinc-900/50 hover:bg-zinc-800/80 text-white border border-amber-500/20 hover:border-amber-500/40",
                   )}
                 >
-                  <span>
+                  <span className="truncate">
                     {category} ({getCategoryCount(category)})
                   </span>
-                  <ChevronRight
-                    className={cn(
-                      "w-5 h-5 transition-all",
-                      selectedCategory === category
-                        ? "opacity-100 translate-x-0"
-                        : "opacity-0 -translate-x-2 group-hover:opacity-70 group-hover:translate-x-0",
-                    )}
-                  />
+                  <ChevronRight className="w-4 h-4 flex-shrink-0 ml-2" />
                 </button>
               ))}
             </div>
@@ -180,23 +173,18 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                       )}
                     >
                       <Icon className="w-5 h-5 flex-shrink-0" />
-                      <span className="flex-1">
+                      <span className="truncate">
                         {sub} ({getSubCategoryCount(sub)})
                       </span>
-                      <ChevronRight
-                        className={cn(
-                          "w-5 h-5 transition-all",
-                          selectedSubCategory === sub
-                            ? "opacity-100 translate-x-0"
-                            : "opacity-0 -translate-x-2 group-hover:opacity-70 group-hover:translate-x-0",
-                        )}
-                      />
+                      <ChevronRight className="w-4 h-4 flex-shrink-0 ml-auto" />
                     </button>
                   )
                 })}
               </div>
             ) : (
-              <div className="flex items-center justify-center h-full text-zinc-500 text-sm">Select a category</div>
+              <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
+                Select a category
+              </div>
             )}
           </ScrollArea>
         </div>
@@ -214,7 +202,7 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
 
                   return (
                     <button
-                      key={`${voice.voice}-${index}`}
+                      key={index}
                       onClick={() => setSelectedVoice(voice)}
                       className={cn(
                         "w-full text-left px-5 py-4 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center gap-3",
@@ -224,13 +212,15 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                       )}
                     >
                       <Icon className="w-5 h-5 flex-shrink-0" />
-                      <span>{voice.voice}</span>
+                      <span className="truncate">{voice.voice}</span>
                     </button>
                   )
                 })}
               </div>
             ) : (
-              <div className="flex items-center justify-center h-full text-zinc-500 text-sm">Select a sub-category</div>
+              <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
+                Select a sub-category
+              </div>
             )}
           </ScrollArea>
         </div>

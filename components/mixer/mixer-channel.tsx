@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useMIDI } from "@/lib/midi-context"
 import { Music, Sliders } from "lucide-react"
+import { RotaryKnob } from "@/components/ui/rotary-knob"
 
 interface MixerChannelProps {
   channel: number
@@ -50,6 +51,21 @@ export function MixerChannel({
     sendControlChange(channel, 74, value)
   }
 
+  const handleBassChange = (value: number) => {
+    setBassEQ(value)
+    sendControlChange(channel, 70, value) // CC 70 for bass EQ
+  }
+
+  const handleMidChange = (value: number) => {
+    setMidEQ(value)
+    sendControlChange(channel, 71, value) // CC 71 for mid EQ
+  }
+
+  const handleHighChange = (value: number) => {
+    setHighEQ(value)
+    sendControlChange(channel, 72, value) // CC 72 for high EQ
+  }
+
   return (
     <div className="premium-card p-4 flex flex-col items-center gap-4 w-36 min-h-[600px]">
       <button
@@ -88,104 +104,41 @@ export function MixerChannel({
       </div>
 
       <div className="w-full space-y-4 flex-1">
-        <div className="text-center">
-          <div className="premium-knob mx-auto flex items-center justify-center relative">
-            <input
-              type="range"
-              min="0"
-              max="127"
-              value={bassEQ}
-              onChange={(e) => setBassEQ(Number(e.target.value))}
-              className="absolute inset-0 opacity-0 cursor-pointer"
-            />
-            <span className="text-sm font-mono font-bold text-primary z-10">
-              {bassEQ - 64 > 0 ? "+" : ""}
-              {bassEQ - 64}
-            </span>
-          </div>
-          <div className="premium-label mt-2">Bass</div>
-        </div>
+        <RotaryKnob
+          value={bassEQ}
+          onChange={handleBassChange}
+          label="Bass"
+          displayValue={`${bassEQ - 64 > 0 ? "+" : ""}${bassEQ - 64}`}
+          size="md"
+        />
 
-        <div className="text-center">
-          <div className="premium-knob mx-auto flex items-center justify-center relative">
-            <input
-              type="range"
-              min="0"
-              max="127"
-              value={midEQ}
-              onChange={(e) => setMidEQ(Number(e.target.value))}
-              className="absolute inset-0 opacity-0 cursor-pointer"
-            />
-            <span className="text-sm font-mono font-bold text-primary z-10">
-              {midEQ - 64 > 0 ? "+" : ""}
-              {midEQ - 64}
-            </span>
-          </div>
-          <div className="premium-label mt-2">Mid</div>
-        </div>
+        <RotaryKnob
+          value={midEQ}
+          onChange={handleMidChange}
+          label="Mid"
+          displayValue={`${midEQ - 64 > 0 ? "+" : ""}${midEQ - 64}`}
+          size="md"
+        />
 
-        <div className="text-center">
-          <div className="premium-knob mx-auto flex items-center justify-center relative">
-            <input
-              type="range"
-              min="0"
-              max="127"
-              value={highEQ}
-              onChange={(e) => setHighEQ(Number(e.target.value))}
-              className="absolute inset-0 opacity-0 cursor-pointer"
-            />
-            <span className="text-sm font-mono font-bold text-primary z-10">
-              {highEQ - 64 > 0 ? "+" : ""}
-              {highEQ - 64}
-            </span>
-          </div>
-          <div className="premium-label mt-2">High</div>
-        </div>
+        <RotaryKnob
+          value={highEQ}
+          onChange={handleHighChange}
+          label="High"
+          displayValue={`${highEQ - 64 > 0 ? "+" : ""}${highEQ - 64}`}
+          size="md"
+        />
 
-        <div className="text-center">
-          <div className="premium-knob mx-auto flex items-center justify-center relative">
-            <input
-              type="range"
-              min="0"
-              max="127"
-              value={reverb}
-              onChange={(e) => handleReverbChange(Number(e.target.value))}
-              className="absolute inset-0 opacity-0 cursor-pointer"
-            />
-            <span className="text-sm font-mono font-bold text-primary z-10">{reverb}</span>
-          </div>
-          <div className="premium-label mt-2">Reverb</div>
-        </div>
+        <RotaryKnob value={reverb} onChange={handleReverbChange} label="Reverb" displayValue={`${reverb}`} size="md" />
 
-        <div className="text-center">
-          <div className="premium-knob mx-auto flex items-center justify-center relative">
-            <input
-              type="range"
-              min="0"
-              max="127"
-              value={chorus}
-              onChange={(e) => handleChorusChange(Number(e.target.value))}
-              className="absolute inset-0 opacity-0 cursor-pointer"
-            />
-            <span className="text-sm font-mono font-bold text-primary z-10">{chorus}</span>
-          </div>
-          <div className="premium-label mt-2">Chorus</div>
-        </div>
+        <RotaryKnob value={chorus} onChange={handleChorusChange} label="Chorus" displayValue={`${chorus}`} size="md" />
 
-        <div className="text-center">
-          <div className="premium-knob mx-auto flex items-center justify-center relative">
-            <input
-              type="range"
-              min="0"
-              max="127"
-              value={brightness}
-              onChange={(e) => handleBrightnessChange(Number(e.target.value))}
-              className="absolute inset-0 opacity-0 cursor-pointer"
-            />
-            <span className="text-sm font-mono font-bold text-primary z-10">{brightness}</span>
-          </div>
-          <div className="premium-label mt-2">Bright</div>
-        </div>
+        <RotaryKnob
+          value={brightness}
+          onChange={handleBrightnessChange}
+          label="Bright"
+          displayValue={`${brightness}`}
+          size="md"
+        />
       </div>
 
       <div className="w-full space-y-2">
