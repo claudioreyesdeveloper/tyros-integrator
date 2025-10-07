@@ -17,7 +17,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Download } from "lucide-react"
+import { Download, Upload, FileMusic } from "lucide-react"
 import type { Voice } from "@/lib/voice-data"
 import type { MixerSettings, DSPSettings } from "@/app/page"
 
@@ -64,6 +64,7 @@ export function RegistrationManager({
   const [port1, setPort1] = useState<string>("")
   const [port2, setPort2] = useState<string>("")
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const patchFileInputRef = useRef<HTMLInputElement>(null)
 
   const availablePorts = midiAccess ? Array.from(midiAccess.outputs.values()).map((port) => port.name) : []
 
@@ -166,6 +167,33 @@ export function RegistrationManager({
     event.target.value = ""
   }
 
+  const handleOpenPatchFile = () => {
+    patchFileInputRef.current?.click()
+  }
+
+  const handlePatchFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      try {
+        const content = e.target?.result as string
+        const patchData = JSON.parse(content)
+
+        console.log("[v0] Loaded patch file:", patchData)
+
+        alert("Patch file loaded successfully! (State update to be implemented)")
+      } catch (error) {
+        console.error("[v0] Error parsing patch file:", error)
+        alert("Error loading patch file. Please check the file format.")
+      }
+    }
+    reader.readAsText(file)
+
+    event.target.value = ""
+  }
+
   const handleSaveClick = (slotNumber: number) => {
     setCurrentSlot(slotNumber)
     setRegistrationName(`Registration ${slotNumber}`)
@@ -207,29 +235,54 @@ export function RegistrationManager({
   }
 
   return (
-    <div className="h-full flex flex-col p-8 bg-gradient-to-b from-background to-black">
+    <div className="h-full flex flex-col p-4 md:p-6 lg:p-8 bg-gradient-to-b from-background to-black">
       <input ref={fileInputRef} type="file" accept=".json" onChange={handleFileChange} className="hidden" />
+      <input
+        ref={patchFileInputRef}
+        type="file"
+        accept=".json,.patch"
+        onChange={handlePatchFileChange}
+        className="hidden"
+      />
 
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-6 md:mb-7 lg:mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6">
         <div>
-          <h2 className="text-4xl font-bold premium-text mb-3 bg-gradient-to-r from-primary via-yellow-400 to-primary bg-clip-text text-transparent">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold premium-text mb-2 md:mb-3 bg-gradient-to-r from-primary via-yellow-400 to-primary bg-clip-text text-transparent">
             Registration Manager
           </h2>
-          <p className="text-lg text-muted-foreground">Save and recall complete performance setups</p>
+          <p className="text-sm md:text-base lg:text-lg text-muted-foreground">
+            Save and recall complete performance setups
+          </p>
         </div>
-        <div className="flex gap-4">
-          <Button onClick={handleOpenConfiguration} className="glossy-button h-14 px-8 text-lg gap-3" size="lg">
-            <Download className="w-5 h-5 rotate-180" />
+        <div className="flex flex-col md:flex-row gap-2 md:gap-3 lg:gap-4 w-full md:w-auto">
+          <Button
+            onClick={handleOpenPatchFile}
+            className="glossy-button h-11 md:h-12 lg:h-14 px-6 md:px-7 lg:px-8 text-sm md:text-base lg:text-lg gap-2 md:gap-3"
+            size="lg"
+          >
+            <FileMusic className="w-4 h-4 md:w-5 md:h-5" />
+            Open Patch File
+          </Button>
+          <Button
+            onClick={handleOpenConfiguration}
+            className="glossy-button h-11 md:h-12 lg:h-14 px-6 md:px-7 lg:px-8 text-sm md:text-base lg:text-lg gap-2 md:gap-3"
+            size="lg"
+          >
+            <Upload className="w-4 h-4 md:w-5 md:h-5" />
             Open
           </Button>
-          <Button onClick={handleSaveConfiguration} className="glossy-button h-14 px-8 text-lg gap-3" size="lg">
-            <Download className="w-5 h-5" />
+          <Button
+            onClick={handleSaveConfiguration}
+            className="glossy-button h-11 md:h-12 lg:h-14 px-6 md:px-7 lg:px-8 text-sm md:text-base lg:text-lg gap-2 md:gap-3"
+            size="lg"
+          >
+            <Download className="w-4 h-4 md:w-5 md:h-5" />
             Save
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 lg:gap-6 mb-6 md:mb-7 lg:mb-8">
         {registrations.map((registration, index) => (
           <RegistrationSlot
             key={index}
@@ -242,13 +295,13 @@ export function RegistrationManager({
         ))}
       </div>
 
-      <div className="glossy-panel p-8">
-        <h3 className="premium-label text-base mb-6">MIDI Port Configuration</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="glossy-panel p-6 md:p-7 lg:p-8">
+        <h3 className="premium-label text-sm md:text-base mb-4 md:mb-5 lg:mb-6">MIDI Port Configuration</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-7 lg:gap-8">
           <div className="space-y-2">
             <Label htmlFor="port1">Port 1</Label>
             <Select value={port1} onValueChange={setPort1}>
-              <SelectTrigger id="port1" className="h-12">
+              <SelectTrigger id="port1" className="h-11 md:h-12">
                 <SelectValue placeholder="Select MIDI Port 1" />
               </SelectTrigger>
               <SelectContent>
@@ -276,7 +329,7 @@ export function RegistrationManager({
           <div className="space-y-2">
             <Label htmlFor="port2">Port 2</Label>
             <Select value={port2} onValueChange={setPort2}>
-              <SelectTrigger id="port2" className="h-12">
+              <SelectTrigger id="port2" className="h-11 md:h-12">
                 <SelectValue placeholder="Select MIDI Port 2" />
               </SelectTrigger>
               <SelectContent>

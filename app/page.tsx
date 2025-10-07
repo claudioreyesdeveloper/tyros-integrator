@@ -151,17 +151,17 @@ export default function Home() {
       <div className="absolute inset-0 bg-black/60" />
       <div className="relative z-10 flex flex-col min-h-screen">
         <header className="border-b border-primary/30">
-          <div className="px-6 py-3 flex items-center justify-between">
+          <div className="px-4 md:px-6 lg:px-8 py-2 md:py-3 flex items-center justify-between">
             <div>
-              <h1 className="text-xl font-bold text-white drop-shadow-lg">Tyros5 Integrator</h1>
-              <p className="text-xs text-gray-300 drop-shadow-md">Professional MIDI Controller</p>
+              <h1 className="text-lg md:text-xl lg:text-2xl font-bold text-white drop-shadow-lg">Tyros5 Integrator</h1>
+              <p className="text-xs md:text-sm text-gray-300 drop-shadow-md">Professional MIDI Controller</p>
             </div>
             <MIDIStatus />
           </div>
           <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
         </header>
 
-        <main className="flex-1">
+        <main className="flex-1 overflow-auto">
           {activeTab === "home" && <HomeScreen onSelectVoice={handleSelectVoice} partVoices={partVoices} />}
 
           {activeTab === "voices" && (
