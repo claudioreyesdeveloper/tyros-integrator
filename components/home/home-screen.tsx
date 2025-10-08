@@ -38,10 +38,7 @@ export function HomeScreen({ onSelectVoice, partVoices }: HomeScreenProps) {
                 <div className="text-center w-full">
                   <h3 className="premium-text text-xl md:text-2xl lg:text-2xl mb-2">{PART_NAMES[partNumber - 1]}</h3>
                   {voice ? (
-                    <div className="space-y-2">
-                      <p className="text-xs md:text-sm premium-label">{voice.sub}</p>
-                      <p className="text-sm md:text-base font-semibold text-foreground">{voice.voice}</p>
-                    </div>
+                    <p className="text-sm md:text-base lg:text-lg font-semibold text-foreground">{voice.voice}</p>
                   ) : (
                     <p className="text-xs md:text-sm text-muted-foreground">No Voice</p>
                   )}

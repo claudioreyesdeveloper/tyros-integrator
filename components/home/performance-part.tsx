@@ -23,10 +23,7 @@ export function PerformancePart({ partNumber, partName, voice, onSelectVoice }: 
       <div className="text-center w-full">
         <h3 className="premium-text text-xl md:text-2xl mb-2">{partName}</h3>
         {voice ? (
-          <div className="space-y-1">
-            <p className="text-xs md:text-sm premium-label">{voice.sub}</p>
-            <p className="text-sm md:text-base font-semibold text-foreground">{voice.voice}</p>
-          </div>
+          <p className="text-sm md:text-base font-semibold text-foreground">{voice.voice}</p>
         ) : (
           <p className="text-xs md:text-sm text-muted-foreground">No Voice</p>
         )}
