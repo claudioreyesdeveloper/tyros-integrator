@@ -17,7 +17,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Download, Upload, FileMusic } from "lucide-react"
+import { Download, Upload, FileMusic, Zap } from "lucide-react"
 import type { Voice } from "@/lib/voice-data"
 import type { MixerSettings, DSPSettings } from "@/app/page"
 import { PatchFileImportDialog } from "./patch-file-import-dialog"
@@ -57,7 +57,7 @@ export function RegistrationManager({
   globalSettings,
   globalEffects,
 }: RegistrationManagerProps) {
-  const { midiAccess } = useMIDI()
+  const { midiAccess, requestMIDIAccess } = useMIDI()
   const [registrations, setRegistrations] = useState<(Registration | null)[]>(Array(8).fill(null))
   const [saveDialogOpen, setSaveDialogOpen] = useState(false)
   const [patchImportDialogOpen, setPatchImportDialogOpen] = useState(false)
@@ -236,6 +236,18 @@ export function RegistrationManager({
     setRegistrations(newRegistrations)
   }
 
+  const handleAutoconnect = async () => {
+    await requestMIDIAccess()
+
+    // Auto-select first two available ports
+    if (availablePorts.length > 0) {
+      setPort1(availablePorts[0])
+    }
+    if (availablePorts.length > 1) {
+      setPort2(availablePorts[1])
+    }
+  }
+
   return (
     <div className="h-full flex flex-col p-4 md:p-6 lg:p-8 bg-gradient-to-b from-background to-black">
       <input ref={fileInputRef} type="file" accept=".json" onChange={handleFileChange} className="hidden" />
@@ -298,7 +310,17 @@ export function RegistrationManager({
       </div>
 
       <div className="glossy-panel p-6 md:p-7 lg:p-8">
-        <h3 className="premium-label text-sm md:text-base mb-4 md:mb-5 lg:mb-6">MIDI Port Configuration</h3>
+        <div className="flex items-center justify-between mb-4 md:mb-5 lg:mb-6">
+          <h3 className="premium-label text-sm md:text-base">MIDI Port Configuration</h3>
+          <Button
+            onClick={handleAutoconnect}
+            className="glossy-button h-9 md:h-10 px-4 md:px-5 text-xs md:text-sm gap-2"
+            size="sm"
+          >
+            <Zap className="w-3 h-3 md:w-4 md:h-4" />
+            Autoconnect
+          </Button>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-7 lg:gap-8">
           <div className="space-y-2">
             <Label htmlFor="port1">Port 1</Label>
