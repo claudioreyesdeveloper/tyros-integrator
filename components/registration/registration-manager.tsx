@@ -20,6 +20,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Download, Upload, FileMusic } from "lucide-react"
 import type { Voice } from "@/lib/voice-data"
 import type { MixerSettings, DSPSettings } from "@/app/page"
+import { PatchFileImportDialog } from "./patch-file-import-dialog"
 
 interface Registration {
   name: string
@@ -59,6 +60,7 @@ export function RegistrationManager({
   const { midiAccess } = useMIDI()
   const [registrations, setRegistrations] = useState<(Registration | null)[]>(Array(8).fill(null))
   const [saveDialogOpen, setSaveDialogOpen] = useState(false)
+  const [patchImportDialogOpen, setPatchImportDialogOpen] = useState(false)
   const [currentSlot, setCurrentSlot] = useState<number | null>(null)
   const [registrationName, setRegistrationName] = useState("")
   const [port1, setPort1] = useState<string>("")
@@ -168,7 +170,7 @@ export function RegistrationManager({
   }
 
   const handleOpenPatchFile = () => {
-    patchFileInputRef.current?.click()
+    setPatchImportDialogOpen(true)
   }
 
   const handlePatchFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -355,6 +357,8 @@ export function RegistrationManager({
           </div>
         </div>
       </div>
+
+      <PatchFileImportDialog open={patchImportDialogOpen} onOpenChange={setPatchImportDialogOpen} />
 
       <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
         <DialogContent>

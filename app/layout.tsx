@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "Tyros5 Integrator",
+  title: "SmartBridge",
   description: "Professional MIDI Controller for Yamaha Tyros5",
   generator: "v0.app",
 }

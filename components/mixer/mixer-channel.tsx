@@ -2,8 +2,9 @@
 
 import { useState } from "react"
 import { useMIDI } from "@/lib/midi-context"
-import { Music, Sliders } from "lucide-react"
+import { Sliders } from "lucide-react"
 import { RotaryKnob } from "@/components/ui/rotary-knob"
+import { VoiceIcon } from "@/components/ui/voice-icon"
 
 interface MixerChannelProps {
   channel: number
@@ -12,6 +13,8 @@ interface MixerChannelProps {
   insertEffect: string
   onOpenEffects: () => void
   onSelectVoice: () => void
+  voiceSubcategory?: string
+  voiceCategory?: string
 }
 
 export function MixerChannel({
@@ -21,6 +24,8 @@ export function MixerChannel({
   insertEffect,
   onOpenEffects,
   onSelectVoice,
+  voiceSubcategory = "",
+  voiceCategory = "",
 }: MixerChannelProps) {
   const { sendControlChange } = useMIDI()
   const [volume, setVolume] = useState(100)
@@ -54,7 +59,7 @@ export function MixerChannel({
         onClick={onSelectVoice}
         className="w-full glossy-button px-2 md:px-3 lg:px-4 py-2 md:py-2.5 lg:py-3 rounded-lg flex items-center justify-center gap-2 text-black font-bold text-xs md:text-sm shadow-lg hover:shadow-xl transition-all"
       >
-        <Music className="w-3 h-3 md:w-3.5 md:h-3.5 lg:w-4 lg:h-4" />
+        <VoiceIcon subcategory={voiceSubcategory} category={voiceCategory} size={18} />
         Voice
       </button>
 
@@ -64,10 +69,9 @@ export function MixerChannel({
         <div className="premium-text text-xs md:text-sm mt-1 font-bold">{partName}</div>
       </div>
 
-      {/* Voice Display */}
       <div className="w-full">
-        <div className="flex flex-col items-center gap-2 px-2 md:px-3 py-2 md:py-3 lg:py-4 bg-gradient-to-br from-secondary via-secondary/90 to-secondary/70 rounded-lg border-2 border-primary/20 shadow-inner">
-          <Music className="w-4 h-4 md:w-5 md:h-5 text-primary drop-shadow-lg" />
+        <div className="flex flex-col items-center gap-2 px-2 md:px-3 py-3 md:py-4 lg:py-5 bg-gradient-to-br from-secondary via-secondary/90 to-secondary/70 rounded-lg border-2 border-primary/20 shadow-inner">
+          <VoiceIcon subcategory={voiceSubcategory} category={voiceCategory} size={40} />
           <span className="text-xs font-bold text-center line-clamp-2 text-foreground">{voiceName}</span>
         </div>
       </div>

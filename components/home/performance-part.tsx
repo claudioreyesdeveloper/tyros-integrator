@@ -14,21 +14,21 @@ export function PerformancePart({ partNumber, partName, voice, onSelectVoice }: 
   return (
     <button
       onClick={onSelectVoice}
-      className="premium-card p-8 flex flex-col items-center gap-6 hover:scale-105 transition-all duration-300 group"
+      className="premium-card p-6 md:p-8 flex flex-col items-center gap-4 md:gap-6 hover:scale-105 transition-all duration-300 group"
     >
-      <div className="w-24 h-24 rounded-full bg-gradient-to-br from-secondary to-secondary/60 flex items-center justify-center border-4 border-primary/40 group-hover:border-primary/80 transition-all shadow-lg shadow-primary/20">
-        <VoiceIcon subcategory={voice?.sub || ""} className="text-primary" size={48} />
+      <div className="w-28 h-28 md:w-32 md:h-32 rounded-2xl bg-gradient-to-br from-secondary/80 to-secondary/40 flex items-center justify-center border-4 border-primary/40 group-hover:border-primary/80 transition-all shadow-2xl shadow-primary/30">
+        <VoiceIcon subcategory={voice?.sub || ""} category={voice?.cat || ""} size={64} />
       </div>
 
       <div className="text-center w-full">
-        <h3 className="premium-text text-2xl mb-2">{partName}</h3>
+        <h3 className="premium-text text-xl md:text-2xl mb-2">{partName}</h3>
         {voice ? (
           <div className="space-y-1">
-            <p className="text-sm premium-label">{voice.sub}</p>
-            <p className="text-base font-semibold text-foreground">{voice.voice}</p>
+            <p className="text-xs md:text-sm premium-label">{voice.sub}</p>
+            <p className="text-sm md:text-base font-semibold text-foreground">{voice.voice}</p>
           </div>
         ) : (
-          <p className="text-sm text-muted-foreground">No Voice</p>
+          <p className="text-xs md:text-sm text-muted-foreground">No Voice</p>
         )}
       </div>
     </button>

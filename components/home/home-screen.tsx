@@ -63,7 +63,7 @@ export function HomeScreen({ onSelectVoice, partVoices }: HomeScreenProps) {
           <div className="hidden md:block w-px h-6 bg-border" />
           <div className="flex items-center gap-3">
             <div className="w-3 h-3 rounded-full bg-primary shadow-lg shadow-primary/50" />
-            <span className="premium-label">Tyros5 Ready</span>
+            <span className="premium-label">SmartBridge Ready</span>
           </div>
         </div>
       </div>

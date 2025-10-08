@@ -153,7 +153,7 @@ export default function Home() {
         <header className="border-b border-primary/30">
           <div className="px-4 md:px-6 lg:px-8 py-2 md:py-3 flex items-center justify-between">
             <div>
-              <h1 className="text-lg md:text-xl lg:text-2xl font-bold text-white drop-shadow-lg">Tyros5 Integrator</h1>
+              <h1 className="text-lg md:text-xl lg:text-2xl font-bold text-white drop-shadow-lg">SmartBridge</h1>
               <p className="text-xs md:text-sm text-gray-300 drop-shadow-md">Professional MIDI Controller</p>
             </div>
             <MIDIStatus />

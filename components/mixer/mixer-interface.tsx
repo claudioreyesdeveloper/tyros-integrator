@@ -285,6 +285,7 @@ export function MixerInterface({
               insertEffect={channelEffects[ch.channel] || "None"}
               onOpenEffects={() => setEffectsChannel(ch.channel)}
               onSelectVoice={() => onSelectVoice(ch.channel)}
+              voiceSubcategory={partVoices[ch.channel]?.sub || ""}
             />
           ))}
         </div>
