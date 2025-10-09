@@ -1,6 +1,6 @@
 "use client"
 
-import { Home, Music, Sliders, Save } from "lucide-react"
+import { Home, Music, Sliders, Save, ScrollText } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface TabNavigationProps {
@@ -13,6 +13,7 @@ const tabs = [
   { id: "voices", label: "Voices", icon: Music },
   { id: "mixer", label: "Mixer", icon: Sliders },
   { id: "registration", label: "Registration", icon: Save },
+  { id: "logging", label: "Logging", icon: ScrollText },
 ]
 
 export function TabNavigation({ activeTab, onTabChange }: TabNavigationProps) {

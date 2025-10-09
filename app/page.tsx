@@ -7,6 +7,7 @@ import { HomeScreen } from "@/components/home/home-screen"
 import { VoiceBrowser } from "@/components/voices/voice-browser"
 import { MixerInterface } from "@/components/mixer/mixer-interface"
 import { RegistrationManager } from "@/components/registration/registration-manager"
+import { MidiLogger } from "@/components/logging/midi-logger"
 import type { Voice } from "@/lib/voice-data"
 
 export interface MixerSettings {
@@ -194,6 +195,8 @@ export default function Home() {
               onLoadConfiguration={handleLoadConfiguration}
             />
           )}
+
+          {activeTab === "logging" && <MidiLogger />}
         </main>
       </div>
     </div>
