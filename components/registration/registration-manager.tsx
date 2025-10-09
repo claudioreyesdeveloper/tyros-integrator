@@ -63,12 +63,14 @@ export function RegistrationManager({
   const [patchImportDialogOpen, setPatchImportDialogOpen] = useState(false)
   const [currentSlot, setCurrentSlot] = useState<number | null>(null)
   const [registrationName, setRegistrationName] = useState("")
-  const [port1, setPort1] = useState<string>("")
-  const [port2, setPort2] = useState<string>("")
+  const [port1, setPort1] = useState<string>("Digitalworkstation Port 1")
+  const [port2, setPort2] = useState<string>("Digitalworkstation Port 2")
   const fileInputRef = useRef<HTMLInputElement>(null)
   const patchFileInputRef = useRef<HTMLInputElement>(null)
 
-  const availablePorts = midiAccess ? Array.from(midiAccess.outputs.values()).map((port) => port.name) : []
+  const detectedPorts = midiAccess ? Array.from(midiAccess.outputs.values()).map((port) => port.name) : []
+  const defaultPorts = ["Digitalworkstation Port 1", "Digitalworkstation Port 2"]
+  const availablePorts = [...new Set([...defaultPorts, ...detectedPorts])]
 
   const handleSaveConfiguration = () => {
     const configuration = {
@@ -325,13 +327,20 @@ export function RegistrationManager({
           <div className="space-y-2">
             <Label htmlFor="port1">Port 1</Label>
             <Select value={port1} onValueChange={setPort1}>
-              <SelectTrigger id="port1" className="h-11 md:h-12">
+              <SelectTrigger
+                id="port1"
+                className="w-full bg-zinc-900/50 border-2 border-amber-500/30 hover:border-amber-500/50 focus:border-amber-500 text-white font-semibold h-11 md:h-12 rounded-xl transition-all text-sm md:text-base"
+              >
                 <SelectValue placeholder="Select MIDI Port 1" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-zinc-900 border-2 border-amber-500/30 text-white">
                 {availablePorts.length > 0 ? (
                   availablePorts.map((port, index) => (
-                    <SelectItem key={index} value={port}>
+                    <SelectItem
+                      key={index}
+                      value={port}
+                      className="text-white font-semibold hover:bg-zinc-800 focus:bg-gradient-to-r focus:from-amber-500 focus:to-yellow-500 focus:text-black text-sm md:text-base"
+                    >
                       {port}
                     </SelectItem>
                   ))
@@ -353,13 +362,20 @@ export function RegistrationManager({
           <div className="space-y-2">
             <Label htmlFor="port2">Port 2</Label>
             <Select value={port2} onValueChange={setPort2}>
-              <SelectTrigger id="port2" className="h-11 md:h-12">
+              <SelectTrigger
+                id="port2"
+                className="w-full bg-zinc-900/50 border-2 border-amber-500/30 hover:border-amber-500/50 focus:border-amber-500 text-white font-semibold h-11 md:h-12 rounded-xl transition-all text-sm md:text-base"
+              >
                 <SelectValue placeholder="Select MIDI Port 2" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-zinc-900 border-2 border-amber-500/30 text-white">
                 {availablePorts.length > 0 ? (
                   availablePorts.map((port, index) => (
-                    <SelectItem key={index} value={port}>
+                    <SelectItem
+                      key={index}
+                      value={port}
+                      className="text-white font-semibold hover:bg-zinc-800 focus:bg-gradient-to-r focus:from-amber-500 focus:to-yellow-500 focus:text-black text-sm md:text-base"
+                    >
                       {port}
                     </SelectItem>
                   ))

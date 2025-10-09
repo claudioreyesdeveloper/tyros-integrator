@@ -14,6 +14,7 @@ export interface MIDILogEntry {
 }
 
 interface MIDIState {
+  // Connection state
   access: MIDIAccess | null
   inputs: MIDIInput[]
   outputs: MIDIOutput[]
@@ -21,22 +22,31 @@ interface MIDIState {
   selectedOutput: MIDIOutput | null
   isSupported: boolean
   isConnected: boolean
+  error: string | null
+
+  // Message tracking
   lastMessage: { type: string; data: number[] } | null
   logs: MIDILogEntry[]
 
-  // Actions
+  // Core actions
   initialize: () => Promise<void>
+  requestMIDIAccess: () => Promise<void>
   selectInput: (input: MIDIInput | null) => void
   selectOutput: (output: MIDIOutput | null) => void
-  sendMessage: (data: number[]) => void
-  sendProgramChange: (channel: number, program: number) => void
-  sendControlChange: (channel: number, controller: number, value: number) => void
+
+  // Simplified message sending
+  send: (data: number[]) => void
+  sendControlChange: (channel: number, cc: number, value: number) => void
+  sendProgramChange: (channel: number, program: number, msb?: number, lsb?: number) => void
   sendNoteOn: (channel: number, note: number, velocity: number) => void
   sendNoteOff: (channel: number, note: number) => void
+  sendSysEx: (data: number[]) => void
+
+  // Utility
   clearLogs: () => void
 }
 
-const createLogEntry = (
+const createLog = (
   type: string,
   description: string,
   data: number[],
@@ -52,25 +62,47 @@ const createLogEntry = (
   direction,
 })
 
-const formatMIDIMessage = (type: string, data: number[]): string => {
+const formatMessage = (data: number[]): string => {
   const [status, data1, data2] = data
+  const messageType = status & 0xf0
   const channel = (status & 0x0f) + 1
 
-  switch (type) {
-    case "noteOn":
+  switch (messageType) {
+    case 0x90:
       return `Note On (Ch ${channel}, Note ${data1}, Vel ${data2})`
-    case "noteOff":
+    case 0x80:
       return `Note Off (Ch ${channel}, Note ${data1})`
-    case "controlChange":
+    case 0xb0:
       return `Control Change (Ch ${channel}, CC ${data1}, Val ${data2})`
-    case "programChange":
+    case 0xc0:
       return `Program Change (Ch ${channel}, Prg ${data1})`
+    case 0xf0:
+      return `SysEx (${data.length} bytes)`
     default:
-      return `${type} (${data.join(", ")})`
+      return `MIDI Message (${data.map((d) => d.toString(16)).join(" ")})`
+  }
+}
+
+const getMessageType = (status: number): string => {
+  const messageType = status & 0xf0
+  switch (messageType) {
+    case 0x90:
+      return "noteOn"
+    case 0x80:
+      return "noteOff"
+    case 0xb0:
+      return "controlChange"
+    case 0xc0:
+      return "programChange"
+    case 0xf0:
+      return "sysex"
+    default:
+      return "unknown"
   }
 }
 
 export const useMIDI = create<MIDIState>((set, get) => ({
+  // Initial state
   access: null,
   inputs: [],
   outputs: [],
@@ -78,21 +110,23 @@ export const useMIDI = create<MIDIState>((set, get) => ({
   selectedOutput: null,
   isSupported: typeof navigator !== "undefined" && "requestMIDIAccess" in navigator,
   isConnected: false,
+  error: null,
   lastMessage: null,
   logs: [],
 
   initialize: async () => {
-    if (!get().isSupported) {
-      console.error("Web MIDI API is not supported in this browser")
-      set((state) => ({
-        logs: [...state.logs, createLogEntry("initialization", "MIDI API not supported", [], "incoming", "failed")],
-      }))
+    const state = get()
+
+    if (!state.isSupported) {
+      set({
+        error: "Web MIDI API is not supported in this browser. Please use Chrome, Edge, or Opera.",
+        logs: [...state.logs, createLog("error", "MIDI API not supported", [], "incoming", "failed")],
+      })
       return
     }
 
     try {
       const access = await navigator.requestMIDIAccess({ sysex: true })
-
       const inputs = Array.from(access.inputs.values())
       const outputs = Array.from(access.outputs.values())
 
@@ -103,130 +137,115 @@ export const useMIDI = create<MIDIState>((set, get) => ({
         isConnected: outputs.length > 0,
         selectedOutput: outputs[0] || null,
         selectedInput: inputs[0] || null,
-      })
-
-      set((state) => ({
+        error: outputs.length === 0 ? "No MIDI devices found. Please connect a MIDI device." : null,
         logs: [
           ...state.logs,
-          createLogEntry(
-            "initialization",
-            `MIDI initialized (${inputs.length} inputs, ${outputs.length} outputs)`,
-            [],
-            "incoming",
-          ),
+          createLog("init", `MIDI initialized (${inputs.length} inputs, ${outputs.length} outputs)`, [], "incoming"),
         ],
-      }))
+      })
 
-      // Setup input listeners
       inputs.forEach((input) => {
         input.onmidimessage = (event) => {
-          const [status, data1, data2] = event.data
-          const messageType = status & 0xf0
-
-          let type = "unknown"
-          if (messageType === 0x90) type = "noteOn"
-          else if (messageType === 0x80) type = "noteOff"
-          else if (messageType === 0xb0) type = "controlChange"
-          else if (messageType === 0xc0) type = "programChange"
-
-          set({ lastMessage: { type, data: Array.from(event.data) } })
+          const data = Array.from(event.data)
+          const type = getMessageType(data[0])
 
           set((state) => ({
-            logs: [
-              ...state.logs,
-              createLogEntry(type, formatMIDIMessage(type, Array.from(event.data)), Array.from(event.data), "incoming"),
-            ],
+            lastMessage: { type, data },
+            logs: [...state.logs, createLog(type, formatMessage(data), data, "incoming")],
           }))
         }
       })
 
-      // Listen for device changes
       access.onstatechange = () => {
         const newInputs = Array.from(access.inputs.values())
         const newOutputs = Array.from(access.outputs.values())
-        set({
+
+        set((state) => ({
           inputs: newInputs,
           outputs: newOutputs,
           isConnected: newOutputs.length > 0,
-        })
-
-        set((state) => ({
           logs: [
             ...state.logs,
-            createLogEntry(
+            createLog(
               "deviceChange",
-              `Device state changed (${newInputs.length} inputs, ${newOutputs.length} outputs)`,
+              `Devices: ${newInputs.length} inputs, ${newOutputs.length} outputs`,
               [],
               "incoming",
             ),
           ],
         }))
       }
-
-      console.log("MIDI initialized successfully")
     } catch (error) {
-      console.error("Failed to initialize MIDI:", error)
+      const errorMsg = error instanceof Error ? error.message : "Unknown error"
       set((state) => ({
-        logs: [
-          ...state.logs,
-          createLogEntry("initialization", `Failed to initialize: ${error}`, [], "incoming", "failed"),
-        ],
+        error: `MIDI access denied: ${errorMsg}`,
+        logs: [...state.logs, createLog("error", `Failed to initialize: ${errorMsg}`, [], "incoming", "failed")],
       }))
     }
   },
 
-  selectInput: (input) => set({ selectedInput: input }),
+  // Alias for backward compatibility
+  requestMIDIAccess: async () => {
+    await get().initialize()
+  },
 
+  selectInput: (input) => set({ selectedInput: input }),
   selectOutput: (output) => set({ selectedOutput: output }),
 
-  sendMessage: (data) => {
+  send: (data) => {
     const { selectedOutput } = get()
-    if (selectedOutput && data.length > 0) {
-      try {
-        selectedOutput.send(data)
-        const [status] = data
-        const messageType = status & 0xf0
-        let type = "unknown"
-        if (messageType === 0x90) type = "noteOn"
-        else if (messageType === 0x80) type = "noteOff"
-        else if (messageType === 0xb0) type = "controlChange"
-        else if (messageType === 0xc0) type = "programChange"
 
-        set((state) => ({
-          logs: [...state.logs, createLogEntry(type, formatMIDIMessage(type, data), data, "outgoing")],
-        }))
-      } catch (error) {
-        set((state) => ({
-          logs: [...state.logs, createLogEntry("sendMessage", `Failed to send: ${error}`, data, "outgoing", "failed")],
-        }))
-      }
+    if (!selectedOutput || data.length === 0) return
+
+    try {
+      selectedOutput.send(data)
+      const type = getMessageType(data[0])
+
+      set((state) => ({
+        logs: [...state.logs, createLog(type, formatMessage(data), data, "outgoing")],
+      }))
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : "Send failed"
+      set((state) => ({
+        logs: [...state.logs, createLog("error", errorMsg, data, "outgoing", "failed")],
+      }))
     }
   },
 
-  sendProgramChange: (channel, program) => {
-    const status = 0xc0 | (channel & 0x0f)
-    get().sendMessage([status, program & 0x7f])
+  sendControlChange: (channel, cc, value) => {
+    const status = 0xb0 | ((channel - 1) & 0x0f)
+    get().send([status, cc & 0x7f, value & 0x7f])
   },
 
-  sendControlChange: (channel, controller, value) => {
-    const status = 0xb0 | (channel & 0x0f)
-    get().sendMessage([status, controller & 0x7f, value & 0x7f])
+  sendProgramChange: (channel, program, msb, lsb) => {
+    // If MSB and LSB provided, send bank select first
+    if (msb !== undefined && lsb !== undefined) {
+      get().sendControlChange(channel, 0, msb)
+      get().sendControlChange(channel, 32, lsb)
+    }
+
+    const status = 0xc0 | ((channel - 1) & 0x0f)
+    get().send([status, program & 0x7f])
   },
 
   sendNoteOn: (channel, note, velocity) => {
-    const status = 0x90 | (channel & 0x0f)
-    get().sendMessage([status, note & 0x7f, velocity & 0x7f])
+    const status = 0x90 | ((channel - 1) & 0x0f)
+    get().send([status, note & 0x7f, velocity & 0x7f])
   },
 
   sendNoteOff: (channel, note) => {
-    const status = 0x80 | (channel & 0x0f)
-    get().sendMessage([status, note & 0x7f, 0])
+    const status = 0x80 | ((channel - 1) & 0x0f)
+    get().send([status, note & 0x7f, 0])
+  },
+
+  sendSysEx: (data) => {
+    const sysexMessage = [0xf0, ...data, 0xf7]
+    get().send(sysexMessage)
   },
 
   clearLogs: () => set({ logs: [] }),
 }))
 
-// Hook to auto-initialize MIDI on mount
 export function useMIDIInitialize() {
   const initialize = useMIDI((state) => state.initialize)
   const isSupported = useMIDI((state) => state.isSupported)
