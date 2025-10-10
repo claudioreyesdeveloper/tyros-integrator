@@ -280,7 +280,7 @@ Potential improvements to consider:
 ## Troubleshooting
 
 ### MIDI Not Connecting
-1. Check browser support (Chrome, Edge, Opera support Web MIDI API)
+1. all media activity should be using JUCE
 2. Ensure MIDI device is connected before loading the app
 3. Check browser permissions for MIDI access
 4. Try refreshing the page
