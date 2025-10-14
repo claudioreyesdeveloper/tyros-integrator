@@ -20,11 +20,9 @@ export function RotaryKnob({ value, min = 0, max = 127, onChange, label, display
   const [startY, setStartY] = useState(0)
   const [startValue, setStartValue] = useState(0)
 
-  // Calculate rotation angle (-135° to +135° = 270° total range)
   const percentage = (value - min) / (max - min)
   const rotation = -135 + percentage * 270
 
-  // Size classes
   const sizeClasses = {
     sm: "w-12 h-12",
     md: "w-16 h-16",
@@ -99,25 +97,17 @@ export function RotaryKnob({ value, min = 0, max = 127, onChange, label, display
           transition: isDragging ? "none" : "transform 0.1s ease-out",
         }}
       >
-        {/* Knob body */}
         <div className="absolute inset-0 rounded-full bg-gradient-to-b from-secondary to-secondary/60 border-2 border-border shadow-lg">
-          {/* Inner circle */}
           <div className="absolute inset-2 rounded-full bg-gradient-to-b from-background/40 to-background/20" />
-
-          {/* Pointer indicator */}
           <div className="absolute top-1 left-1/2 -translate-x-1/2 w-1 h-3 bg-primary rounded-full shadow-md" />
-
-          {/* Center dot */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-primary/50 rounded-full" />
         </div>
       </div>
 
-      {/* Value display */}
       {displayValue && (
         <div className="text-xs font-mono font-bold text-primary min-w-[3ch] text-center">{displayValue}</div>
       )}
 
-      {/* Label */}
       {label && <div className="premium-label text-xs">{label}</div>}
     </div>
   )
