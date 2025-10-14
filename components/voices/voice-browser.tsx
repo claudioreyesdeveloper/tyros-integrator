@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { loadVoiceData, getCategories, getSubCategories, getVoices, type Voice } from "@/lib/voice-data"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
@@ -30,6 +30,7 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false)
   const [recentVoices, setRecentVoices] = useState<Voice[]>([])
   const { api } = useMIDI()
+  const isSelectingFromSearch = useRef(false)
 
   useEffect(() => {
     loadVoiceData().then((data) => {
@@ -55,8 +56,11 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
     if (selectedCategory) {
       const subs = getSubCategories(voices, selectedCategory)
       setSubCategories(subs)
-      setSelectedSubCategory(null)
-      setVoiceList([])
+      if (!isSelectingFromSearch.current) {
+        setSelectedSubCategory(null)
+        setVoiceList([])
+      }
+      isSelectingFromSearch.current = false
     }
   }, [selectedCategory, voices])
 
@@ -93,8 +97,8 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
   }
 
   const handleCommandPaletteSelect = (voice: Voice) => {
+    isSelectingFromSearch.current = true
     setSelectedVoice(voice)
-    // Auto-select the category and subcategory
     setSelectedCategory(voice.category)
     setSelectedSubCategory(voice.sub)
   }

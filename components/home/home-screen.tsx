@@ -8,7 +8,7 @@ interface HomeScreenProps {
   partVoices: Record<number, Voice>
 }
 
-const PART_NAMES = ["Left", "Right 1", "Right 2", "Right 3"]
+const PART_NAMES = ["Left 1", "Left 2", "Right 1", "Right 2"]
 
 export function HomeScreen({ onSelectVoice, partVoices }: HomeScreenProps) {
   return (
@@ -38,7 +38,7 @@ export function HomeScreen({ onSelectVoice, partVoices }: HomeScreenProps) {
                 <div className="text-center w-full">
                   <h3 className="premium-text text-xl md:text-2xl lg:text-2xl mb-2">{PART_NAMES[partNumber - 1]}</h3>
                   {voice ? (
-                    <p className="text-sm md:text-base lg:text-lg font-semibold text-foreground">{voice.voice}</p>
+                    <p className="text-sm md:text-base lg:text-lg font-semibold text-white">{voice.voice}</p>
                   ) : (
                     <p className="text-xs md:text-sm text-muted-foreground">No Voice</p>
                   )}
