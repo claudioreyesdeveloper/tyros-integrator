@@ -8,6 +8,8 @@ import { VoiceBrowser } from "@/components/voices/voice-browser"
 import { MixerInterface } from "@/components/mixer/mixer-interface"
 import { RegistrationManager } from "@/components/registration/registration-manager"
 import { MidiLogger } from "@/components/logging/midi-logger"
+import { AssemblyWorkbench } from "@/components/assembly/assembly-workbench"
+import { ChordSequencer } from "@/components/chords/chord-sequencer"
 import type { Voice } from "@/lib/voice-data"
 
 export interface MixerSettings {
@@ -195,6 +197,10 @@ export default function Home() {
               onLoadConfiguration={handleLoadConfiguration}
             />
           )}
+
+          {activeTab === "assembly" && <AssemblyWorkbench />}
+
+          {activeTab === "chords" && <ChordSequencer />}
 
           {activeTab === "logging" && <MidiLogger />}
         </main>
