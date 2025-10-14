@@ -7,6 +7,7 @@
 
 import type { Voice } from "./voice-data"
 import type { Effect } from "./effect-data"
+import type { MixerSettings, DSPSettings } from "@/app/page"
 
 // ============================================================================
 // VOICE COMMANDS
@@ -218,9 +219,9 @@ export interface RegistrationLoadCommand {
   action: "load"
   slot: number // 1-8
   data: {
-    voices: any[]
-    mixer: any[]
-    effects: any[]
+    voices: Voice[]
+    mixer: MixerSettings[]
+    effects: DSPSettings[]
   }
 }
 
@@ -230,9 +231,9 @@ export interface RegistrationSaveCommand {
   slot: number // 1-8
   name: string
   data: {
-    voices: any[]
-    mixer: any[]
-    effects: any[]
+    voices: Voice[]
+    mixer: MixerSettings[]
+    effects: DSPSettings[]
   }
 }
 

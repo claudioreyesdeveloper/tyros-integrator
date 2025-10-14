@@ -863,7 +863,7 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
     setDragOverBeat(beat)
   }
 
-  const handleCellDrop = (e: React.DragEvent, sectionId: string, targetBeat: number) => {
+  const handleCellDrop = (e: React.DragEvent | React.TouchEvent, sectionId: string, targetBeat: number) => {
     e.preventDefault()
     if (!draggingChord) return
 
