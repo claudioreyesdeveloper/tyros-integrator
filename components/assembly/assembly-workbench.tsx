@@ -103,7 +103,12 @@ export function AssemblyWorkbench() {
     const categoryIndex = STYLE_CATEGORIES.indexOf(category)
     const styleIndex = STYLE_NAMES[category]?.indexOf(style) || 0
 
-    api.style.select(category, style)
+    api.sendCommand({
+      type: "style",
+      action: "select",
+      category,
+      style,
+    })
 
     toast({
       title: "Source Style Loaded",
@@ -113,10 +118,10 @@ export function AssemblyWorkbench() {
 
   const handlePlayStop = () => {
     if (isPlaying) {
-      api.style.stop()
+      api.sendCommand({ type: "style", action: "stop" })
       setIsPlaying(false)
     } else {
-      api.style.start()
+      api.sendCommand({ type: "style", action: "start" })
       setIsPlaying(true)
     }
   }
@@ -124,11 +129,11 @@ export function AssemblyWorkbench() {
   const handleSolo = (track: string) => {
     if (soloedTrack === track) {
       setSoloedTrack(null)
-      api.mixer.setSolo(null)
+      api.sendCommand({ type: "mixer", action: "solo", channel: null })
     } else {
       setSoloedTrack(track)
       const trackIdx = STYLE_TRACKS.indexOf(track)
-      api.mixer.setSolo(trackIdx)
+      api.sendCommand({ type: "mixer", action: "solo", channel: trackIdx })
     }
   }
 
@@ -142,7 +147,12 @@ export function AssemblyWorkbench() {
     setMutedTracks(newMuted)
 
     const trackIdx = STYLE_TRACKS.indexOf(track)
-    api.mixer.setMute(trackIdx, newMuted.has(track))
+    api.sendCommand({
+      type: "mixer",
+      action: "mute",
+      channel: trackIdx,
+      muted: newMuted.has(track),
+    })
   }
 
   const handleNTRChange = (value: string) => {

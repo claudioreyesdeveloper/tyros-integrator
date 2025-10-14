@@ -76,6 +76,19 @@ export interface MixerGlobalChorusCommand {
   value: number // 0-127
 }
 
+export interface MixerSoloCommand {
+  type: "mixer"
+  action: "solo"
+  channel: number | null // null = clear solo
+}
+
+export interface MixerMuteCommand {
+  type: "mixer"
+  action: "mute"
+  channel: number
+  muted: boolean
+}
+
 // ============================================================================
 // EFFECTS COMMANDS
 // ============================================================================
@@ -90,6 +103,13 @@ export interface EffectAssignCommand {
 // ============================================================================
 // STYLE COMMANDS
 // ============================================================================
+
+export interface StyleSelectCommand {
+  type: "style"
+  action: "select"
+  category: string
+  style: string
+}
 
 export interface StyleStartStopCommand {
   type: "style"
@@ -254,9 +274,12 @@ export type TyrosCommand =
   | MixerMasterVolumeCommand
   | MixerGlobalReverbCommand
   | MixerGlobalChorusCommand
+  | MixerSoloCommand // Added to union type
+  | MixerMuteCommand // Added to union type
   // Effects
   | EffectAssignCommand
   // Style
+  | StyleSelectCommand // Added to union type
   | StyleStartStopCommand
   | StyleTempoCommand
   | StyleVariationCommand
