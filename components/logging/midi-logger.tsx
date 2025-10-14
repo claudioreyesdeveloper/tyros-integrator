@@ -12,14 +12,15 @@ import { PatchFileImportDialog } from "@/components/registration/patch-file-impo
 export function MidiLogger() {
   const logs = useMIDI((state) => state.logs)
   const clearLogs = useMIDI((state) => state.clearLogs)
-  const { midiAccess, requestMIDIAccess } = useMIDI()
+  const access = useMIDI((state) => state.access)
+  const requestMIDIAccess = useMIDI((state) => state.requestMIDIAccess)
 
   const [port1, setPort1] = useState<string>("Digitalworkstation Port 1")
   const [port2, setPort2] = useState<string>("Digitalworkstation Port 2")
   const [patchImportDialogOpen, setPatchImportDialogOpen] = useState(false)
   const patchFileInputRef = useRef<HTMLInputElement>(null)
 
-  const detectedPorts = midiAccess ? Array.from(midiAccess.outputs.values()).map((port) => port.name) : []
+  const detectedPorts = access ? Array.from(access.outputs.values()).map((port) => port.name) : []
   const defaultPorts = ["Digitalworkstation Port 1", "Digitalworkstation Port 2"]
   const availablePorts = [...new Set([...defaultPorts, ...detectedPorts])]
 
@@ -156,8 +157,9 @@ export function MidiLogger() {
           </div>
           <Button
             onClick={handleOpenPatchFile}
-            className="glossy-button h-11 md:h-12 px-6 md:px-7 text-sm md:text-base gap-2"
+            variant="outline"
             size="lg"
+            className="glossy-button h-11 md:h-12 px-6 md:px-7 text-sm md:text-base gap-2 bg-transparent"
           >
             <FileMusic className="w-4 h-4 md:w-5 md:h-5" />
             Open Patch File
