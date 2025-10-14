@@ -534,7 +534,7 @@ export function StyleEditor() {
         root: chord.root,
         quality: chord.type,
       },
-      // duration: chord.duration, // Note: duration might not be directly supported in this API call
+      duration: chord.duration, // Required property for ChordPlayCommand
       velocity: 100,
     })
   }
