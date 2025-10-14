@@ -52,7 +52,7 @@ interface DragData {
 }
 
 export function AssemblyWorkbench() {
-  const { sendProgramChange, sendSysEx, sendControlChange } = useMIDI()
+  const { api } = useMIDI()
   const { toast } = useToast()
 
   const [sourceCategory, setSourceCategory] = useState("Pop & Rock")
@@ -103,9 +103,7 @@ export function AssemblyWorkbench() {
     const categoryIndex = STYLE_CATEGORIES.indexOf(category)
     const styleIndex = STYLE_NAMES[category]?.indexOf(style) || 0
 
-    sendProgramChange(0, categoryIndex, 0)
-    sendProgramChange(0, styleIndex, 32)
-    sendProgramChange(0, styleIndex)
+    api.style.select(category, style)
 
     toast({
       title: "Source Style Loaded",
@@ -115,10 +113,10 @@ export function AssemblyWorkbench() {
 
   const handlePlayStop = () => {
     if (isPlaying) {
-      sendControlChange(0, 0xfa, 0)
+      api.style.stop()
       setIsPlaying(false)
     } else {
-      sendControlChange(0, 0xf8, 0)
+      api.style.start()
       setIsPlaying(true)
     }
   }
@@ -126,11 +124,11 @@ export function AssemblyWorkbench() {
   const handleSolo = (track: string) => {
     if (soloedTrack === track) {
       setSoloedTrack(null)
-      sendSysEx([0x43, 0x10, 0x4c, 0x00, 0xff])
+      api.mixer.setSolo(null)
     } else {
       setSoloedTrack(track)
       const trackIdx = STYLE_TRACKS.indexOf(track)
-      sendSysEx([0x43, 0x10, 0x4c, 0x01, trackIdx])
+      api.mixer.setSolo(trackIdx)
     }
   }
 
@@ -144,27 +142,27 @@ export function AssemblyWorkbench() {
     setMutedTracks(newMuted)
 
     const trackIdx = STYLE_TRACKS.indexOf(track)
-    sendSysEx([0x43, 0x10, 0x4c, 0x02, trackIdx, newMuted.has(track) ? 0x00 : 0x7f])
+    api.mixer.setMute(trackIdx, newMuted.has(track))
   }
 
   const handleNTRChange = (value: string) => {
     setNtrRule(value)
     const trackIdx = STYLE_TRACKS.indexOf(selectedTrack)
     const ruleIdx = NTR_OPTIONS.indexOf(value)
-    sendSysEx([0x43, 0x10, 0x4c, 0x10, trackIdx, ruleIdx])
+    console.log(`[Assembly] NTR Rule changed: track=${trackIdx}, rule=${ruleIdx}`)
   }
 
   const handleNTTChange = (value: string) => {
     setNttRule(value)
     const trackIdx = STYLE_TRACKS.indexOf(selectedTrack)
     const ruleIdx = NTT_OPTIONS.indexOf(value)
-    sendSysEx([0x43, 0x10, 0x4c, 0x11, trackIdx, ruleIdx])
+    console.log(`[Assembly] NTT Rule changed: track=${trackIdx}, rule=${ruleIdx}`)
   }
 
   const handleRTRChange = (enabled: boolean) => {
     setRtrEnabled(enabled)
     const trackIdx = STYLE_TRACKS.indexOf(selectedTrack)
-    sendSysEx([0x43, 0x10, 0x4c, 0x12, trackIdx, enabled ? 0x01 : 0x00])
+    console.log(`[Assembly] RTR changed: track=${trackIdx}, enabled=${enabled}`)
   }
 
   const handleDragStart = (e: React.DragEvent, section: string, track: string, isSource: boolean) => {
@@ -258,7 +256,9 @@ export function AssemblyWorkbench() {
     const targetSectionIdx = STYLE_SECTIONS.indexOf(target.section)
     const targetTrackIdx = STYLE_TRACKS.indexOf(target.track)
 
-    sendSysEx([0x43, 0x10, 0x4c, sourceSectionIdx, sourceTrackIdx, targetSectionIdx, targetTrackIdx])
+    console.log(
+      `[Assembly] Copy pattern: source=${sourceSectionIdx},${sourceTrackIdx} → target=${targetSectionIdx},${targetTrackIdx}`,
+    )
 
     const targetKey = `${target.section}-${target.track}`
     setCopiedParts((prev) => ({
