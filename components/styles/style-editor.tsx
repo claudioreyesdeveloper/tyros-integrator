@@ -106,7 +106,7 @@ const STYLE_SECTIONS = [
   "Outro 3",
 ]
 
-const STYLE_TRACKS = ["Rhythm 1", "Rhythm 2", "Bass", "Chord 1", "Chord 2", "Pad", "Phrase 1", "Phrase 2"]
+const STYLE_TRACKS = ["Rhythm 1", "Rhythm 2", "Bass", "Chord 1", "Chord 2", "Chord 3", "Phrase 1", "Phrase 2"]
 
 const NTR_OPTIONS = ["Root", "Bass", "Melodic", "Harmonic Minor", "Melodic Minor", "Natural Minor"]
 const NTT_OPTIONS = ["Bypass", "Melody", "Chord", "Bass", "Melodic Minor", "Harmonic Minor"]
@@ -145,7 +145,7 @@ interface ChordEvent {
 }
 
 export function StyleEditor() {
-  const { sendProgramChange, sendSysEx, sendControlChange } = useMIDI()
+  const { api } = useMIDI()
   const { toast } = useToast()
 
   const [sourceCategory, setSourceCategory] = useState("Pop & Rock")
@@ -227,9 +227,12 @@ export function StyleEditor() {
     const categoryIndex = STYLE_CATEGORIES.indexOf(category)
     const styleIndex = STYLE_NAMES[category]?.indexOf(style) || 0
 
-    sendProgramChange(0, categoryIndex, 0)
-    sendProgramChange(0, styleIndex, 32)
-    sendProgramChange(0, styleIndex)
+    api.sendCommand({
+      type: "style",
+      action: "select",
+      category,
+      style,
+    })
 
     toast({
       title: "Source Style Loaded",
@@ -239,10 +242,10 @@ export function StyleEditor() {
 
   const handlePlayStop = () => {
     if (isPlaying) {
-      sendControlChange(0, 0xfa, 0) // MIDI Stop
+      api.sendCommand({ type: "style", action: "stop" })
       setIsPlaying(false)
     } else {
-      sendControlChange(0, 0xf8, 0) // MIDI Start
+      api.sendCommand({ type: "style", action: "start" })
       setIsPlaying(true)
     }
   }
@@ -250,11 +253,11 @@ export function StyleEditor() {
   const handleSolo = (track: string) => {
     if (soloedTrack === track) {
       setSoloedTrack(null)
-      sendSysEx([0x43, 0x10, 0x4c, 0x00, 0xff]) // Clear solo
+      api.sendCommand({ type: "mixer", action: "solo", channel: null })
     } else {
       setSoloedTrack(track)
       const trackIdx = STYLE_TRACKS.indexOf(track)
-      sendSysEx([0x43, 0x10, 0x4c, 0x01, trackIdx]) // Solo track
+      api.sendCommand({ type: "mixer", action: "solo", channel: trackIdx })
     }
   }
 
@@ -268,41 +271,46 @@ export function StyleEditor() {
     setMutedTracks(newMuted)
 
     const trackIdx = STYLE_TRACKS.indexOf(track)
-    sendSysEx([0x43, 0x10, 0x4c, 0x02, trackIdx, newMuted.has(track) ? 0x00 : 0x7f])
+    api.sendCommand({
+      type: "mixer",
+      action: "mute",
+      channel: trackIdx,
+      muted: newMuted.has(track),
+    })
   }
 
   const handleNTRChange = (value: string) => {
     setNtrRule(value)
     const trackIdx = STYLE_TRACKS.indexOf(selectedTrack)
     const ruleIdx = NTR_OPTIONS.indexOf(value)
-    sendSysEx([0x43, 0x10, 0x4c, 0x10, trackIdx, ruleIdx])
+    api.sendCommand({ type: "style", action: "set_ntr_rule", trackIndex: trackIdx, ruleIndex: ruleIdx })
   }
 
   const handleNTTChange = (value: string) => {
     setNttRule(value)
     const trackIdx = STYLE_TRACKS.indexOf(selectedTrack)
     const ruleIdx = NTT_OPTIONS.indexOf(value)
-    sendSysEx([0x43, 0x10, 0x4c, 0x11, trackIdx, ruleIdx])
+    api.sendCommand({ type: "style", action: "set_ntt_rule", trackIndex: trackIdx, ruleIndex: ruleIdx })
   }
 
   const handleRTRChange = (enabled: boolean) => {
     setRtrEnabled(enabled)
     const trackIdx = STYLE_TRACKS.indexOf(selectedTrack)
-    sendSysEx([0x43, 0x10, 0x4c, 0x12, trackIdx, enabled ? 0x01 : 0x00])
+    api.sendCommand({ type: "style", action: "set_rtr_rule", trackIndex: trackIdx, enabled })
   }
 
   const handleStyleVolumeChange = (index: number, value: number[]) => {
     const newVolumes = [...styleVolumes]
     newVolumes[index] = value[0]
     setStyleVolumes(newVolumes)
-    sendSysEx([0x43, 0x10, 0x4c, 0x20, index, value[0]])
+    api.sendCommand({ type: "mixer", action: "set_volume", channel: index, volume: value[0] })
   }
 
   const handleStylePanChange = (index: number, value: number) => {
     const newPans = [...stylePans]
     newPans[index] = value
     setStylePans(newPans)
-    sendSysEx([0x43, 0x10, 0x4c, 0x21, index, value])
+    api.sendCommand({ type: "mixer", action: "set_pan", channel: index, pan: value })
   }
 
   const handleDragStart = (e: React.DragEvent, section: string, track: string, isSource: boolean) => {
@@ -402,7 +410,13 @@ export function StyleEditor() {
     const targetSectionIdx = STYLE_SECTIONS.indexOf(target.section)
     const targetTrackIdx = STYLE_TRACKS.indexOf(target.track)
 
-    sendSysEx([0x43, 0x10, 0x4c, sourceSectionIdx, sourceTrackIdx, targetSectionIdx, targetTrackIdx])
+    // Using API sendCommand for copy operation
+    api.sendCommand({
+      type: "style",
+      action: "copy_pattern",
+      source: { section: sourceSectionIdx, track: sourceTrackIdx },
+      target: { section: targetSectionIdx, track: targetTrackIdx },
+    })
 
     const targetKey = `${target.section}-${target.track}`
     setCopiedParts((prev) => ({
@@ -432,7 +446,8 @@ export function StyleEditor() {
   const handleUndo = () => {
     if (!lastAction) return
 
-    sendSysEx([0x43, 0x10, 0x4d, 0x00])
+    // Using API sendCommand for undo
+    api.sendCommand({ type: "style", action: "undo_last" })
 
     const targetKey = `${lastAction.target.section}-${lastAction.target.track}`
     setCopiedParts((prev) => {
@@ -453,7 +468,8 @@ export function StyleEditor() {
   const handleCommitSave = async () => {
     setCommitStatus("saving")
 
-    sendSysEx([0x43, 0x7e, 0x00, 0x01])
+    // Using API sendCommand for commit/save
+    api.sendCommand({ type: "style", action: "commit_and_save" })
 
     await new Promise((resolve) => setTimeout(resolve, 2000))
 
@@ -510,9 +526,16 @@ export function StyleEditor() {
     // Send chord notes based on type and inversion
     // This is a simplified implementation
     const chordNotes = getChordNotes(rootNote, chord.type, chord.inversion)
-    chordNotes.forEach((note) => {
-      sendControlChange(channel, 0x90, note) // Note On
-      sendControlChange(channel, note, 100) // Velocity
+
+    api.sendCommand({
+      type: "chord",
+      action: "play",
+      chord: {
+        root: chord.root,
+        quality: chord.type,
+      },
+      // duration: chord.duration, // Note: duration might not be directly supported in this API call
+      velocity: 100,
     })
   }
 
@@ -592,7 +615,8 @@ export function StyleEditor() {
   const handleSectionChange = (section: string) => {
     setSelectedSection(section)
     const sectionIdx = STYLE_SECTIONS_FULL.indexOf(section)
-    sendSysEx([0x43, 0x10, 0x4c, 0x50, sectionIdx])
+    // Using API sendCommand for section change
+    api.sendCommand({ type: "style", action: "change_section", sectionIndex: sectionIdx })
 
     toast({
       title: "Style Section Changed",
@@ -1046,7 +1070,7 @@ export function StyleEditor() {
                       const newReverbs = [...styleReverbs]
                       newReverbs[index] = val
                       setStyleReverbs(newReverbs)
-                      sendSysEx([0x43, 0x10, 0x4c, 0x22, index, val])
+                      api.sendCommand({ type: "mixer", action: "set_reverb", channel: index, reverb: val })
                     }}
                     label="Rev"
                     displayValue={styleReverbs[index].toString()}
@@ -1061,7 +1085,7 @@ export function StyleEditor() {
                       const newChorus = [...styleChorus]
                       newChorus[index] = val
                       setStyleChorus(newChorus)
-                      sendSysEx([0x43, 0x10, 0x4c, 0x23, index, val])
+                      api.sendCommand({ type: "mixer", action: "set_chorus", channel: index, chorus: val })
                     }}
                     label="Cho"
                     displayValue={styleChorus[index].toString()}
@@ -1086,14 +1110,12 @@ export function StyleEditor() {
                       value={[keyboardVolumes[part]]}
                       onValueChange={(val) => {
                         setKeyboardVolumes({ ...keyboardVolumes, [part]: val[0] })
-                        sendSysEx([
-                          0x43,
-                          0x10,
-                          0x4c,
-                          0x30,
-                          ["right1", "right2", "right3", "left"].indexOf(part),
-                          val[0],
-                        ])
+                        api.sendCommand({
+                          type: "mixer",
+                          action: "set_keyboard_volume",
+                          part,
+                          volume: val[0],
+                        })
                       }}
                       min={0}
                       max={127}
@@ -1108,7 +1130,12 @@ export function StyleEditor() {
                     max={127}
                     onChange={(val) => {
                       setKeyboardPans({ ...keyboardPans, [part]: val })
-                      sendSysEx([0x43, 0x10, 0x4c, 0x31, ["right1", "right2", "right3", "left"].indexOf(part), val])
+                      api.sendCommand({
+                        type: "mixer",
+                        action: "set_keyboard_pan",
+                        part,
+                        pan: val,
+                      })
                     }}
                     label="Pan"
                     displayValue={
@@ -1135,7 +1162,7 @@ export function StyleEditor() {
                   max={127}
                   onChange={(val) => {
                     setTouchSense(val)
-                    sendSysEx([0x43, 0x10, 0x4c, 0x40, val])
+                    api.sendCommand({ type: "voice", action: "set_touch_sense", value: val })
                   }}
                   label="Touch Sense Depth"
                   displayValue={touchSense.toString()}
@@ -1150,7 +1177,7 @@ export function StyleEditor() {
                   max={127}
                   onChange={(val) => {
                     setVibratoSpeed(val)
-                    sendSysEx([0x43, 0x10, 0x4c, 0x41, val])
+                    api.sendCommand({ type: "voice", action: "set_vibrato_speed", value: val })
                   }}
                   label="Vibrato Speed"
                   displayValue={vibratoSpeed.toString()}
@@ -1165,7 +1192,7 @@ export function StyleEditor() {
                   max={127}
                   onChange={(val) => {
                     setVibratoDelay(val)
-                    sendSysEx([0x43, 0x10, 0x4c, 0x42, val])
+                    api.sendCommand({ type: "voice", action: "set_vibrato_delay", value: val })
                   }}
                   label="Vibrato Delay"
                   displayValue={vibratoDelay.toString()}

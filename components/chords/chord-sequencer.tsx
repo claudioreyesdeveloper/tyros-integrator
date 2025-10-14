@@ -109,7 +109,7 @@ interface ChordSequencerProps {
 }
 
 export function ChordSequencer({ chordState, setChordState }: ChordSequencerProps) {
-  const { sendSysEx } = useMIDI()
+  const { api } = useMIDI()
   const { toast } = useToast()
 
   const {

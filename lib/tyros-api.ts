@@ -274,12 +274,12 @@ export type TyrosCommand =
   | MixerMasterVolumeCommand
   | MixerGlobalReverbCommand
   | MixerGlobalChorusCommand
-  | MixerSoloCommand // Added to union type
-  | MixerMuteCommand // Added to union type
+  | MixerSoloCommand
+  | MixerMuteCommand
   // Effects
   | EffectAssignCommand
   // Style
-  | StyleSelectCommand // Added to union type
+  | StyleSelectCommand
   | StyleStartStopCommand
   | StyleTempoCommand
   | StyleVariationCommand
