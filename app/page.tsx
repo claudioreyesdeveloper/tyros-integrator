@@ -12,6 +12,37 @@ import { ChordSequencer } from "@/components/chords/chord-sequencer"
 import type { Voice } from "@/lib/voice-data"
 import type { Tyros5Configuration, ChannelPartConfig } from "@/lib/types"
 
+type Resolution = "whole" | "half" | "quarter"
+
+interface Chord {
+  id: string
+  symbol: string
+  beat: number
+  duration: number
+}
+
+interface Section {
+  id: string
+  name: string
+  bars: number
+  stylePart: string
+  color: string
+  chords: Chord[]
+}
+
+interface ChordState {
+  sections: Section[]
+  activeSection: string
+  resolution: Resolution
+  selectedCategory: string
+  selectedStyle: string
+  tempo: number
+  localControl: boolean
+  clockSource: "internal" | "external"
+  accompaniment: boolean
+}
+// </CHANGE>
+
 export interface MixerSettings {
   volume: number
   pan: number
@@ -56,7 +87,7 @@ export default function Home() {
     chorusSendGlobal: 30,
   })
 
-  const [chordState, setChordState] = useState({
+  const [chordState, setChordState] = useState<ChordState>({
     sections: [
       {
         id: "section-1",
@@ -64,18 +95,19 @@ export default function Home() {
         bars: 4,
         stylePart: "Intro 1",
         color: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-        chords: [],
+        chords: [] as Chord[], // Explicitly typed as Chord[]
       },
     ],
     activeSection: "section-1",
-    resolution: "quarter" as "whole" | "half" | "quarter",
+    resolution: "quarter",
     selectedCategory: "Pop/Rock",
     selectedStyle: "8BeatModern",
     tempo: 120,
     localControl: true,
-    clockSource: "internal" as "internal" | "external",
+    clockSource: "internal",
     accompaniment: true,
   })
+  // </CHANGE>
 
   const handleSelectVoice = (partNumber: number) => {
     setCurrentPart(partNumber)
