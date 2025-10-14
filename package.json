@@ -61,7 +61,7 @@
     "tailwindcss-animate": "^1.0.7",
     "use-sync-external-store": "latest",
     "vaul": "^0.9.9",
-    "webmidi": "3.1.13",
+    "webmidi": "latest",
     "zod": "3.25.67",
     "zustand": "latest"
   },

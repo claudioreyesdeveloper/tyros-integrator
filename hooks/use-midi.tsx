@@ -2,6 +2,7 @@
 
 import { create } from "zustand"
 import { useEffect } from "react"
+import type { MIDIMessageEvent } from "webmidi"
 
 export interface MIDILogEntry {
   id: string
@@ -145,7 +146,7 @@ export const useMIDI = create<MIDIState>((set, get) => ({
       })
 
       inputs.forEach((input) => {
-        input.onmidimessage = (event) => {
+        input.onmidimessage = (event: MIDIMessageEvent) => {
           const data = Array.from(event.data)
           const type = getMessageType(data[0])
 

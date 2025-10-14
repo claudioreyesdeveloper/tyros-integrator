@@ -165,8 +165,8 @@ importers:
         specifier: ^0.9.9
         version: 0.9.9(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       webmidi:
-        specifier: 3.1.13
-        version: 3.1.13
+        specifier: latest
+        version: 3.1.14
       zod:
         specifier: 3.25.67
         version: 3.25.67
@@ -1994,8 +1994,8 @@ packages:
   victory-vendor@36.9.2:
     resolution: {integrity: sha512-PnpQQMuxlwYdocC8fIJqVXvkeViHYzotI+NJrCuav0ZYFoq912ZHBk3mCeuj+5/VpodOjPe1z0Fk2ihgzlXqjQ==}
 
-  webmidi@3.1.13:
-    resolution: {integrity: sha512-CEZTHyJviQUI+X7yPNT1BZA7daZQ3ns80C7h0gmlk4Y2UNstPkSca54rzU5ay4HoZQFuOzS1WHwAdAC7Rpfl4w==}
+  webmidi@3.1.14:
+    resolution: {integrity: sha512-K9GzNm0J3R/61NJWAW7ipAJGWU5D/8bEjOir3PymFjLDpbQJ+ygjvm5jx/WQ8atQ1hu23St3lvnc5g1NKbOsrw==}
     engines: {node: '>=8.5'}
 
   yallist@5.0.0:
@@ -3730,7 +3730,7 @@ snapshots:
       d3-time: 3.1.0
       d3-timer: 3.0.1
 
-  webmidi@3.1.13:
+  webmidi@3.1.14:
     dependencies:
       djipevents: 2.0.7
     optionalDependencies:
