@@ -1,6 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import * as React from "react"
+import * as CheckboxPrimitive from "@radix-ui/react-checkbox"
+import { Check } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -10,13 +13,32 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import { loadVoiceData, getCategories, getSubCategories, type Voice } from "@/lib/voice-data"
+import { cn } from "@/lib/utils"
 
 interface PatchFileImportDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
 }
+
+const InlineCheckbox = React.forwardRef<
+  React.ElementRef<typeof CheckboxPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>
+>(({ className, ...props }, ref) => (
+  <CheckboxPrimitive.Root
+    ref={ref}
+    className={cn(
+      "peer h-4 w-4 shrink-0 rounded-sm border border-white/40 shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-amber-500 data-[state=checked]:border-amber-500 data-[state=checked]:text-white",
+      className,
+    )}
+    {...props}
+  >
+    <CheckboxPrimitive.Indicator className="flex items-center justify-center text-current">
+      <Check className="h-3 w-3" />
+    </CheckboxPrimitive.Indicator>
+  </CheckboxPrimitive.Root>
+))
+InlineCheckbox.displayName = "InlineCheckbox"
 
 export function PatchFileImportDialog({ open, onOpenChange }: PatchFileImportDialogProps) {
   const [voices, setVoices] = useState<Voice[]>([])
@@ -115,11 +137,10 @@ export function PatchFileImportDialog({ open, onOpenChange }: PatchFileImportDia
                   key={`new-${subCategory}`}
                   className="flex items-center gap-3 py-2 px-3 rounded hover:bg-white/5 transition-colors"
                 >
-                  <Checkbox
+                  <InlineCheckbox
                     id={`sub-${subCategory}`}
                     checked={selectedSubCategories.has(subCategory)}
                     onCheckedChange={() => handleSubCategoryToggle(subCategory)}
-                    className="border-white/40 data-[state=checked]:bg-amber-500 data-[state=checked]:border-amber-500"
                   />
                   <label htmlFor={`sub-${subCategory}`} className="text-sm text-white cursor-pointer flex-1">
                     {subCategory}
