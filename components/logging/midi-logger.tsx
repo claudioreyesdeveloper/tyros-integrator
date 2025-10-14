@@ -20,7 +20,11 @@ export function MidiLogger() {
   const [patchImportDialogOpen, setPatchImportDialogOpen] = useState(false)
   const patchFileInputRef = useRef<HTMLInputElement>(null)
 
-  const detectedPorts = access ? Array.from(access.outputs.values()).map((port) => port.name) : []
+  const detectedPorts = access
+    ? Array.from(access.outputs.values())
+        .map((port) => port.name)
+        .filter((name): name is string => !!name)
+    : []
   const defaultPorts = ["Digitalworkstation Port 1", "Digitalworkstation Port 2"]
   const availablePorts = [...new Set([...defaultPorts, ...detectedPorts])]
 
@@ -51,10 +55,10 @@ export function MidiLogger() {
     await requestMIDIAccess()
 
     // Auto-select first two available ports
-    if (availablePorts.length > 0) {
+    if (availablePorts.length > 0 && availablePorts[0]) {
       setPort1(availablePorts[0])
     }
-    if (availablePorts.length > 1) {
+    if (availablePorts.length > 1 && availablePorts[1]) {
       setPort2(availablePorts[1])
     }
   }
