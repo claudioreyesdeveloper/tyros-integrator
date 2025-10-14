@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { TabNavigation } from "@/components/tab-navigation"
-import { MIDIStatus } from "@/components/midi-status"
 import { HomeScreen } from "@/components/home/home-screen"
 import { VoiceBrowser } from "@/components/voices/voice-browser"
 import { MixerInterface } from "@/components/mixer/mixer-interface"
@@ -55,6 +54,27 @@ export default function Home() {
     masterVolume: 100,
     reverbSendGlobal: 45,
     chorusSendGlobal: 30,
+  })
+
+  const [chordState, setChordState] = useState({
+    sections: [
+      {
+        id: "section-1",
+        name: "Intro",
+        bars: 4,
+        stylePart: "Intro 1",
+        color: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        chords: [],
+      },
+    ],
+    activeSection: "section-1",
+    resolution: "quarter" as "whole" | "half" | "quarter",
+    selectedCategory: "Pop/Rock",
+    selectedStyle: "8BeatModern",
+    tempo: 120,
+    localControl: true,
+    clockSource: "internal" as "internal" | "external",
+    accompaniment: true,
   })
 
   const handleSelectVoice = (partNumber: number) => {
@@ -160,7 +180,6 @@ export default function Home() {
               <h1 className="text-lg md:text-xl lg:text-2xl font-bold text-white drop-shadow-lg">SmartBridge</h1>
               <p className="text-xs md:text-sm text-gray-300 drop-shadow-md">Professional MIDI Controller</p>
             </div>
-            <MIDIStatus />
           </div>
           <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
         </header>
@@ -201,7 +220,7 @@ export default function Home() {
 
           {activeTab === "assembly" && <AssemblyWorkbench />}
 
-          {activeTab === "chords" && <ChordSequencer />}
+          {activeTab === "chords" && <ChordSequencer chordState={chordState} setChordState={setChordState} />}
 
           {activeTab === "logging" && <MidiLogger />}
         </main>

@@ -5,10 +5,10 @@ import type React from "react"
 import { useState, useRef } from "react"
 import { MixerChannel } from "./mixer-channel"
 import { DSPEffectsPanel } from "../effects/dsp-effects-panel"
-import { useMIDI } from "@/lib/midi-context"
 import { Volume2, Waves, Sparkles, Download, Upload } from "lucide-react"
 import type { Voice } from "@/lib/voice-data"
 import { Button } from "@/components/ui/button"
+import { useMIDI } from "@/lib/midi-context"
 
 const PART_NAMES = [
   "Left",
@@ -64,7 +64,6 @@ export function MixerInterface({
   currentBank: externalCurrentBank,
   onBankChange,
 }: MixerInterfaceProps) {
-  const { sendControlChange } = useMIDI()
   const [internalCurrentBank, setInternalCurrentBank] = useState(0)
   const currentBank = externalCurrentBank !== undefined ? externalCurrentBank : internalCurrentBank
 
@@ -73,6 +72,7 @@ export function MixerInterface({
   const [globalReverb, setGlobalReverb] = useState(40)
   const [globalChorus, setGlobalChorus] = useState(30)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const { api } = useMIDI()
 
   const startChannel = currentBank * 8 + 1
   const channels = Array.from({ length: 8 }, (_, i) => ({
@@ -82,23 +82,29 @@ export function MixerInterface({
 
   const handleMasterVolumeChange = (value: number) => {
     setMasterVolume(value)
-    for (let ch = 1; ch <= 32; ch++) {
-      sendControlChange(ch, 7, value)
-    }
+    api.sendCommand({
+      type: "mixer",
+      action: "master-volume",
+      value,
+    })
   }
 
   const handleGlobalReverbChange = (value: number) => {
     setGlobalReverb(value)
-    for (let ch = 1; ch <= 32; ch++) {
-      sendControlChange(ch, 91, value)
-    }
+    api.sendCommand({
+      type: "mixer",
+      action: "global-reverb",
+      value,
+    })
   }
 
   const handleGlobalChorusChange = (value: number) => {
     setGlobalChorus(value)
-    for (let ch = 1; ch <= 32; ch++) {
-      sendControlChange(ch, 93, value)
-    }
+    api.sendCommand({
+      type: "mixer",
+      action: "global-chorus",
+      value,
+    })
   }
 
   const handleBankChange = (bank: number) => {

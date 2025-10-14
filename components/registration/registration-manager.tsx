@@ -58,7 +58,7 @@ export function RegistrationManager({
   globalEffects,
   onLoadConfiguration,
 }: RegistrationManagerProps) {
-  const { midiAccess, requestMIDIAccess } = useMIDI()
+  const { api } = useMIDI()
   const [registrations, setRegistrations] = useState<(Registration | null)[]>(Array(8).fill(null))
   const [saveDialogOpen, setSaveDialogOpen] = useState(false)
   const [currentSlot, setCurrentSlot] = useState<number | null>(null)
@@ -178,11 +178,19 @@ export function RegistrationManager({
       name: registrationName,
       timestamp: new Date().toLocaleString(),
       data: {
-        voices: [],
-        mixer: [],
-        effects: [],
+        voices: Object.values(partVoices),
+        mixer: Object.values(channelMixer),
+        effects: Object.values(channelEffects),
       },
     }
+
+    api.sendCommand({
+      type: "registration",
+      action: "save",
+      slot: currentSlot,
+      name: registrationName,
+      data: newRegistration.data,
+    })
 
     const newRegistrations = [...registrations]
     newRegistrations[currentSlot - 1] = newRegistration
@@ -196,6 +204,14 @@ export function RegistrationManager({
   const handleLoad = (slotNumber: number) => {
     const registration = registrations[slotNumber - 1]
     if (!registration) return
+
+    api.sendCommand({
+      type: "registration",
+      action: "load",
+      slot: slotNumber,
+      data: registration.data,
+    })
+
     console.log("[v0] Loading registration:", registration.name)
   }
 

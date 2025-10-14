@@ -3,60 +3,61 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
-import { useMIDI } from "@/lib/midi-context"
 import { Play, Square, Music2, Zap, ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useMIDI } from "@/lib/midi-context"
 
 export function StyleControls() {
-  const { sendControlChange, sendProgramChange } = useMIDI()
   const [isPlaying, setIsPlaying] = useState(false)
   const [tempo, setTempo] = useState(120)
   const [activeVariation, setActiveVariation] = useState<number>(1)
   const [syncStart, setSyncStart] = useState(false)
+  const { api } = useMIDI()
 
-  // MIDI channel for style control (typically channel 9 or 10 for rhythm)
   const STYLE_CHANNEL = 9
 
   const handleStartStop = () => {
-    if (isPlaying) {
-      // Send Stop (CC 85 = 0)
-      sendControlChange(STYLE_CHANNEL, 85, 0)
-      setIsPlaying(false)
-    } else {
-      // Send Start (CC 85 = 127)
-      sendControlChange(STYLE_CHANNEL, 85, 127)
-      setIsPlaying(true)
-    }
+    setIsPlaying(!isPlaying)
+    api.sendCommand({
+      type: "style",
+      action: isPlaying ? "stop" : "start",
+    })
   }
 
   const handleTempoChange = (value: number[]) => {
     const newTempo = value[0]
     setTempo(newTempo)
-    // Send tempo via CC (some keyboards use CC 88 for tempo)
-    sendControlChange(STYLE_CHANNEL, 88, Math.floor((newTempo / 300) * 127))
+    api.sendCommand({
+      type: "style",
+      action: "tempo",
+      value: newTempo,
+    })
   }
 
   const handleVariation = (variation: number) => {
     setActiveVariation(variation)
-    // Send variation change (CC 86 with different values)
-    sendControlChange(STYLE_CHANNEL, 86, (variation - 1) * 32)
+    api.sendCommand({
+      type: "style",
+      action: "variation",
+      variation,
+    })
   }
 
   const handleFillIn = (type: "auto" | "break" | "intro" | "ending") => {
-    // Different CC values for different fill types
-    const fillCodes = {
-      intro: 102,
-      auto: 103,
-      break: 104,
-      ending: 105,
-    }
-    sendControlChange(STYLE_CHANNEL, fillCodes[type], 127)
+    api.sendCommand({
+      type: "style",
+      action: "fill-in",
+      fillType: type,
+    })
   }
 
   const handleSyncStart = () => {
     setSyncStart(!syncStart)
-    // CC 87 for sync start
-    sendControlChange(STYLE_CHANNEL, 87, syncStart ? 0 : 127)
+    api.sendCommand({
+      type: "style",
+      action: "sync-start",
+      enabled: !syncStart,
+    })
   }
 
   return (

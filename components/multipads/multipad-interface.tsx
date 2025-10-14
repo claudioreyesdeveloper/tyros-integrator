@@ -2,10 +2,10 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { useMIDI } from "@/lib/midi-context"
 import { Square, Play, Grid3x3, Volume2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Slider } from "@/components/ui/slider"
+import { useMIDI } from "@/lib/midi-context"
 
 interface MultiPad {
   id: number
@@ -61,7 +61,6 @@ const MULTIPAD_BANKS = [
 const MULTIPAD_CHANNELS = [5, 6, 7, 8]
 
 export function MultiPadInterface() {
-  const { sendNoteOn, sendNoteOff, sendControlChange } = useMIDI()
   const [selectedBank, setSelectedBank] = useState(0)
   const [playingPads, setPlayingPads] = useState<Set<number>>(new Set())
   const [padVolumes, setPadVolumes] = useState<Record<number, number>>({
@@ -71,6 +70,7 @@ export function MultiPadInterface() {
     4: 100,
   })
   const [stopAll, setStopAll] = useState(false)
+  const { api } = useMIDI()
 
   const currentBank = MULTIPAD_BANKS[selectedBank]
 
@@ -80,7 +80,12 @@ export function MultiPadInterface() {
 
     if (playingPads.has(padId)) {
       // Stop the pad
-      sendNoteOff(channel, note)
+      api.sendCommand({
+        type: "multipad",
+        action: "stop",
+        padId,
+        channel,
+      })
       setPlayingPads((prev) => {
         const newSet = new Set(prev)
         newSet.delete(padId)
@@ -88,19 +93,22 @@ export function MultiPadInterface() {
       })
     } else {
       // Start the pad
-      sendNoteOn(channel, note, velocity)
+      api.sendCommand({
+        type: "multipad",
+        action: "trigger",
+        padId,
+        note,
+        velocity,
+        channel,
+      })
       setPlayingPads((prev) => new Set(prev).add(padId))
     }
   }
 
   const handleStopAll = () => {
-    // Send note off for all pads
-    playingPads.forEach((padId) => {
-      const channel = MULTIPAD_CHANNELS[padId - 1]
-      const pad = currentBank.pads.find((p) => p.id === padId)
-      if (pad) {
-        sendNoteOff(channel, pad.note)
-      }
+    api.sendCommand({
+      type: "multipad",
+      action: "stop-all",
     })
     setPlayingPads(new Set())
     setStopAll(true)
@@ -110,9 +118,14 @@ export function MultiPadInterface() {
   const handleVolumeChange = (padId: number, value: number[]) => {
     const newVolume = value[0]
     setPadVolumes((prev) => ({ ...prev, [padId]: newVolume }))
-    // Send volume CC to the pad's channel
     const channel = MULTIPAD_CHANNELS[padId - 1]
-    sendControlChange(channel, 7, Math.floor((newVolume / 100) * 127))
+    api.sendCommand({
+      type: "multipad",
+      action: "volume",
+      padId,
+      channel,
+      value: Math.floor((newVolume / 100) * 127),
+    })
   }
 
   return (

@@ -93,27 +93,79 @@ interface Section {
   chords: Chord[]
 }
 
-export function ChordSequencer() {
+interface ChordSequencerProps {
+  chordState: {
+    sections: Section[]
+    activeSection: string
+    resolution: Resolution
+    selectedCategory: string
+    selectedStyle: string
+    tempo: number
+    localControl: boolean
+    clockSource: "internal" | "external"
+    accompaniment: boolean
+  }
+  setChordState: React.Dispatch<React.SetStateAction<ChordSequencerProps["chordState"]>>
+}
+
+export function ChordSequencer({ chordState, setChordState }: ChordSequencerProps) {
   const { sendSysEx } = useMIDI()
   const { toast } = useToast()
 
-  const [sections, setSections] = useState<Section[]>([
-    {
-      id: "section-1",
-      name: "Intro",
-      bars: 4,
-      stylePart: "Intro 1",
-      color: SECTION_COLORS.Intro,
-      chords: [],
-    },
-  ])
+  const {
+    sections,
+    activeSection,
+    resolution,
+    selectedCategory,
+    selectedStyle,
+    tempo,
+    localControl,
+    clockSource,
+    accompaniment,
+  } = chordState
 
-  const [activeSection, setActiveSection] = useState<string>("section-1")
-  const [resolution, setResolution] = useState<Resolution>("quarter")
+  const setSections = (updater: Section[] | ((prev: Section[]) => Section[])) => {
+    setChordState((prev) => ({
+      ...prev,
+      sections: typeof updater === "function" ? updater(prev.sections) : updater,
+    }))
+  }
+
+  const setActiveSection = (value: string) => {
+    setChordState((prev) => ({ ...prev, activeSection: value }))
+  }
+
+  const setResolution = (value: Resolution) => {
+    setChordState((prev) => ({ ...prev, resolution: value }))
+  }
+
+  const setSelectedCategory = (value: string) => {
+    setChordState((prev) => ({ ...prev, selectedCategory: value }))
+  }
+
+  const setSelectedStyle = (value: string) => {
+    setChordState((prev) => ({ ...prev, selectedStyle: value }))
+  }
+
+  const setTempo = (value: number) => {
+    setChordState((prev) => ({ ...prev, tempo: value }))
+  }
+
+  const setLocalControl = (value: boolean) => {
+    setChordState((prev) => ({ ...prev, localControl: value }))
+  }
+
+  const setClockSource = (value: "internal" | "external") => {
+    setChordState((prev) => ({ ...prev, clockSource: value }))
+  }
+
+  const setAccompaniment = (value: boolean) => {
+    setChordState((prev) => ({ ...prev, accompaniment: value }))
+  }
+
+  // Keep local UI state that doesn't need to persist
   const [isPlaying, setIsPlaying] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
-  const [syncWithDAW, setSyncWithDAW] = useState(false)
-  const [midiActivity, setMidiActivity] = useState<number[]>(Array(8).fill(0))
 
   const [editingCell, setEditingCell] = useState<{ sectionId: string; beat: number } | null>(null)
   const [chordInput, setChordInput] = useState("")
@@ -135,12 +187,12 @@ export function ChordSequencer() {
   const [showStylePartMenu, setShowStylePartMenu] = useState<string | null>(null)
   const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null)
 
-  const [selectedCategory, setSelectedCategory] = useState("Pop/Rock")
-  const [selectedStyle, setSelectedStyle] = useState("8BeatModern")
-  const [localControl, setLocalControl] = useState(true)
-  const [clockSource, setClockSource] = useState<"internal" | "external">("internal")
-  const [accompaniment, setAccompaniment] = useState(true)
-  const [tempo, setTempo] = useState(120)
+  // Removed: const [selectedCategory, setSelectedCategory] = useState("Pop/Rock")
+  // Removed: const [selectedStyle, setSelectedStyle] = useState("8BeatModern")
+  // Removed: const [localControl, setLocalControl] = useState(true)
+  // Removed: const [clockSource, setClockSource] = useState<"internal" | "external">("internal")
+  // Removed: const [accompaniment, setAccompaniment] = useState(true)
+  // Removed: const [tempo, setTempo] = useState(120)
 
   const [showMobileControls, setShowMobileControls] = useState(false)
 

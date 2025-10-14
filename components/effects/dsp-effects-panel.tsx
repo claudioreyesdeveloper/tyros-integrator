@@ -1,11 +1,11 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useMIDI } from "@/lib/midi-context"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { X } from "lucide-react"
 import { loadEffectData, getEffectCategories, getEffectTypes, type Effect } from "@/lib/effect-data"
+import { useMIDI } from "@/lib/midi-context"
 
 interface DSPEffectsPanelProps {
   channel: number
@@ -14,12 +14,11 @@ interface DSPEffectsPanelProps {
 }
 
 export function DSPEffectsPanel({ channel, onClose, onEffectAssigned }: DSPEffectsPanelProps) {
-  const { sendControlChange } = useMIDI()
-
   const [effects, setEffects] = useState<Effect[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string>("")
   const [selectedEffect, setSelectedEffect] = useState<Effect | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const { api } = useMIDI()
 
   useEffect(() => {
     loadEffectData().then((data) => {
@@ -40,12 +39,12 @@ export function DSPEffectsPanel({ channel, onClose, onEffectAssigned }: DSPEffec
   const handleAssignEffect = () => {
     if (!selectedEffect) return
 
-    sendControlChange(channel, 0, selectedEffect.msb)
-    sendControlChange(channel, 32, selectedEffect.lsb)
-
-    console.log(
-      `[v0] Assigned effect to channel ${channel}: ${selectedEffect.type} (MSB: ${selectedEffect.msb}, LSB: ${selectedEffect.lsb})`,
-    )
+    api.sendCommand({
+      type: "effect",
+      action: "assign",
+      channel,
+      effect: selectedEffect,
+    })
 
     onEffectAssigned(selectedEffect.type)
   }

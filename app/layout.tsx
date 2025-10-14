@@ -31,6 +31,20 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Suppress ResizeObserver loop errors (harmless browser warning)
+              window.addEventListener('error', (e) => {
+                if (e.message === 'ResizeObserver loop completed with undelivered notifications.' ||
+                    e.message === 'ResizeObserver loop limit exceeded') {
+                  e.stopImmediatePropagation();
+                  e.preventDefault();
+                }
+              });
+            `,
+          }}
+        />
         <Suspense
           fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white">Loading...</div>}
         >

@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from "react"
 import { loadVoiceData, getCategories, getSubCategories, getVoices, type Voice } from "@/lib/voice-data"
-import { useMIDI } from "@/lib/midi-context"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
 import { VoiceIcon } from "@/components/ui/voice-icon"
 import { VoiceCommandPalette } from "./voice-command-palette"
 import { ChevronRight, Command } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useMIDI } from "@/lib/midi-context"
 
 interface VoiceBrowserProps {
   currentPart: number | null
@@ -19,7 +19,6 @@ interface VoiceBrowserProps {
 const PART_NAMES = ["Left", "Right 1", "Right 2", "Right 3"]
 
 export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBrowserProps) {
-  const { sendProgramChange } = useMIDI()
   const [voices, setVoices] = useState<Voice[]>([])
   const [categories, setCategories] = useState<string[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
@@ -30,6 +29,7 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
   const [isLoading, setIsLoading] = useState(true)
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false)
   const [recentVoices, setRecentVoices] = useState<Voice[]>([])
+  const { api } = useMIDI()
 
   useEffect(() => {
     loadVoiceData().then((data) => {
@@ -78,12 +78,12 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
 
   const handleAssign = () => {
     if (selectedVoice && currentPart !== null) {
-      sendProgramChange(
-        currentPart,
-        Number.parseInt(selectedVoice.prg),
-        Number.parseInt(selectedVoice.msb),
-        Number.parseInt(selectedVoice.lsb),
-      )
+      api.sendCommand({
+        type: "voice",
+        action: "assign",
+        part: currentPart,
+        voice: selectedVoice,
+      })
       onVoiceAssigned(selectedVoice)
       setRecentVoices((prev) => {
         const filtered = prev.filter((v) => v.voice !== selectedVoice.voice || v.msb !== selectedVoice.msb)

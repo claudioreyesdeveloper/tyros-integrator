@@ -27,7 +27,7 @@ export function MixerChannel({
   voiceSubcategory = "",
   voiceCategory = "",
 }: MixerChannelProps) {
-  const { sendControlChange } = useMIDI()
+  const { api } = useMIDI()
   const [volume, setVolume] = useState(100)
   const [reverb, setReverb] = useState(40)
   const [chorus, setChorus] = useState(30)
@@ -35,22 +35,42 @@ export function MixerChannel({
 
   const handleVolumeChange = (value: number) => {
     setVolume(value)
-    sendControlChange(channel, 7, value)
+    api.sendCommand({
+      type: "mixer",
+      action: "volume",
+      channel,
+      value,
+    })
   }
 
   const handleReverbChange = (value: number) => {
     setReverb(value)
-    sendControlChange(channel, 91, value)
+    api.sendCommand({
+      type: "mixer",
+      action: "reverb",
+      channel,
+      value,
+    })
   }
 
   const handleChorusChange = (value: number) => {
     setChorus(value)
-    sendControlChange(channel, 93, value)
+    api.sendCommand({
+      type: "mixer",
+      action: "chorus",
+      channel,
+      value,
+    })
   }
 
   const handleBrightnessChange = (value: number) => {
     setBrightness(value)
-    sendControlChange(channel, 74, value)
+    api.sendCommand({
+      type: "mixer",
+      action: "brightness",
+      channel,
+      value,
+    })
   }
 
   return (
