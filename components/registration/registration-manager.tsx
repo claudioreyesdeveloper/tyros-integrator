@@ -45,6 +45,7 @@ interface RegistrationManagerProps {
     reverbSendGlobal: number
     chorusSendGlobal: number
   }
+  onLoadConfiguration: (config: any) => void
 }
 
 export function RegistrationManager({
@@ -54,6 +55,7 @@ export function RegistrationManager({
   channelEffects,
   globalSettings,
   globalEffects,
+  onLoadConfiguration,
 }: RegistrationManagerProps) {
   const { midiAccess, requestMIDIAccess } = useMIDI()
   const [registrations, setRegistrations] = useState<(Registration | null)[]>(Array(8).fill(null))
@@ -150,7 +152,8 @@ export function RegistrationManager({
 
         console.log("[v0] Loaded configuration:", config)
 
-        alert("Configuration loaded successfully! (State update to be implemented)")
+        onLoadConfiguration(config)
+        alert("Configuration loaded successfully!")
       } catch (error) {
         console.error("[v0] Error parsing configuration file:", error)
         alert("Error loading configuration file. Please check the file format.")
