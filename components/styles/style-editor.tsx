@@ -283,34 +283,37 @@ export function StyleEditor() {
     setNtrRule(value)
     const trackIdx = STYLE_TRACKS.indexOf(selectedTrack)
     const ruleIdx = NTR_OPTIONS.indexOf(value)
-    api.sendCommand({ type: "style", action: "set_ntr_rule", trackIndex: trackIdx, ruleIndex: ruleIdx })
+    console.log(`[Style Editor] Set NTR Rule for track ${trackIdx} to ${value} (index: ${ruleIdx})`)
+    // TODO: Backend should implement SFF NTR rule modification via SysEx
   }
 
   const handleNTTChange = (value: string) => {
     setNttRule(value)
     const trackIdx = STYLE_TRACKS.indexOf(selectedTrack)
     const ruleIdx = NTT_OPTIONS.indexOf(value)
-    api.sendCommand({ type: "style", action: "set_ntt_rule", trackIndex: trackIdx, ruleIndex: ruleIdx })
+    console.log(`[Style Editor] Set NTT Rule for track ${trackIdx} to ${value} (index: ${ruleIdx})`)
+    // TODO: Backend should implement SFF NTT rule modification via SysEx
   }
 
   const handleRTRChange = (enabled: boolean) => {
     setRtrEnabled(enabled)
     const trackIdx = STYLE_TRACKS.indexOf(selectedTrack)
-    api.sendCommand({ type: "style", action: "set_rtr_rule", trackIndex: trackIdx, enabled })
+    console.log(`[Style Editor] Set RTR Rule for track ${trackIdx} to ${enabled}`)
+    // TODO: Backend should implement SFF RTR rule modification via SysEx
   }
 
   const handleStyleVolumeChange = (index: number, value: number[]) => {
     const newVolumes = [...styleVolumes]
     newVolumes[index] = value[0]
     setStyleVolumes(newVolumes)
-    api.sendCommand({ type: "mixer", action: "set_volume", channel: index, volume: value[0] })
+    api.sendCommand({ type: "mixer", action: "volume", channel: index, value: value[0] })
   }
 
   const handleStylePanChange = (index: number, value: number) => {
     const newPans = [...stylePans]
     newPans[index] = value
     setStylePans(newPans)
-    api.sendCommand({ type: "mixer", action: "set_pan", channel: index, pan: value })
+    api.sendCommand({ type: "mixer", action: "pan", channel: index, value: value })
   }
 
   const handleDragStart = (e: React.DragEvent, section: string, track: string, isSource: boolean) => {
@@ -410,13 +413,10 @@ export function StyleEditor() {
     const targetSectionIdx = STYLE_SECTIONS.indexOf(target.section)
     const targetTrackIdx = STYLE_TRACKS.indexOf(target.track)
 
-    // Using API sendCommand for copy operation
-    api.sendCommand({
-      type: "style",
-      action: "copy_pattern",
-      source: { section: sourceSectionIdx, track: sourceTrackIdx },
-      target: { section: targetSectionIdx, track: targetTrackIdx },
-    })
+    console.log(
+      `[Style Editor] Copy pattern from section ${sourceSectionIdx} track ${sourceTrackIdx} to section ${targetSectionIdx} track ${targetTrackIdx}`,
+    )
+    // TODO: Backend should implement SFF pattern copy via SysEx
 
     const targetKey = `${target.section}-${target.track}`
     setCopiedParts((prev) => ({
@@ -446,8 +446,8 @@ export function StyleEditor() {
   const handleUndo = () => {
     if (!lastAction) return
 
-    // Using API sendCommand for undo
-    api.sendCommand({ type: "style", action: "undo_last" })
+    console.log("[Style Editor] Undo last pattern copy operation")
+    // TODO: Backend should implement undo functionality
 
     const targetKey = `${lastAction.target.section}-${lastAction.target.track}`
     setCopiedParts((prev) => {
@@ -468,8 +468,8 @@ export function StyleEditor() {
   const handleCommitSave = async () => {
     setCommitStatus("saving")
 
-    // Using API sendCommand for commit/save
-    api.sendCommand({ type: "style", action: "commit_and_save" })
+    console.log("[Style Editor] Commit and save hybrid style to Tyros5 user memory")
+    // TODO: Backend should implement bulk SysEx transfer to save style
 
     await new Promise((resolve) => setTimeout(resolve, 2000))
 
@@ -615,8 +615,8 @@ export function StyleEditor() {
   const handleSectionChange = (section: string) => {
     setSelectedSection(section)
     const sectionIdx = STYLE_SECTIONS_FULL.indexOf(section)
-    // Using API sendCommand for section change
-    api.sendCommand({ type: "style", action: "change_section", sectionIndex: sectionIdx })
+    console.log(`[Style Editor] Change style section to ${section} (index: ${sectionIdx})`)
+    // TODO: Backend should implement style section change via MIDI
 
     toast({
       title: "Style Section Changed",
@@ -1070,7 +1070,7 @@ export function StyleEditor() {
                       const newReverbs = [...styleReverbs]
                       newReverbs[index] = val
                       setStyleReverbs(newReverbs)
-                      api.sendCommand({ type: "mixer", action: "set_reverb", channel: index, reverb: val })
+                      api.sendCommand({ type: "mixer", action: "reverb", channel: index, value: val })
                     }}
                     label="Rev"
                     displayValue={styleReverbs[index].toString()}
@@ -1085,7 +1085,7 @@ export function StyleEditor() {
                       const newChorus = [...styleChorus]
                       newChorus[index] = val
                       setStyleChorus(newChorus)
-                      api.sendCommand({ type: "mixer", action: "set_chorus", channel: index, chorus: val })
+                      api.sendCommand({ type: "mixer", action: "chorus", channel: index, value: val })
                     }}
                     label="Cho"
                     displayValue={styleChorus[index].toString()}
@@ -1110,12 +1110,8 @@ export function StyleEditor() {
                       value={[keyboardVolumes[part]]}
                       onValueChange={(val) => {
                         setKeyboardVolumes({ ...keyboardVolumes, [part]: val[0] })
-                        api.sendCommand({
-                          type: "mixer",
-                          action: "set_keyboard_volume",
-                          part,
-                          volume: val[0],
-                        })
+                        console.log(`[Style Editor] Set keyboard ${part} volume to ${val[0]}`)
+                        // TODO: Backend should implement keyboard part volume control
                       }}
                       min={0}
                       max={127}
@@ -1130,12 +1126,8 @@ export function StyleEditor() {
                     max={127}
                     onChange={(val) => {
                       setKeyboardPans({ ...keyboardPans, [part]: val })
-                      api.sendCommand({
-                        type: "mixer",
-                        action: "set_keyboard_pan",
-                        part,
-                        pan: val,
-                      })
+                      console.log(`[Style Editor] Set keyboard ${part} pan to ${val}`)
+                      // TODO: Backend should implement keyboard part pan control
                     }}
                     label="Pan"
                     displayValue={
@@ -1162,7 +1154,8 @@ export function StyleEditor() {
                   max={127}
                   onChange={(val) => {
                     setTouchSense(val)
-                    api.sendCommand({ type: "voice", action: "set_touch_sense", value: val })
+                    console.log(`[Style Editor] Set touch sense depth to ${val}`)
+                    // TODO: Backend should implement voice parameter control
                   }}
                   label="Touch Sense Depth"
                   displayValue={touchSense.toString()}
@@ -1177,7 +1170,8 @@ export function StyleEditor() {
                   max={127}
                   onChange={(val) => {
                     setVibratoSpeed(val)
-                    api.sendCommand({ type: "voice", action: "set_vibrato_speed", value: val })
+                    console.log(`[Style Editor] Set vibrato speed to ${val}`)
+                    // TODO: Backend should implement voice parameter control
                   }}
                   label="Vibrato Speed"
                   displayValue={vibratoSpeed.toString()}
@@ -1192,7 +1186,8 @@ export function StyleEditor() {
                   max={127}
                   onChange={(val) => {
                     setVibratoDelay(val)
-                    api.sendCommand({ type: "voice", action: "set_vibrato_delay", value: val })
+                    console.log(`[Style Editor] Set vibrato delay to ${val}`)
+                    // TODO: Backend should implement voice parameter control
                   }}
                   label="Vibrato Delay"
                   displayValue={vibratoDelay.toString()}
