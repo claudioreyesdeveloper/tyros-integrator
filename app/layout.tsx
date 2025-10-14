@@ -23,6 +23,8 @@ export const metadata: Metadata = {
   generator: "v0.app",
 }
 
+export const dynamic = "force-dynamic"
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -31,7 +33,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Suspense fallback={null}>
+        <Suspense
+          fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white">Loading...</div>}
+        >
           <MIDIProvider>{children}</MIDIProvider>
         </Suspense>
       </body>

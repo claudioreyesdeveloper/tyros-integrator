@@ -3,6 +3,7 @@
 // This file now acts as a compatibility layer for components using the old Context API
 import type React from "react"
 import { useMIDI as useZustandMIDI, useMIDIInitialize } from "@/hooks/use-midi"
+import { useEffect, useState } from "react"
 
 export function useMIDI() {
   const store = useZustandMIDI()
@@ -30,6 +31,19 @@ export function useMIDI() {
 }
 
 export function MIDIProvider({ children }: { children: React.ReactNode }) {
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
   useMIDIInitialize()
+
+  if (!isMounted) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center text-white">Loading SmartBridge...</div>
+    )
+  }
+
   return <>{children}</>
 }
