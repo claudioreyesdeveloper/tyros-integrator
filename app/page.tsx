@@ -11,6 +11,7 @@ import { MidiLogger } from "@/components/logging/midi-logger"
 import { AssemblyWorkbench } from "@/components/assembly/assembly-workbench"
 import { ChordSequencer } from "@/components/chords/chord-sequencer"
 import type { Voice } from "@/lib/voice-data"
+import type { Tyros5Configuration, ChannelPartConfig } from "@/lib/types"
 
 export interface MixerSettings {
   volume: number
@@ -77,7 +78,7 @@ export default function Home() {
     setChannelEffects((prev) => ({ ...prev, [channel]: effectName }))
   }
 
-  const handleLoadConfiguration = (config: any) => {
+  const handleLoadConfiguration = (config: Tyros5Configuration) => {
     // Update global settings
     if (config.GlobalSettings) {
       setGlobalSettings({
@@ -102,7 +103,7 @@ export default function Home() {
       const newChannelMixer: Record<number, MixerSettings> = {}
       const newChannelDSP: Record<number, DSPSettings> = {}
 
-      config.ChannelParts.forEach((channel: any) => {
+      config.ChannelParts.forEach((channel: ChannelPartConfig) => {
         const channelID = channel.ChannelID
 
         // Load voice if present

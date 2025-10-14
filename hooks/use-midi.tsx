@@ -158,8 +158,8 @@ export const useMIDI = create<MIDIState>((set, get) => ({
       })
 
       access.onstatechange = () => {
-        const newInputs = Array.from(access.inputs.values())
-        const newOutputs = Array.from(access.outputs.values())
+        const newInputs = Array.from(get().access?.inputs.values() || [])
+        const newOutputs = Array.from(get().access?.outputs.values() || [])
 
         set((state) => ({
           inputs: newInputs,

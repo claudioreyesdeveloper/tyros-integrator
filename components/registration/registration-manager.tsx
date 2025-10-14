@@ -19,14 +19,15 @@ import { Input } from "@/components/ui/input"
 import { Download, Upload } from "lucide-react"
 import type { Voice } from "@/lib/voice-data"
 import type { MixerSettings, DSPSettings } from "@/app/page"
+import type { Tyros5Configuration } from "@/lib/types"
 
 interface Registration {
   name: string
   timestamp: string
   data: {
-    voices: any[]
-    mixer: any[]
-    effects: any[]
+    voices: Voice[]
+    mixer: MixerSettings[]
+    effects: string[]
   }
 }
 
@@ -45,7 +46,7 @@ interface RegistrationManagerProps {
     reverbSendGlobal: number
     chorusSendGlobal: number
   }
-  onLoadConfiguration: (config: any) => void
+  onLoadConfiguration: (config: Tyros5Configuration) => void
 }
 
 export function RegistrationManager({
