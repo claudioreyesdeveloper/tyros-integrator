@@ -27,7 +27,7 @@ interface Registration {
   data: {
     voices: Voice[]
     mixer: MixerSettings[]
-    effects: string[]
+    effects: DSPSettings[]
   }
 }
 
@@ -180,7 +180,7 @@ export function RegistrationManager({
       data: {
         voices: Object.values(partVoices),
         mixer: Object.values(channelMixer),
-        effects: Object.values(channelEffects),
+        effects: Object.values(channelDSP),
       },
     }
 

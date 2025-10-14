@@ -44,7 +44,7 @@ export interface RegistrationData {
   Data: {
     voices: Voice[]
     mixer: MixerSettings[]
-    effects: string[]
+    effects: DSPSettings[]
   } | null
 }
 
