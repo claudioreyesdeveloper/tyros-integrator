@@ -32,24 +32,68 @@ SmartBridge is a comprehensive web-based MIDI control interface for the Yamaha T
 
 ### 2. Voice Browser - Comprehensive Voice Management
 
+**Modern Interface Design**
+- **Sidebar + Card Grid Layout**: Professional file-browser inspired design
+- **Collapsible Sidebar**: Category navigation with icons and voice counts
+- **Large Visual Cards**: Categories, sub-categories, and voices displayed as cards
+- **Breadcrumb Navigation**: Always shows current location in hierarchy
+- **Responsive Design**: Adapts to all screen sizes with mobile-optimized layout
+
 **Voice Library**
 - **1,000+ Voices**: Complete Tyros5 voice library organized by category
 - **16 Main Categories**: Piano, Organ, Guitar, Bass, Strings, Brass, Woodwind, Synth, and more
 - **Subcategory Organization**: Each category contains multiple subcategories for precise voice selection
 - **MSB/LSB/PRG Data**: Full MIDI program change data for each voice
+- **Voice Icons**: Visual icons for quick identification
+
+**Command Palette (Cmd/Ctrl+K)**
+- **Instant Access**: Press Cmd/Ctrl+K from anywhere to open
+- **Fuzzy Search**: Find voices by partial name matching across all 1,000+ voices
+- **Keyboard Navigation**: Arrow keys to navigate, Enter to select
+- **Quick Assign**: Cmd/Ctrl+Enter to instantly assign to current part
+- **Organized Results**: Favorites and Recent voices shown first
+- **Visual Feedback**: Icons and breadcrumb paths for each result
+- **Auto-Close**: Palette closes after selection with navigation updated
+
+**Smart Collections**
+- **Favorites**: 
+  - Star any voice to add to favorites
+  - Persisted in localStorage across sessions
+  - Quick access from sidebar and command palette
+  - Remove with another click on star icon
+  
+- **Most Used**: 
+  - Automatically tracks voice usage
+  - Shows top 5 voices with usage count badges
+  - Persisted in localStorage
+  - Updates in real-time as you use voices
+  
+- **This Session**: 
+  - Tracks voices used in current browser session
+  - Stored in sessionStorage
+  - Clears when browser is closed
+  - Perfect for current project workflow
+  
+- **Recently Used**: 
+  - Last 10 voices accessed
+  - Persisted in localStorage
+  - Chronological order (newest first)
+  - Quick access to recent selections
 
 **Search & Navigation**
-- **Command Palette Search**: Press Cmd/Ctrl+K for instant voice search
-- **Fuzzy Search**: Find voices by partial name matching
-- **Smart Navigation**: Search results automatically update category/subcategory navigation
-- **Category Breadcrumbs**: Always know your location in the voice hierarchy
-- **Quick Category Switching**: Jump between categories without losing your place
+- **Direct Search**: Search bar in header for quick filtering
+- **Category Filtering**: Click categories in sidebar to filter
+- **Breadcrumb Navigation**: Click breadcrumbs to navigate back
+- **Auto-Update**: Search results automatically update navigation
+- **Visual Highlighting**: Selected category highlighted in sidebar
+- **Smooth Transitions**: Animated transitions between views
 
 **Voice Assignment**
 - **Direct Part Assignment**: Assign voices to any of the 4 performance parts
 - **Visual Confirmation**: Selected voice highlights in the browser
 - **MIDI Program Change**: Sends proper MSB/LSB/PRG messages to Tyros5
 - **Persistent Selection**: Voice assignments persist across tab switches
+- **Usage Tracking**: Automatically tracks for Smart Collections
 
 ---
 
@@ -235,22 +279,58 @@ SmartBridge is a comprehensive web-based MIDI control interface for the Yamaha T
 
 **Advanced Chord Progression Editor**
 - **Multi-Section Support**: Create chord progressions for different song sections
-- **Section Management**: Intro, Verse, Chorus, Bridge, Outro
+- **15 Section Types**: Intro, Verse, Pre-Chorus, Chorus, Post-Chorus, Bridge, Interlude, Outro, Solo, Breakdown, Build-Up, Drop, Hook, Refrain, Coda
+- **Color-Coded Sections**: Each section type has distinct gradient color for visual organization
 - **Bar/Beat Grid**: Precise chord placement on timeline
 - **Chord Duration Control**: Set chord length in beats
 - **Visual Chord Display**: See entire progression at a glance
+
+**Chord Progression Library**
+- **60+ Curated Progressions**: Hand-picked from Chordonomicon dataset
+- **12 Genres**: 
+  - Pop/Rock (I-V-vi-IV, vi-IV-I-V, I-IV-V, etc.)
+  - Jazz (ii-V-I, I-vi-ii-V, iii-vi-ii-V-I, etc.)
+  - Blues (12-bar blues, minor blues, jazz blues)
+  - Latin (Bossa Nova, Samba, Tango progressions)
+  - Gospel (I-IV-I-V, I-vi-IV-V with passing chords)
+  - EDM (i-VI-III-VII, i-v-VI-IV)
+  - Country (I-IV-I-V, I-V-vi-IV)
+  - R&B (i-iv-VII-VI, i-VII-VI-VII)
+  - Hip-Hop/Trap (i-VI-III-VII, i-iv-VII-VI)
+  - Funk (Dorian vamps, dominant 7th progressions)
+  - Classical (I-IV-V-I, i-iv-V-i)
+  - World (Modal progressions, ethnic scales)
+- **Searchable**: Filter by name or genre
+- **One-Click Add**: Replace current section with selected progression
+- **Intelligent Bar Allocation**: 
+  - Short progressions (1-4 chords): 1 bar per chord
+  - Medium progressions (5-8 chords): 1 bar per chord
+  - 12-bar blues: Traditional 12-bar layout
+  - Long progressions (16+ chords): 0.25-0.5 bars per chord
+  - Automatically adjusts section length to fit progression
+
+**Timeline Features**
+- **Color-Coded Sections**: 15 distinct gradient colors for visual organization
+- **Remove All Button**: Clear all chords in active section with confirmation
+- **Remove Section Button**: Delete entire sections from timeline
+- **Drag to Resize**: Adjust section length with visual preview
+- **Section Dropdown**: Change section type (Intro, Verse, Chorus, etc.)
+- **Bar Count Control**: Adjust number of bars per section
+- **Visual Feedback**: Pending changes shown with purple highlight
 
 **Chord Library**
 - **Comprehensive Chord Types**: All common chord qualities
 - **Slash Chords**: Support for alternate bass notes
 - **Chord Extensions**: 9th, 11th, 13th extensions
 - **Custom Voicings**: Control chord inversions
+- **Harte Syntax**: Standard chord notation from Chordonomicon
 
 **Playback & Control**
 - **Real-time Playback**: Hear your progression with style accompaniment
-- **Tempo Control**: Adjust playback speed
+- **Tempo Control**: Adjust playback speed (30-400 BPM)
 - **Loop Sections**: Repeat sections for practice
 - **Sync with Style**: Coordinate with Tyros5 style playback
+- **Export MIDI**: Save progression as MIDI file for DAW
 
 ---
 

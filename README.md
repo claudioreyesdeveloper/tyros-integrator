@@ -5,14 +5,14 @@ A comprehensive web-based control interface for the Yamaha Tyros5 keyboard, buil
 ## Features
 
 ### 🎹 Complete Tyros5 Control
-- **Voice Browser**: Browse and assign 1,000+ voices across 16 categories
-- **Mixer Interface**: 16-channel mixer with volume, pan, reverb, chorus, and brightness controls
+- **Voice Browser**: Browse and assign 1,000+ voices across 16 categories with command palette and smart collections
+- **Mixer Interface**: 16-channel mixer with volume, pan, reverb, chorus, brightness, and 3-band EQ controls
 - **Effects Panel**: DSP effects assignment and control
-- **Style Controls**: Accompaniment style selection and playback control
-- **Chord Sequencer**: Visual chord progression editor with drag-and-drop
+- **Style Controls**: Accompaniment style selection and playback control with 11 variations
+- **Chord Sequencer**: Visual chord progression editor with 60+ preset progressions and drag-and-drop
 - **Multipad Interface**: Trigger and control multipads
-- **Registration Manager**: Save and load complete performance setups
-- **Assembly Workbench**: Create custom style assemblies from SFF files
+- **Registration Manager**: Save and load complete performance setups with freeze and sequence features
+- **Assembly Workbench**: Create custom style assemblies with premium drag-and-drop interface
 
 ### 🎨 Modern UI/UX
 - Dark mode interface optimized for stage use
@@ -445,23 +445,64 @@ app.post('/api/tyros/command', async (req, res) => {
 
 ## Key Features
 
-### Persistent State
-- Chord progressions persist across tab switches
-- Mixer settings maintained during navigation
-- Voice selections preserved
-- Registration memory stored locally
+### Voice Browser Enhancements
 
-### Type Safety
-- Full TypeScript coverage
-- Strict type checking for all commands
-- IntelliSense support for API usage
-- Compile-time error detection
+**Modern Sidebar + Card Grid Layout**
+- Collapsible left sidebar with category navigation
+- Large visual cards for categories, sub-categories, and voices
+- Breadcrumb navigation showing current path
+- Icon-based visual identification
 
-### Extensibility
-- Easy to add new command types
-- Modular component architecture
-- Reusable UI components
-- Clean separation of concerns
+**Command Palette (Cmd/Ctrl+K)**
+- Instant fuzzy search across all 1,000+ voices
+- Keyboard-driven navigation with arrow keys
+- Quick assign with Cmd/Ctrl+Enter
+- Shows favorites and recent voices at the top
+- Visual icons and breadcrumb paths in results
+
+**Smart Collections**
+- **Favorites**: Star voices to save them (persisted in localStorage)
+- **Most Used**: Top 5 voices by usage count with badges
+- **This Session**: Voices used in current session
+- **Recently Used**: Last 10 voices accessed
+- All collections accessible from sidebar and command palette
+
+**Persistent Storage**
+- Favorites saved to localStorage
+- Usage tracking for "Most Used" feature
+- Session tracking for "This Session" feature
+- Recent voices history maintained
+
+### Chord Sequencer Enhancements
+
+**Chord Progression Library**
+- 60+ curated progressions from Chordonomicon dataset
+- 12 genres: Pop/Rock, Jazz, Blues, Latin, Gospel, EDM, Country, R&B, Hip-Hop/Trap, Funk, Classical, World
+- Searchable by name and genre
+- One-click add to replace current section
+- Intelligent bar allocation based on progression length
+
+**Timeline Features**
+- Color-coded song structures (15 distinct gradient colors)
+- "Remove All" button to clear all chords in active section
+- Remove section button on each timeline card
+- Drag to resize sections with visual preview
+- Multi-section support (Intro, Verse, Chorus, Bridge, Outro, etc.)
+
+## Keyboard Shortcuts
+
+### Global Shortcuts
+- `Cmd/Ctrl + K`: Open voice command palette
+- `Cmd/Ctrl + Enter`: Quick assign voice from command palette
+- `Cmd/Ctrl + S`: Save current configuration
+- `Space`: Play/Stop style
+- `Esc`: Close dialogs and cancel operations
+
+### Navigation Shortcuts
+- `Tab`: Navigate between controls
+- `Arrow Keys`: Navigate lists, grids, and command palette
+- `Enter`: Confirm selections
+- `Backspace/Delete`: Delete selected items
 
 ## Technology Stack
 
