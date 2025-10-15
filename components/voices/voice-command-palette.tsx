@@ -3,16 +3,20 @@
 import { useState, useEffect, useRef } from "react"
 import type { Voice } from "@/lib/voice-data"
 import { VoiceIcon } from "@/components/ui/voice-icon"
-import { Search, Clock } from "lucide-react"
+import { Search, Clock, Star } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface VoiceCommandPaletteProps {
   isOpen: boolean
   onClose: () => void
   voices: Voice[]
-  onSelectVoice: (voice: Voice) => void
+  onSelectVoice: (voice: Voice, action?: string) => void
   recentVoices?: Voice[]
+  favorites?: Voice[]
+  currentPart?: number | null
 }
+
+const PART_NAMES = ["Left", "Right 1", "Right 2", "Right 3"]
 
 function fuzzyScore(voiceName: string, searchQuery: string): number {
   const voice = voiceName.toLowerCase()
@@ -84,6 +88,8 @@ export function VoiceCommandPalette({
   voices,
   onSelectVoice,
   recentVoices = [],
+  favorites = [],
+  currentPart = null,
 }: VoiceCommandPaletteProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedIndex, setSelectedIndex] = useState(0)
@@ -91,7 +97,22 @@ export function VoiceCommandPalette({
   const listRef = useRef<HTMLDivElement>(null)
 
   const searchResults = searchQuery.trim() ? fuzzySearch(voices, searchQuery, 30) : []
-  const displayItems = searchQuery.trim() ? searchResults : recentVoices.slice(0, 10)
+
+  const sections = []
+  if (searchQuery.trim()) {
+    if (searchResults.length > 0) {
+      sections.push({ title: "Search Results", icon: Search, color: "text-amber-500", items: searchResults })
+    }
+  } else {
+    if (favorites.length > 0) {
+      sections.push({ title: "Favorites", icon: Star, color: "text-amber-500", items: favorites.slice(0, 5) })
+    }
+    if (recentVoices.length > 0) {
+      sections.push({ title: "Recent", icon: Clock, color: "text-blue-500", items: recentVoices.slice(0, 5) })
+    }
+  }
+
+  const allItems = sections.flatMap((s) => s.items)
 
   useEffect(() => {
     if (isOpen) {
@@ -109,20 +130,21 @@ export function VoiceCommandPalette({
         onClose()
       } else if (e.key === "ArrowDown") {
         e.preventDefault()
-        setSelectedIndex((prev) => (prev + 1) % displayItems.length)
+        setSelectedIndex((prev) => (prev + 1) % allItems.length)
       } else if (e.key === "ArrowUp") {
         e.preventDefault()
-        setSelectedIndex((prev) => (prev - 1 + displayItems.length) % displayItems.length)
-      } else if (e.key === "Enter" && displayItems[selectedIndex]) {
+        setSelectedIndex((prev) => (prev - 1 + allItems.length) % allItems.length)
+      } else if (e.key === "Enter" && allItems[selectedIndex]) {
         e.preventDefault()
-        onSelectVoice(displayItems[selectedIndex])
+        const action = (e.ctrlKey || e.metaKey) && currentPart !== null ? "assign" : undefined
+        onSelectVoice(allItems[selectedIndex], action)
         onClose()
       }
     }
 
     window.addEventListener("keydown", handleKeyDown)
     return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [isOpen, displayItems, selectedIndex, onSelectVoice, onClose])
+  }, [isOpen, allItems, selectedIndex, onSelectVoice, onClose, currentPart])
 
   useEffect(() => {
     if (listRef.current) {
@@ -157,7 +179,7 @@ export function VoiceCommandPalette({
               <input
                 ref={inputRef}
                 type="text"
-                placeholder="Search voices... (type to search, ↑↓ to navigate, Enter to select, Esc to close)"
+                placeholder="Search voices... (↑↓ navigate, Enter select, ⌘Enter assign, Esc close)"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="flex-1 bg-transparent text-white text-lg placeholder:text-zinc-500 outline-none"
@@ -169,42 +191,55 @@ export function VoiceCommandPalette({
           </div>
 
           <div className="bg-zinc-900 border-x-2 border-b-2 border-amber-500/40 rounded-b-2xl shadow-2xl shadow-amber-500/20 max-h-[60vh] overflow-y-auto">
-            {displayItems.length > 0 ? (
+            {allItems.length > 0 ? (
               <div ref={listRef} className="py-2">
-                {!searchQuery.trim() && recentVoices.length > 0 && (
-                  <div className="px-5 py-2 flex items-center gap-2 text-xs font-semibold text-amber-500/70 uppercase tracking-wider">
-                    <Clock className="w-3.5 h-3.5" />
-                    Recent Voices
-                  </div>
-                )}
-                {displayItems.map((voice, index) => (
-                  <button
-                    key={`${voice.voice}-${voice.msb}-${voice.lsb}-${index}`}
-                    onClick={() => {
-                      onSelectVoice(voice)
-                      onClose()
-                    }}
-                    className={cn(
-                      "w-full text-left px-5 py-3.5 flex items-center gap-4 transition-all duration-150",
-                      selectedIndex === index
-                        ? "bg-gradient-to-r from-amber-500/30 to-yellow-500/30 border-l-4 border-amber-500"
-                        : "hover:bg-zinc-800/50 border-l-4 border-transparent",
-                    )}
-                  >
-                    <VoiceIcon subcategory={voice.sub} category={voice.category} size={24} />
-                    <div className="flex-1 min-w-0">
-                      <div className="text-white font-semibold text-base truncate">{voice.voice}</div>
-                      <div className="text-amber-500/70 text-sm truncate mt-0.5">
-                        {voice.category} → {voice.sub}
+                {sections.map((section, sectionIdx) => {
+                  const sectionStartIdx = sections.slice(0, sectionIdx).reduce((acc, s) => acc + s.items.length, 0)
+                  return (
+                    <div key={section.title}>
+                      <div className="px-5 py-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider">
+                        <section.icon className={cn("w-3.5 h-3.5", section.color)} />
+                        <span className={section.color}>{section.title}</span>
                       </div>
+                      {section.items.map((voice, itemIdx) => {
+                        const globalIdx = sectionStartIdx + itemIdx
+                        return (
+                          <button
+                            key={`${voice.voice}-${voice.msb}-${voice.lsb}-${itemIdx}`}
+                            onClick={() => {
+                              onSelectVoice(voice)
+                              onClose()
+                            }}
+                            className={cn(
+                              "w-full text-left px-5 py-3.5 flex items-center gap-4 transition-all duration-150",
+                              selectedIndex === globalIdx
+                                ? "bg-gradient-to-r from-amber-500/30 to-yellow-500/30 border-l-4 border-amber-500"
+                                : "hover:bg-zinc-800/50 border-l-4 border-transparent",
+                            )}
+                          >
+                            <VoiceIcon subcategory={voice.sub} category={voice.category} size={24} />
+                            <div className="flex-1 min-w-0">
+                              <div className="text-white font-semibold text-base truncate">{voice.voice}</div>
+                              <div className="text-amber-500/70 text-sm truncate mt-0.5">
+                                {voice.category} → {voice.sub}
+                              </div>
+                            </div>
+                            <div className="flex flex-col items-end gap-1 text-xs text-zinc-500 font-mono">
+                              <div>MSB: {voice.msb}</div>
+                              <div>LSB: {voice.lsb}</div>
+                              <div>PRG: {voice.prg}</div>
+                            </div>
+                            {currentPart !== null && selectedIndex === globalIdx && (
+                              <div className="text-xs text-amber-500/70 font-mono">
+                                ⌘↵ to assign to {PART_NAMES[currentPart - 1]}
+                              </div>
+                            )}
+                          </button>
+                        )
+                      })}
                     </div>
-                    <div className="flex flex-col items-end gap-1 text-xs text-zinc-500 font-mono">
-                      <div>MSB: {voice.msb}</div>
-                      <div>LSB: {voice.lsb}</div>
-                      <div>PRG: {voice.prg}</div>
-                    </div>
-                  </button>
-                ))}
+                  )
+                })}
               </div>
             ) : (
               <div className="py-12 text-center">

@@ -6,7 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
 import { VoiceIcon } from "@/components/ui/voice-icon"
 import { VoiceCommandPalette } from "./voice-command-palette"
-import { ChevronRight, Command, Star, Clock, Menu, X, Home } from "lucide-react"
+import { ChevronRight, Command, Star, Clock, Menu, X, Home, TrendingUp, Zap } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useMIDI } from "@/lib/midi-context"
 
@@ -17,6 +17,51 @@ interface VoiceBrowserProps {
 }
 
 const PART_NAMES = ["Left", "Right 1", "Right 2", "Right 3"]
+
+const STORAGE_KEYS = {
+  FAVORITES: "tyros-voice-favorites",
+  RECENT: "tyros-voice-recent",
+  USAGE_COUNTS: "tyros-voice-usage-counts",
+  SESSION: "tyros-voice-session",
+}
+
+function loadFromStorage<T>(key: string, defaultValue: T): T {
+  if (typeof window === "undefined") return defaultValue
+  try {
+    const item = localStorage.getItem(key)
+    return item ? JSON.parse(item) : defaultValue
+  } catch {
+    return defaultValue
+  }
+}
+
+function saveToStorage<T>(key: string, value: T): void {
+  if (typeof window === "undefined") return
+  try {
+    localStorage.setItem(key, JSON.stringify(value))
+  } catch (error) {
+    console.error("Failed to save to localStorage:", error)
+  }
+}
+
+function loadFromSessionStorage<T>(key: string, defaultValue: T): T {
+  if (typeof window === "undefined") return defaultValue
+  try {
+    const item = sessionStorage.getItem(key)
+    return item ? JSON.parse(item) : defaultValue
+  } catch {
+    return defaultValue
+  }
+}
+
+function saveToSessionStorage<T>(key: string, value: T): void {
+  if (typeof window === "undefined") return
+  try {
+    sessionStorage.setItem(key, JSON.stringify(value))
+  } catch (error) {
+    console.error("Failed to save to sessionStorage:", error)
+  }
+}
 
 export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBrowserProps) {
   const [voices, setVoices] = useState<Voice[]>([])
@@ -30,9 +75,18 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false)
   const [recentVoices, setRecentVoices] = useState<Voice[]>([])
   const [favorites, setFavorites] = useState<Voice[]>([])
+  const [usageCounts, setUsageCounts] = useState<Record<string, number>>({})
+  const [sessionVoices, setSessionVoices] = useState<Voice[]>([])
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
   const { api } = useMIDI()
   const isSelectingFromSearch = useRef(false)
+
+  useEffect(() => {
+    setFavorites(loadFromStorage(STORAGE_KEYS.FAVORITES, []))
+    setRecentVoices(loadFromStorage(STORAGE_KEYS.RECENT, []))
+    setUsageCounts(loadFromStorage(STORAGE_KEYS.USAGE_COUNTS, {}))
+    setSessionVoices(loadFromSessionStorage(STORAGE_KEYS.SESSION, []))
+  }, [])
 
   useEffect(() => {
     loadVoiceData().then((data) => {
@@ -82,6 +136,18 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
     return getVoices(voices, selectedCategory, subCategory).length
   }
 
+  const getVoiceKey = (voice: Voice) => `${voice.voice}-${voice.msb}-${voice.lsb}`
+
+  const getMostUsedVoices = () => {
+    const sortedEntries = Object.entries(usageCounts).sort(([, a], [, b]) => b - a)
+    return sortedEntries
+      .slice(0, 5)
+      .map(([key]) => {
+        return voices.find((v) => getVoiceKey(v) === key)
+      })
+      .filter((v): v is Voice => v !== undefined)
+  }
+
   const handleAssign = () => {
     if (selectedVoice && currentPart !== null) {
       api.sendCommand({
@@ -91,33 +157,51 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
         voice: selectedVoice,
       })
       onVoiceAssigned(selectedVoice)
-      setRecentVoices((prev) => {
-        const filtered = prev.filter((v) => v.voice !== selectedVoice.voice || v.msb !== selectedVoice.msb)
-        return [selectedVoice, ...filtered].slice(0, 10)
-      })
+
+      const newRecent = [
+        selectedVoice,
+        ...recentVoices.filter((v) => getVoiceKey(v) !== getVoiceKey(selectedVoice)),
+      ].slice(0, 10)
+      setRecentVoices(newRecent)
+      saveToStorage(STORAGE_KEYS.RECENT, newRecent)
+
+      const voiceKey = getVoiceKey(selectedVoice)
+      const newCounts = { ...usageCounts, [voiceKey]: (usageCounts[voiceKey] || 0) + 1 }
+      setUsageCounts(newCounts)
+      saveToStorage(STORAGE_KEYS.USAGE_COUNTS, newCounts)
+
+      const newSession = [
+        selectedVoice,
+        ...sessionVoices.filter((v) => getVoiceKey(v) !== getVoiceKey(selectedVoice)),
+      ].slice(0, 10)
+      setSessionVoices(newSession)
+      saveToSessionStorage(STORAGE_KEYS.SESSION, newSession)
     }
   }
 
-  const handleCommandPaletteSelect = (voice: Voice) => {
+  const handleCommandPaletteSelect = (voice: Voice, action?: string) => {
     isSelectingFromSearch.current = true
-    setSelectedVoice(voice)
+
     setSelectedCategory(voice.category)
     setSelectedSubCategory(voice.sub)
+    setSelectedVoice(voice)
+
+    if (action === "assign" && currentPart !== null) {
+      handleAssign()
+    }
   }
 
   const toggleFavorite = (voice: Voice) => {
-    setFavorites((prev) => {
-      const exists = prev.some((v) => v.voice === voice.voice && v.msb === voice.msb)
-      if (exists) {
-        return prev.filter((v) => v.voice !== voice.voice || v.msb !== voice.msb)
-      } else {
-        return [voice, ...prev]
-      }
-    })
+    const newFavorites = favorites.some((v) => getVoiceKey(v) === getVoiceKey(voice))
+      ? favorites.filter((v) => getVoiceKey(v) !== getVoiceKey(voice))
+      : [voice, ...favorites]
+
+    setFavorites(newFavorites)
+    saveToStorage(STORAGE_KEYS.FAVORITES, newFavorites)
   }
 
   const isFavorite = (voice: Voice) => {
-    return favorites.some((v) => v.voice === voice.voice && v.msb === voice.msb)
+    return favorites.some((v) => getVoiceKey(v) === getVoiceKey(voice))
   }
 
   const getBreadcrumbs = () => {
@@ -141,6 +225,8 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
       </div>
     )
   }
+
+  const mostUsedVoices = getMostUsedVoices()
 
   return (
     <div className="h-full flex flex-col bg-gradient-to-b from-black via-zinc-950 to-black">
@@ -193,55 +279,116 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
         >
           <ScrollArea className="flex-1">
             <div className="p-4 space-y-6">
-              {favorites.length > 0 && (
-                <div>
-                  <div className="flex items-center gap-2 mb-3 px-2">
-                    <Star className="w-4 h-4 text-amber-500" />
-                    <h3 className="text-xs font-bold text-amber-500 uppercase tracking-wider">Favorites</h3>
-                  </div>
-                  <div className="space-y-1">
-                    {favorites.slice(0, 5).map((voice, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => {
-                          setSelectedVoice(voice)
-                          setSelectedCategory(voice.category)
-                          setSelectedSubCategory(voice.sub)
-                        }}
-                        className="w-full text-left px-3 py-2 rounded-lg text-xs text-white hover:bg-amber-500/10 transition-colors flex items-center gap-2"
-                      >
-                        <VoiceIcon subcategory={voice.sub} category={voice.category} size={16} />
-                        <span className="truncate">{voice.voice}</span>
-                      </button>
-                    ))}
-                  </div>
+              <div className="space-y-4">
+                <div className="px-2">
+                  <h2 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-3">Smart Collections</h2>
                 </div>
-              )}
 
-              {recentVoices.length > 0 && (
-                <div>
-                  <div className="flex items-center gap-2 mb-3 px-2">
-                    <Clock className="w-4 h-4 text-blue-500" />
-                    <h3 className="text-xs font-bold text-blue-500 uppercase tracking-wider">Recent</h3>
+                {favorites.length > 0 && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-2 px-2">
+                      <Star className="w-4 h-4 text-amber-500" />
+                      <h3 className="text-xs font-semibold text-amber-500 uppercase tracking-wider">
+                        Favorites ({favorites.length})
+                      </h3>
+                    </div>
+                    <div className="space-y-1">
+                      {favorites.slice(0, 5).map((voice, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => {
+                            setSelectedVoice(voice)
+                            setSelectedCategory(voice.category)
+                            setSelectedSubCategory(voice.sub)
+                          }}
+                          className="w-full text-left px-3 py-2 rounded-lg text-xs text-white hover:bg-amber-500/10 transition-colors flex items-center gap-2"
+                        >
+                          <VoiceIcon subcategory={voice.sub} category={voice.category} size={16} />
+                          <span className="truncate">{voice.voice}</span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                  <div className="space-y-1">
-                    {recentVoices.slice(0, 5).map((voice, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => {
-                          setSelectedVoice(voice)
-                          setSelectedCategory(voice.category)
-                          setSelectedSubCategory(voice.sub)
-                        }}
-                        className="w-full text-left px-3 py-2 rounded-lg text-xs text-white hover:bg-blue-500/10 transition-colors flex items-center gap-2"
-                      >
-                        <VoiceIcon subcategory={voice.sub} category={voice.category} size={16} />
-                        <span className="truncate">{voice.voice}</span>
-                      </button>
-                    ))}
+                )}
+
+                {mostUsedVoices.length > 0 && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-2 px-2">
+                      <TrendingUp className="w-4 h-4 text-purple-500" />
+                      <h3 className="text-xs font-semibold text-purple-500 uppercase tracking-wider">Most Used</h3>
+                    </div>
+                    <div className="space-y-1">
+                      {mostUsedVoices.map((voice, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => {
+                            setSelectedVoice(voice)
+                            setSelectedCategory(voice.category)
+                            setSelectedSubCategory(voice.sub)
+                          }}
+                          className="w-full text-left px-3 py-2 rounded-lg text-xs text-white hover:bg-purple-500/10 transition-colors flex items-center gap-2"
+                        >
+                          <VoiceIcon subcategory={voice.sub} category={voice.category} size={16} />
+                          <span className="truncate flex-1">{voice.voice}</span>
+                          <span className="text-[10px] text-purple-500/70 font-mono">
+                            {usageCounts[getVoiceKey(voice)]}×
+                          </span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+
+                {sessionVoices.length > 0 && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-2 px-2">
+                      <Zap className="w-4 h-4 text-cyan-500" />
+                      <h3 className="text-xs font-semibold text-cyan-500 uppercase tracking-wider">This Session</h3>
+                    </div>
+                    <div className="space-y-1">
+                      {sessionVoices.slice(0, 5).map((voice, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => {
+                            setSelectedVoice(voice)
+                            setSelectedCategory(voice.category)
+                            setSelectedSubCategory(voice.sub)
+                          }}
+                          className="w-full text-left px-3 py-2 rounded-lg text-xs text-white hover:bg-cyan-500/10 transition-colors flex items-center gap-2"
+                        >
+                          <VoiceIcon subcategory={voice.sub} category={voice.category} size={16} />
+                          <span className="truncate">{voice.voice}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {recentVoices.length > 0 && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-2 px-2">
+                      <Clock className="w-4 h-4 text-blue-500" />
+                      <h3 className="text-xs font-semibold text-blue-500 uppercase tracking-wider">Recent</h3>
+                    </div>
+                    <div className="space-y-1">
+                      {recentVoices.slice(0, 5).map((voice, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => {
+                            setSelectedVoice(voice)
+                            setSelectedCategory(voice.category)
+                            setSelectedSubCategory(voice.sub)
+                          }}
+                          className="w-full text-left px-3 py-2 rounded-lg text-xs text-white hover:bg-blue-500/10 transition-colors flex items-center gap-2"
+                        >
+                          <VoiceIcon subcategory={voice.sub} category={voice.category} size={16} />
+                          <span className="truncate">{voice.voice}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
 
               <div>
                 <div className="flex items-center gap-2 mb-3 px-2">
@@ -421,6 +568,8 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
         voices={voices}
         onSelectVoice={handleCommandPaletteSelect}
         recentVoices={recentVoices}
+        favorites={favorites}
+        currentPart={currentPart}
       />
     </div>
   )
