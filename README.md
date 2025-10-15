@@ -269,65 +269,7 @@ const unsubscribe = tyrosAPI.onEvent((event) => {
 
 ## Implementing Your Backend
 
-### Option 1: Replace Mock Implementation
-
-Replace the `MockTyrosAPI` class in `lib/tyros-api.ts`:
-
-\`\`\`typescript
-export class RealTyrosAPI implements TyrosAPI {
-  async sendCommand(command: TyrosCommand): Promise<void> {
-    // Send to your backend
-    await fetch('/api/tyros/command', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(command)
-    })
-  }
-
-  async sendCommands(commands: TyrosCommand[]): Promise<void> {
-    await fetch('/api/tyros/commands', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(commands)
-    })
-  }
-
-  isConnected(): boolean {
-    // Check connection status
-    return this.connected
-  }
-
-  getConnectionStatus() {
-    return {
-      connected: this.connected,
-      inputPort: this.inputPort,
-      outputPort: this.outputPort,
-      lastError: this.lastError
-    }
-  }
-
-  async connect(): Promise<void> {
-    // Establish connection
-  }
-
-  async disconnect(): Promise<void> {
-    // Close connection
-  }
-
-  onEvent(callback: (event: TyrosEvent) => void): () => void {
-    // Subscribe to events
-    this.eventCallbacks.push(callback)
-    return () => {
-      const index = this.eventCallbacks.indexOf(callback)
-      if (index > -1) this.eventCallbacks.splice(index, 1)
-    }
-  }
-}
-
-export const tyrosAPI: TyrosAPI = new RealTyrosAPI()
-\`\`\`
-
-### Option 2: Backend Service
+### Backend Service
 
 Create a backend service that translates commands to MIDI:
 
