@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { useMIDI } from "@/lib/midi-context"
-import { Sliders } from "lucide-react"
 import { RotaryKnob } from "@/components/ui/rotary-knob"
 import { VoiceIcon } from "@/components/ui/voice-icon"
 
@@ -33,6 +32,9 @@ export function MixerChannel({
   const [reverb, setReverb] = useState(40)
   const [chorus, setChorus] = useState(30)
   const [brightness, setBrightness] = useState(64)
+  const [bass, setBass] = useState(64)
+  const [mid, setMid] = useState(64)
+  const [high, setHigh] = useState(64)
 
   const handleVolumeChange = (value: number) => {
     setVolume(value)
@@ -82,6 +84,24 @@ export function MixerChannel({
       channel,
       value,
     })
+  }
+
+  const handleBassChange = (value: number) => {
+    setBass(value)
+    console.log(`[v0] EQ Bass CH${channel}:`, value)
+    // TODO: Implement EQ bass command in Tyros API
+  }
+
+  const handleMidChange = (value: number) => {
+    setMid(value)
+    console.log(`[v0] EQ Mid CH${channel}:`, value)
+    // TODO: Implement EQ mid command in Tyros API
+  }
+
+  const handleHighChange = (value: number) => {
+    setHigh(value)
+    console.log(`[v0] EQ High CH${channel}:`, value)
+    // TODO: Implement EQ high command in Tyros API
   }
 
   return (
@@ -134,17 +154,14 @@ export function MixerChannel({
       </div>
 
       <div className="w-full space-y-2">
-        <div className="px-2 md:px-3 py-2 md:py-3 lg:py-4 bg-gradient-to-br from-accent/30 via-accent/20 to-accent/10 rounded-lg border-2 border-primary/40 text-center shadow-lg">
-          <div className="premium-label text-xs mb-1">Insert FX</div>
-          <div className="text-xs font-bold mt-1 line-clamp-2 text-white drop-shadow-md">{insertEffect}</div>
+        <div className="premium-label text-center text-xs">EQ</div>
+        <div className="px-2 md:px-3 py-3 md:py-4 bg-gradient-to-br from-accent/30 via-accent/20 to-accent/10 rounded-lg border-2 border-primary/40 shadow-lg">
+          <div className="flex flex-col gap-2">
+            <RotaryKnob value={bass} onChange={handleBassChange} label="Bass" displayValue={`${bass}`} size="sm" />
+            <RotaryKnob value={mid} onChange={handleMidChange} label="Mid" displayValue={`${mid}`} size="sm" />
+            <RotaryKnob value={high} onChange={handleHighChange} label="High" displayValue={`${high}`} size="sm" />
+          </div>
         </div>
-        <button
-          onClick={onOpenEffects}
-          className="w-full glossy-button px-2 md:px-3 lg:px-4 py-2 md:py-2.5 lg:py-3 rounded-lg flex items-center justify-center gap-2 text-black font-bold text-xs md:text-sm shadow-lg hover:shadow-xl transition-all"
-        >
-          <Sliders className="w-3 h-3 md:w-3.5 md:h-3.5 lg:w-4 lg:h-4" />
-          DSP
-        </button>
       </div>
     </div>
   )

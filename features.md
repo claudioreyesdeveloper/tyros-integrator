@@ -1,8 +1,8 @@
-# SmartBridge - PSR, Genos & Tyros5 Integrator Features
+# SmartBridge - Tyros5 Integrator Features
 
 ## Overview
 
-SmartBridge is a comprehensive web-based MIDI control interface for the Yamaha PSR, Genos & Tyros5 keyboard. Built with Next.js 15, React 19, and TypeScript, it provides professional-grade control over all aspects of the PSR, Genos & Tyros5 through an intuitive, modern interface optimized for both desktop and touch devices.
+SmartBridge is a comprehensive web-based MIDI control interface for the Yamaha Tyros5 keyboard. Built with Next.js 15, React 19, and TypeScript, it provides professional-grade control over all aspects of the Tyros5 through an intuitive, modern interface optimized for both desktop and touch devices.
 
 ---
 
@@ -15,15 +15,23 @@ SmartBridge is a comprehensive web-based MIDI control interface for the Yamaha P
 - **Real-time Voice Assignment**: Click any part to instantly browse and assign voices
 - **Visual Voice Indicators**: Each part displays the currently assigned voice name in white text
 - **Style Selection**: Quick access to accompaniment styles with category browser
+- **Tempo Control**: Adjust style tempo from 40-300 BPM
 - **Transport Controls**: Start/Stop accompaniment with visual feedback
 - **Sync Start Toggle**: Enable/disable synchronized style start
+- **Accompaniment On/Off**: Quick toggle for accompaniment playback
+
+**Visual Design**
+- Premium gradient backgrounds with glass-morphism effects
+- High-contrast white text for excellent readability
+- Touch-optimized buttons and controls
+- Responsive layout adapts to all screen sizes
 
 ---
 
 ### 2. Voice Browser - Comprehensive Voice Management
 
 **Voice Library**
-- **1,000+ Voices**: Complete PSR, PSR, Genos & Tyros and PSR voice library organized by category
+- **1,000+ Voices**: Complete Tyros5 voice library organized by category
 - **16 Main Categories**: Piano, Organ, Guitar, Bass, Strings, Brass, Woodwind, Synth, and more
 - **Subcategory Organization**: Each category contains multiple subcategories for precise voice selection
 - **MSB/LSB/PRG Data**: Full MIDI program change data for each voice
@@ -38,14 +46,14 @@ SmartBridge is a comprehensive web-based MIDI control interface for the Yamaha P
 **Voice Assignment**
 - **Direct Part Assignment**: Assign voices to any of the 4 performance parts
 - **Visual Confirmation**: Selected voice highlights in the browser
-- **MIDI Program Change**: Sends proper MSB/LSB/PRG messages to PSR, Genos & Tyros5
+- **MIDI Program Change**: Sends proper MSB/LSB/PRG messages to Tyros5
 - **Persistent Selection**: Voice assignments persist across tab switches
 
 ---
 
 ### 3. Mixer Interface - Professional Mixing Console
 
-**32-Channel Mixer**
+**16-Channel Mixer**
 - **Channel Banks**: Switch between banks 1-16 and 17-32
 - **Per-Channel Controls**:
   - **Volume Fader**: 0-127 range with visual feedback
@@ -98,7 +106,7 @@ SmartBridge is a comprehensive web-based MIDI control interface for the Yamaha P
 - **Drag & Drop Interface**: Visually copy style parts between sections
 - **11 Style Sections**: Intro 1-3, Main A-D, Fill, Outro 1-3
 - **8 Style Tracks**: Rhythm 1-2, Bass, Chord 1-3, Phrase 1-2
-- **Source Style Preview**: Load and preview any PSR, Genos & Tyros5 style
+- **Source Style Preview**: Load and preview any Tyros5 style
 - **Target Style Building**: Create custom hybrid styles
 
 **Style Part Controls**
@@ -118,7 +126,7 @@ SmartBridge is a comprehensive web-based MIDI control interface for the Yamaha P
 **Assembly History**
 - **Undo Functionality**: Revert last pattern copy operation
 - **Operation Tracking**: View history of all assembly operations
-- **Commit & Save**: Bulk save hybrid style to PSR, Genos & Tyros memory
+- **Commit & Save**: Bulk save hybrid style to Tyros5 memory
 - **Status Indicators**: Visual feedback for save operations
 
 ---
@@ -173,7 +181,7 @@ SmartBridge is a comprehensive web-based MIDI control interface for the Yamaha P
 - **Hardware Port Selection**: Choose MIDI output port
 - **Style Channel Output**: Select MIDI channel (1-16)
 - **Style Section Selection**: Choose style section for playback
-- **Real-time MIDI Output**: Chords sent directly to PSR, Genos & Tyros
+- **Real-time MIDI Output**: Chords sent directly to Tyros5
 
 **Export Functionality**
 - **Export to DAW**: Save chord progression as MIDI file
@@ -201,7 +209,7 @@ SmartBridge is a comprehensive web-based MIDI control interface for the Yamaha P
 - **Real-time Playback**: Hear your progression with style accompaniment
 - **Tempo Control**: Adjust playback speed
 - **Loop Sections**: Repeat sections for practice
-- **Sync with Style**: Coordinate with PSR, Genos & Tyros style playback
+- **Sync with Style**: Coordinate with Tyros5 style playback
 
 ---
 
@@ -232,7 +240,7 @@ SmartBridge is a comprehensive web-based MIDI control interface for the Yamaha P
 ### Unified API Architecture
 
 **Type-Safe Command System**
-- **PSR, Genos & TyrosCommand Union Type**: All commands strictly typed
+- **TyrosCommand Union Type**: All commands strictly typed
 - **Command Categories**:
   - Voice Commands (assign)
   - Mixer Commands (volume, pan, reverb, chorus, brightness, solo, mute)
@@ -241,7 +249,7 @@ SmartBridge is a comprehensive web-based MIDI control interface for the Yamaha P
   - Multipad Commands (trigger, stop, volume)
   - Chord Commands (play, stop, sequence)
   - Registration Commands (save, load)
-  - PSR, Genos & Tyros Control Commands (local-control, clock-source, accompaniment)
+  - Tyros Control Commands (local-control, clock-source, accompaniment)
 
 **API Methods**
 - `sendCommand(command)`: Send single command
@@ -315,7 +323,7 @@ SmartBridge is a comprehensive web-based MIDI control interface for the Yamaha P
 - **SysEx Support**: Full system exclusive message support
 
 **Mock Implementation**
-- **Testing Without Hardware**: Full UI testing without PSR, Genos & Tyros
+- **Testing Without Hardware**: Full UI testing without Tyros5
 - **Console Logging**: All commands logged for debugging
 - **Event Simulation**: Simulate MIDI events
 - **Development Mode**: Safe testing environment
@@ -329,19 +337,19 @@ SmartBridge is a comprehensive web-based MIDI control interface for the Yamaha P
 - **Backward Compatibility**: Support for older formats
 
 **Voice Database**
-- **1,000+ Voices**: Complete PSR, Genos & Tyros voice library
+- **1,000+ Voices**: Complete Tyros5 voice library
 - **Categorized Organization**: 16 main categories
 - **Searchable**: Fast text search
 - **Extensible**: Easy to add new voices
 
 **Effect Database**
-- **DSP Effects Library**: All PSR, Genos & Tyros effects
+- **DSP Effects Library**: All Tyros5 effects
 - **Effect Parameters**: Detailed parameter definitions
 - **Category Organization**: Effects grouped by type
 - **Preset Management**: Save and recall effect presets
 
 **Style Database**
-- **Complete Style Library**: All PSR, Genos & Tyros styles
+- **Complete Style Library**: All Tyros5 styles
 - **Category Organization**: Styles grouped by genre
 - **Style Metadata**: Tempo, time signature, description
 - **Custom Styles**: Support for user-created styles
@@ -360,12 +368,12 @@ SmartBridge is a comprehensive web-based MIDI control interface for the Yamaha P
 
 ### Style Creation Workflow
 
-1. **Load Source Style**: Choose a PSR, Genos & Tyros style as source
+1. **Load Source Style**: Choose a Tyros5 style as source
 2. **Preview Sections**: Listen to different style sections
 3. **Drag & Drop Parts**: Copy desired parts to target style
 4. **Edit SFF Rules**: Adjust transposition and trigger rules
 5. **Mix Tracks**: Balance volume and pan for each track
-6. **Commit & Save**: Save hybrid style to PSR, Genos & Tyros memory
+6. **Commit & Save**: Save hybrid style to Tyros5 memory
 
 ### Chord Progression Workflow
 
@@ -459,10 +467,10 @@ SmartBridge is a comprehensive web-based MIDI control interface for the Yamaha P
 
 ## Summary
 
-SmartBridge provides a complete, professional-grade control interface for the Yamaha PSR, Genos & Tyros keyboard. With features ranging from basic voice selection to advanced style assembly and chord sequencing, it offers everything needed for live performance, studio work, and creative sound design. The modern, responsive interface works seamlessly on desktop, tablet, and mobile devices, while the type-safe API architecture ensures reliable MIDI communication and easy backend integration.
+SmartBridge provides a complete, professional-grade control interface for the Yamaha Tyros5 keyboard. With features ranging from basic voice selection to advanced style assembly and chord sequencing, it offers everything needed for live performance, studio work, and creative sound design. The modern, responsive interface works seamlessly on desktop, tablet, and mobile devices, while the type-safe API architecture ensures reliable MIDI communication and easy backend integration.
 
 **Key Strengths:**
-- Comprehensive feature set covering all PSR, Genos & Tyros functions
+- Comprehensive feature set covering all Tyros5 functions
 - Intuitive, touch-optimized user interface
 - Professional mixing and effects control
 - Advanced style creation and editing tools
@@ -473,6 +481,6 @@ SmartBridge provides a complete, professional-grade control interface for the Ya
 **Perfect For:**
 - Live performers needing quick setup and recall
 - Studio musicians creating custom styles
-- Music educators demonstrating PSR, Genos & Tyros features
+- Music educators demonstrating Tyros5 features
 - Developers building MIDI control applications
-- Anyone wanting modern control of their PSR, Genos & Tyros keyboard
+- Anyone wanting modern control of their Tyros5 keyboard
