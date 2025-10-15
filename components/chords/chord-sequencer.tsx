@@ -15,6 +15,7 @@ import {
   FolderOpen,
   Copy,
   GripVertical,
+  X,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -38,16 +39,534 @@ const STYLE_PARTS = [
 ]
 
 const SECTION_COLORS = {
-  Intro: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-  Verse: "linear-gradient(135deg, #11998e 0%, #38ef7d 100%)",
-  Chorus: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-  Bridge: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
-  Outro: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
+  Intro: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", // Purple
+  Verse: "linear-gradient(135deg, #11998e 0%, #38ef7d 100%)", // Green
+  Chorus: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)", // Pink/Red
+  Bridge: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)", // Blue
+  Outro: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)", // Pink/Yellow
+  PreChorus: "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)", // Cyan/Pink
+  Interlude: "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)", // Peach
+  Solo: "linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)", // Rose
+  Breakdown: "linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%)", // Purple/Blue
+  BuildUp: "linear-gradient(135deg, #fdcbf1 0%, #e6dee9 100%)", // Lavender
+  Drop: "linear-gradient(135deg, #ff0844 0%, #ffb199 100%)", // Red/Orange
+  Hook: "linear-gradient(135deg, #ffd89b 0%, #19547b 100%)", // Gold/Blue
+  Refrain: "linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)", // Light Blue
+  Tag: "linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)", // Sky Blue
+  Coda: "linear-gradient(135deg, #d299c2 0%, #fef9d7 100%)", // Purple/Cream
 }
 
 const ROOT_NOTES = ["C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"]
 
 const CHORD_QUALITIES = ["Major", "Minor", "Dominant", "Diminished", "Augmented", "Suspended"]
+
+const CHORD_PROGRESSIONS = [
+  // Pop/Rock Progressions
+  {
+    id: "pop-1",
+    name: "I-V-vi-IV (Pop Anthem)",
+    genre: "Pop/Rock",
+    chords: ["C", "G", "Am", "F"],
+    description: "The most popular progression in modern pop music",
+  },
+  {
+    id: "pop-2",
+    name: "vi-IV-I-V (Emotional Pop)",
+    genre: "Pop/Rock",
+    chords: ["Am", "F", "C", "G"],
+    description: "Emotional and powerful, used in countless ballads",
+  },
+  {
+    id: "pop-3",
+    name: "I-vi-IV-V (50s Progression)",
+    genre: "Pop/Rock",
+    chords: ["C", "Am", "F", "G"],
+    description: "Classic 50s doo-wop progression",
+  },
+  {
+    id: "pop-4",
+    name: "I-V-vi-iii-IV-I-IV-V (Extended Pop)",
+    genre: "Pop/Rock",
+    chords: ["C", "G", "Am", "Em", "F", "C", "F", "G"],
+    description: "Extended 8-bar pop progression with emotional depth",
+  },
+  {
+    id: "pop-5",
+    name: "vi-V-IV-V (Ascending Pop)",
+    genre: "Pop/Rock",
+    chords: ["Am", "G", "F", "G"],
+    description: "Building tension with ascending motion",
+  },
+  {
+    id: "pop-6",
+    name: "I-iii-IV-iv (Chromatic Pop)",
+    genre: "Pop/Rock",
+    chords: ["C", "Em", "F", "Fm"],
+    description: "Chromatic descent for emotional impact",
+  },
+
+  // Jazz Progressions
+  {
+    id: "jazz-1",
+    name: "ii-V-I (Jazz Standard)",
+    genre: "Jazz",
+    chords: ["Dm7", "G7", "Cmaj7"],
+    description: "The most important progression in jazz",
+  },
+  {
+    id: "jazz-2",
+    name: "I-vi-ii-V (Rhythm Changes)",
+    genre: "Jazz",
+    chords: ["Cmaj7", "Am7", "Dm7", "G7"],
+    description: "Based on 'I Got Rhythm', foundation of bebop",
+  },
+  {
+    id: "jazz-3",
+    name: "iii-vi-ii-V-I (Extended Turnaround)",
+    genre: "Jazz",
+    chords: ["Em7", "Am7", "Dm7", "G7", "Cmaj7"],
+    description: "Extended jazz turnaround with smooth voice leading",
+  },
+  {
+    id: "jazz-4",
+    name: "I-IV-iii-vi-ii-V-I (Coltrane Changes)",
+    genre: "Jazz",
+    chords: ["Cmaj7", "Fmaj7", "Em7", "Am7", "Dm7", "G7", "Cmaj7"],
+    description: "Complex jazz progression inspired by Coltrane",
+  },
+  {
+    id: "jazz-5",
+    name: "ii-V-I-VI-ii-V (Minor ii-V-I)",
+    genre: "Jazz",
+    chords: ["Dm7", "G7", "Cmaj7", "A7", "Dm7", "G7"],
+    description: "Major and minor ii-V-I combination",
+  },
+  {
+    id: "jazz-6",
+    name: "Imaj7-VIm7-IIm7-V7-IIIm7-IIm7-V7 (Autumn Leaves)",
+    genre: "Jazz",
+    chords: ["Cmaj7", "Am7", "Dm7", "G7", "Em7", "Am7", "Dm7", "G7"],
+    description: "Classic Autumn Leaves progression",
+  },
+
+  // Blues Progressions
+  {
+    id: "blues-1",
+    name: "12-Bar Blues",
+    genre: "Blues",
+    chords: ["C7", "C7", "C7", "C7", "F7", "F7", "C7", "C7", "G7", "F7", "C7", "G7"],
+    description: "Classic 12-bar blues progression",
+  },
+  {
+    id: "blues-2",
+    name: "8-Bar Blues",
+    genre: "Blues",
+    chords: ["C7", "F7", "C7", "C7", "F7", "F7", "C7", "G7"],
+    description: "Shorter 8-bar blues form",
+  },
+  {
+    id: "blues-3",
+    name: "Minor Blues",
+    genre: "Blues",
+    chords: ["Cm7", "Cm7", "Cm7", "Cm7", "Fm7", "Fm7", "Cm7", "Cm7", "G7", "Fm7", "Cm7", "G7"],
+    description: "12-bar blues in minor key",
+  },
+  {
+    id: "blues-4",
+    name: "Jazz Blues",
+    genre: "Blues",
+    chords: ["C7", "F7", "C7", "Cmaj7", "F7", "F#dim7", "C7", "Em7", "A7", "Dm7", "G7", "C7"],
+    description: "Jazz-influenced 12-bar blues with substitutions",
+  },
+
+  // Rock Progressions
+  {
+    id: "rock-1",
+    name: "I-IV-V (Rock Standard)",
+    genre: "Rock",
+    chords: ["C", "F", "G"],
+    description: "The foundation of rock and roll",
+  },
+  {
+    id: "rock-2",
+    name: "I-bVII-IV (Rock Anthem)",
+    genre: "Rock",
+    chords: ["C", "Bb", "F"],
+    description: "Powerful rock progression with modal flavor",
+  },
+  {
+    id: "rock-3",
+    name: "i-bVII-bVI-bVII (Hard Rock)",
+    genre: "Rock",
+    chords: ["Am", "G", "F", "G"],
+    description: "Heavy rock progression in minor",
+  },
+  {
+    id: "rock-4",
+    name: "I-bVII-bVI-V (Mixolydian Rock)",
+    genre: "Rock",
+    chords: ["C", "Bb", "Ab", "G"],
+    description: "Modal rock with chromatic descent",
+  },
+  {
+    id: "rock-5",
+    name: "i-iv-v (Power Chord Rock)",
+    genre: "Rock",
+    chords: ["Am", "Dm", "Em"],
+    description: "Simple minor rock progression",
+  },
+
+  // Ballad Progressions
+  {
+    id: "ballad-1",
+    name: "I-V-vi-iii-IV-I-IV-V (Extended Ballad)",
+    genre: "Ballad",
+    chords: ["C", "G", "Am", "Em", "F", "C", "F", "G"],
+    description: "Extended ballad progression with emotional depth",
+  },
+  {
+    id: "ballad-2",
+    name: "I-iii-vi-IV (Soft Ballad)",
+    genre: "Ballad",
+    chords: ["C", "Em", "Am", "F"],
+    description: "Gentle ballad progression",
+  },
+  {
+    id: "ballad-3",
+    name: "vi-IV-I-V-vi-IV-V-V (Power Ballad)",
+    genre: "Ballad",
+    chords: ["Am", "F", "C", "G", "Am", "F", "G", "G"],
+    description: "Epic power ballad progression",
+  },
+
+  // Latin Progressions
+  {
+    id: "latin-1",
+    name: "i-bVII-bVI-V (Andalusian)",
+    genre: "Latin",
+    chords: ["Am", "G", "F", "E"],
+    description: "Spanish/flamenco progression",
+  },
+  {
+    id: "latin-2",
+    name: "i-iv-i-V (Minor Latin)",
+    genre: "Latin",
+    chords: ["Am", "Dm", "Am", "E7"],
+    description: "Common in bossa nova and samba",
+  },
+  {
+    id: "latin-3",
+    name: "Imaj7-VIm7-IIm7-V7 (Bossa Nova)",
+    genre: "Latin",
+    chords: ["Cmaj7", "Am7", "Dm7", "G7"],
+    description: "Classic bossa nova progression",
+  },
+  {
+    id: "latin-4",
+    name: "i-iv-bVII-bIII (Phrygian)",
+    genre: "Latin",
+    chords: ["Am", "Dm", "G", "C"],
+    description: "Phrygian mode for Spanish flavor",
+  },
+  {
+    id: "latin-5",
+    name: "i-bVI-bVII-i (Flamenco)",
+    genre: "Latin",
+    chords: ["Am", "F", "G", "Am"],
+    description: "Traditional flamenco cadence",
+  },
+
+  // Gospel Progressions
+  {
+    id: "gospel-1",
+    name: "I-IV-I-V-IV-I (Traditional Gospel)",
+    genre: "Gospel",
+    chords: ["C", "F", "C", "G", "F", "C"],
+    description: "Traditional gospel progression",
+  },
+  {
+    id: "gospel-2",
+    name: "I-vi-IV-V (Gospel Hymn)",
+    genre: "Gospel",
+    chords: ["C", "Am", "F", "G"],
+    description: "Classic gospel hymn progression",
+  },
+  {
+    id: "gospel-3",
+    name: "I-IV-I-I7-IV-iv-I-V (Gospel Blues)",
+    genre: "Gospel",
+    chords: ["C", "F", "C", "C7", "F", "Fm", "C", "G"],
+    description: "Gospel with blues influence",
+  },
+
+  // EDM/Dance Progressions
+  {
+    id: "edm-1",
+    name: "i-bVII-bVI-bVII (EDM Drop)",
+    genre: "Dance/EDM",
+    chords: ["Am", "G", "F", "G"],
+    description: "Popular in electronic dance music drops",
+  },
+  {
+    id: "edm-2",
+    name: "vi-IV-I-V (EDM Anthem)",
+    genre: "Dance/EDM",
+    chords: ["Am", "F", "C", "G"],
+    description: "Festival anthem progression",
+  },
+  {
+    id: "edm-3",
+    name: "i-bVI-bIII-bVII (Progressive House)",
+    genre: "Dance/EDM",
+    chords: ["Am", "F", "C", "G"],
+    description: "Progressive house progression",
+  },
+  {
+    id: "edm-4",
+    name: "i-v-bVI-IV (Melodic Dubstep)",
+    genre: "Dance/EDM",
+    chords: ["Am", "Em", "F", "Dm"],
+    description: "Emotional melodic dubstep progression",
+  },
+
+  // Country Progressions
+  {
+    id: "country-1",
+    name: "I-IV-I-V-I (Classic Country)",
+    genre: "Country",
+    chords: ["C", "F", "C", "G", "C"],
+    description: "Classic country progression",
+  },
+  {
+    id: "country-2",
+    name: "I-V-vi-IV (Modern Country)",
+    genre: "Country",
+    chords: ["C", "G", "Am", "F"],
+    description: "Modern country-pop progression",
+  },
+  {
+    id: "country-3",
+    name: "I-IV-V-IV (Country Rock)",
+    genre: "Country",
+    chords: ["C", "F", "G", "F"],
+    description: "Country rock progression",
+  },
+
+  // R&B/Soul Progressions
+  {
+    id: "rnb-1",
+    name: "I-iii-vi-IV (R&B Soul)",
+    genre: "R&B",
+    chords: ["Cmaj7", "Em7", "Am7", "Fmaj7"],
+    description: "Smooth R&B progression with 7th chords",
+  },
+  {
+    id: "rnb-2",
+    name: "ii-V-I-vi (Neo-Soul)",
+    genre: "R&B",
+    chords: ["Dm9", "G13", "Cmaj9", "Am9"],
+    description: "Neo-soul with extended chords",
+  },
+  {
+    id: "rnb-3",
+    name: "I-IV-iii-vi (Motown)",
+    genre: "R&B",
+    chords: ["C", "F", "Em", "Am"],
+    description: "Classic Motown progression",
+  },
+  {
+    id: "rnb-4",
+    name: "vi-ii-V-I (Soul Ballad)",
+    genre: "R&B",
+    chords: ["Am7", "Dm7", "G7", "Cmaj7"],
+    description: "Soulful ballad progression",
+  },
+
+  // Modal Progressions
+  {
+    id: "modal-1",
+    name: "i-bVII-i (Dorian Vamp)",
+    genre: "Modal",
+    chords: ["Dm", "C", "Dm"],
+    description: "Modal progression, common in funk and fusion",
+  },
+  {
+    id: "modal-2",
+    name: "I-bVII-I (Mixolydian Vamp)",
+    genre: "Modal",
+    chords: ["C", "Bb", "C"],
+    description: "Mixolydian mode for rock and funk",
+  },
+  {
+    id: "modal-3",
+    name: "i-bII-i (Phrygian Vamp)",
+    genre: "Modal",
+    chords: ["Em", "F", "Em"],
+    description: "Phrygian mode for dark, Spanish flavor",
+  },
+  {
+    id: "modal-4",
+    name: "I-II-I (Lydian Vamp)",
+    genre: "Modal",
+    chords: ["C", "D", "C"],
+    description: "Lydian mode for bright, dreamy sound",
+  },
+
+  // Progressive/Experimental
+  {
+    id: "prog-1",
+    name: "I-bII-bVII-IV (Chromatic)",
+    genre: "Progressive",
+    chords: ["C", "Db", "Bb", "F"],
+    description: "Chromatic progression for progressive rock",
+  },
+  {
+    id: "prog-2",
+    name: "i-bVI-bIII-bVII-IV (Complex Prog)",
+    genre: "Progressive",
+    chords: ["Am", "F", "C", "G", "D"],
+    description: "Complex progressive rock progression",
+  },
+  {
+    id: "prog-3",
+    name: "I-bII-II-bIII-III-IV (Chromatic Ascent)",
+    genre: "Progressive",
+    chords: ["C", "Db", "D", "Eb", "E", "F"],
+    description: "Chromatic ascending progression",
+  },
+  {
+    id: "prog-4",
+    name: "i-iv-bVII-bIII-bVI-bII-V (Tool-style)",
+    genre: "Progressive",
+    chords: ["Am", "Dm", "G", "C", "F", "Bb", "E"],
+    description: "Complex prog metal progression",
+  },
+
+  // Indie/Alternative
+  {
+    id: "indie-1",
+    name: "I-V-IV-IV (Indie Rock)",
+    genre: "Indie",
+    chords: ["C", "G", "F", "F"],
+    description: "Simple indie rock progression",
+  },
+  {
+    id: "indie-2",
+    name: "vi-V-IV-V (Indie Pop)",
+    genre: "Indie",
+    chords: ["Am", "G", "F", "G"],
+    description: "Melancholic indie pop progression",
+  },
+  {
+    id: "indie-3",
+    name: "I-iii-vi-IV-I-iii-IV-V (Indie Anthem)",
+    genre: "Indie",
+    chords: ["C", "Em", "Am", "F", "C", "Em", "F", "G"],
+    description: "Extended indie anthem progression",
+  },
+
+  // Funk/Disco
+  {
+    id: "funk-1",
+    name: "i-iv (Funk Vamp)",
+    genre: "Funk",
+    chords: ["Dm7", "Gm7"],
+    description: "Simple funk vamp",
+  },
+  {
+    id: "funk-2",
+    name: "i-bVII-i-bVII (Funk Groove)",
+    genre: "Funk",
+    chords: ["Dm7", "C7", "Dm7", "C7"],
+    description: "Classic funk groove",
+  },
+  {
+    id: "funk-3",
+    name: "ii-V-I-IV (Disco)",
+    genre: "Funk",
+    chords: ["Dm7", "G7", "Cmaj7", "Fmaj7"],
+    description: "Disco progression with 7th chords",
+  },
+  {
+    id: "funk-4",
+    name: "I7-IV7-I7-V7 (Funk Standard)",
+    genre: "Funk",
+    chords: ["C7", "F7", "C7", "G7"],
+    description: "Classic funk progression with all dominant 7ths",
+  },
+  {
+    id: "funk-5",
+    name: "i9-iv9 (Funky 9ths)",
+    genre: "Funk",
+    chords: ["Dm9", "Gm9"],
+    description: "Smooth funk with 9th chords",
+  },
+  {
+    id: "funk-6",
+    name: "I13-IV13-I13-V13 (Extended Funk)",
+    genre: "Funk",
+    chords: ["C13", "F13", "C13", "G13"],
+    description: "Extended funk with 13th chords for rich harmony",
+  },
+  {
+    id: "funk-7",
+    name: "i7-bVII7-i7-bVII7 (Dorian Funk)",
+    genre: "Funk",
+    chords: ["Dm7", "C7", "Dm7", "C7"],
+    description: "Dorian mode funk vamp",
+  },
+  {
+    id: "funk-8",
+    name: "I9-IV9-bVII9-IV9 (Funk Groove)",
+    genre: "Funk",
+    chords: ["C9", "F9", "Bb9", "F9"],
+    description: "Groovy funk with 9th chord movement",
+  },
+  {
+    id: "funk-9",
+    name: "i7-iv7-bVII7-bIII7 (Modal Funk)",
+    genre: "Funk",
+    chords: ["Dm7", "Gm7", "C7", "F7"],
+    description: "Modal funk progression with smooth voice leading",
+  },
+  {
+    id: "funk-10",
+    name: "I7#9-IV7#9 (Hendrix Funk)",
+    genre: "Funk",
+    chords: ["C7#9", "F7#9"],
+    description: "Funky with Hendrix chord (7#9)",
+  },
+  {
+    id: "funk-11",
+    name: "i11-iv11-i11-V7alt (Jazz-Funk)",
+    genre: "Funk",
+    chords: ["Dm11", "Gm11", "Dm11", "A7alt"],
+    description: "Jazz-funk fusion with 11th chords",
+  },
+
+  // Hip-Hop/Trap
+  {
+    id: "hiphop-1",
+    name: "i-bVI-bIII-bVII (Dark Trap)",
+    genre: "Hip-Hop",
+    chords: ["Am", "F", "C", "G"],
+    description: "Dark trap progression",
+  },
+  {
+    id: "hiphop-2",
+    name: "i-iv-bVII-bVI (Minor Hip-Hop)",
+    genre: "Hip-Hop",
+    chords: ["Am", "Dm", "G", "F"],
+    description: "Minor key hip-hop progression",
+  },
+  {
+    id: "hiphop-3",
+    name: "vi-IV-I-V (Melodic Rap)",
+    genre: "Hip-Hop",
+    chords: ["Am", "F", "C", "G"],
+    description: "Melodic rap progression",
+  },
+]
 
 const CHORD_EXTENSIONS: Record<string, string[]> = {
   Major: ["none", "6", "maj7", "add9", "9", "maj9", "6/9", "maj7(#11)", "maj13"],
@@ -183,20 +702,19 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
   const [resizingSection, setResizingSection] = useState<string | null>(null)
   const [resizeStartX, setResizeStartX] = useState(0)
   const [resizeStartBars, setResizeStartBars] = useState(0)
+  const [resizePreviewBars, setResizePreviewBars] = useState<number | null>(null)
+  const resizeAnimationFrame = useRef<number | null>(null)
 
   const [showStylePartMenu, setShowStylePartMenu] = useState<string | null>(null)
   const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null)
 
-  // Removed: const [selectedCategory, setSelectedCategory] = useState("Pop/Rock")
-  // Removed: const [selectedStyle, setSelectedStyle] = useState("8BeatModern")
-  // Removed: const [localControl, setLocalControl] = useState(true)
-  // Removed: const [clockSource, setClockSource] = useState<"internal" | "external">("internal")
-  // Removed: const [accompaniment, setAccompaniment] = useState(true)
-  // Removed: const [tempo, setTempo] = useState(120)
-
   const [showMobileControls, setShowMobileControls] = useState(false)
 
   const [clipboardChord, setClipboardChord] = useState<Chord | null>(null)
+
+  const [showProgressionDialog, setShowProgressionDialog] = useState(false)
+  const [progressionSearch, setProgressionSearch] = useState("")
+  const [selectedGenreFilter, setSelectedGenreFilter] = useState<string>("All")
 
   const [activeChordControls, setActiveChordControls] = useState<string | null>(null)
   const [isTouchDevice, setIsTouchDevice] = useState(false)
@@ -225,25 +743,44 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
   useEffect(() => {
     if (resizingSection) {
       const handleMouseMove = (e: MouseEvent) => {
-        const deltaX = e.clientX - resizeStartX
-        const barWidth = 40 // 40px per bar as per spec
-        const deltaBars = Math.round(deltaX / barWidth)
-        const newBars = Math.max(1, resizeStartBars + deltaBars)
-        handleUpdateSection(resizingSection, { bars: newBars })
+        if (resizeAnimationFrame.current) {
+          cancelAnimationFrame(resizeAnimationFrame.current)
+        }
+
+        resizeAnimationFrame.current = requestAnimationFrame(() => {
+          const deltaX = e.clientX - resizeStartX
+          const barWidth = 40 // 40px per bar as per spec
+          const deltaBars = Math.round(deltaX / barWidth)
+          const newBars = Math.max(1, resizeStartBars + deltaBars)
+          setResizePreviewBars(newBars)
+        })
       }
 
       const handleMouseUp = () => {
+        if (resizeAnimationFrame.current) {
+          cancelAnimationFrame(resizeAnimationFrame.current)
+          resizeAnimationFrame.current = null
+        }
+
+        if (resizePreviewBars !== null) {
+          handleUpdateSection(resizingSection, { bars: resizePreviewBars })
+        }
+
         setResizingSection(null)
+        setResizePreviewBars(null)
       }
 
       window.addEventListener("mousemove", handleMouseMove)
       window.addEventListener("mouseup", handleMouseUp)
       return () => {
+        if (resizeAnimationFrame.current) {
+          cancelAnimationFrame(resizeAnimationFrame.current)
+        }
         window.removeEventListener("mousemove", handleMouseMove)
         window.removeEventListener("mouseup", handleMouseUp)
       }
     }
-  }, [resizingSection, resizeStartX, resizeStartBars])
+  }, [resizingSection, resizeStartX, resizeStartBars, resizePreviewBars])
 
   const handleAddSection = () => {
     const newSection: Section = {
@@ -258,6 +795,37 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
     toast({
       title: "Section Added",
       description: "New section added to arrangement",
+    })
+  }
+
+  const handleRemoveSection = (sectionId: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+
+    // Don't allow removing the last section
+    if (sections.length === 1) {
+      toast({
+        title: "Cannot Remove",
+        description: "At least one section is required",
+        variant: "destructive",
+      })
+      return
+    }
+
+    // If removing the active section, switch to another section
+    if (activeSection === sectionId) {
+      const currentIndex = sections.findIndex((s) => s.id === sectionId)
+      const nextSection = sections[currentIndex + 1] || sections[currentIndex - 1]
+      if (nextSection) {
+        setActiveSection(nextSection.id)
+      }
+    }
+
+    // Remove the section
+    setSections(sections.filter((s) => s.id !== sectionId))
+
+    toast({
+      title: "Section Removed",
+      description: "Section deleted from arrangement",
     })
   }
 
@@ -781,6 +1349,78 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
     })
   }
 
+  const handleRemoveAllChords = () => {
+    if (!activeS) return
+
+    if (activeS.chords.length === 0) {
+      toast({
+        title: "No Chords",
+        description: "This section has no chords to remove",
+      })
+      return
+    }
+
+    // Confirm before removing all chords
+    if (window.confirm(`Remove all ${activeS.chords.length} chord(s) from ${activeS.name}?`)) {
+      setSections(sections.map((s) => (s.id === activeS.id ? { ...s, chords: [] } : s)))
+
+      toast({
+        title: "Chords Removed",
+        description: `All chords removed from ${activeS.name}`,
+      })
+    }
+  }
+
+  const handleAddProgression = (progression: (typeof CHORD_PROGRESSIONS)[0]) => {
+    if (!activeS) return
+
+    const startBeat = 0
+
+    const numChords = progression.chords.length
+    let beatsPerChord = 4 // Default: 1 bar per chord
+
+    if (numChords <= 4) {
+      // Short progressions: 1 bar per chord (4 beats)
+      beatsPerChord = 4
+    } else if (numChords <= 6) {
+      // Medium progressions: 1 bar per chord
+      beatsPerChord = 4
+    } else if (numChords <= 8) {
+      // 8-chord progressions: 1 bar per chord (8 bars total)
+      beatsPerChord = 4
+    } else if (numChords <= 12) {
+      // 12-chord progressions (like 12-bar blues): 1 bar per chord
+      beatsPerChord = 4
+    } else if (numChords <= 16) {
+      // 16-chord progressions: 0.5 bars per chord (8 bars total)
+      beatsPerChord = 2
+    } else {
+      // Very long progressions: 0.25 bars per chord
+      beatsPerChord = 1
+    }
+
+    const requiredBeats = numChords * beatsPerChord
+    const updatedBars = Math.max(activeS.bars, Math.ceil(requiredBeats / 4))
+
+    // Create new chords from the progression
+    const newChords: Chord[] = progression.chords.map((chordSymbol, index) => ({
+      id: `chord-${Date.now()}-${index}`,
+      symbol: chordSymbol,
+      beat: startBeat + index * beatsPerChord,
+      duration: beatsPerChord,
+    }))
+
+    setSections(sections.map((s) => (s.id === activeS.id ? { ...s, chords: newChords, bars: updatedBars } : s)))
+
+    setShowProgressionDialog(false)
+    setProgressionSearch("")
+
+    toast({
+      title: "Progression Added",
+      description: `${progression.name} replaced section content (${numChords} chords across ${Math.ceil(requiredBeats / 4)} bars)`,
+    })
+  }
+
   const cycleResolution = () => {
     const resolutions: Resolution[] = ["whole", "half", "quarter"]
     const currentIndex = resolutions.indexOf(resolution)
@@ -833,14 +1473,6 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
 
   const activeS = sections.find((s) => s.id === activeSection)
 
-  // const handleChordTap = (chordId: string, e: React.MouseEvent | React.TouchEvent) => {
-  //   e.stopPropagation()
-  //   if (isTouchDevice) {
-  //     // Toggle controls visibility on touch devices
-  //     setActiveChordControls(activeChordControls === chordId ? null : chordId)
-  //   }
-  // }
-
   // Add drag-and-drop handlers for chords
   const handleChordDragStart = (e: React.DragEvent, sectionId: string, chordId: string) => {
     e.stopPropagation()
@@ -852,8 +1484,6 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
     setDraggingChord(null)
     setDragOverBeat(null)
     setIsDragging(false)
-    // setLastTapTime(0) // Reset tap timers on drag end - REMOVED
-    // setLastTapChordId(null) - REMOVED
   }
 
   const handleCellDragOver = (e: React.DragEvent, beat: number) => {
@@ -955,9 +1585,6 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
     setTouchStartPos({ x: touch.clientX, y: touch.clientY })
     setDraggingChord({ sectionId, chordId })
     setIsDragging(true)
-    // Set tap timers here too, for when touch move doesn't trigger a drag but a tap
-    // setLastTapTime(Date.now()) // REMOVED
-    // setLastTapChordId(chordId) // REMOVED
   }
 
   const handleChordTouchMove = (e: React.TouchEvent) => {
@@ -1111,6 +1738,14 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
                       minWidth: "280px",
                     }}
                   >
+                    <button
+                      onClick={(e) => handleRemoveSection(section.id, e)}
+                      className="absolute top-2 right-2 z-10 w-7 h-7 rounded-full bg-red-500/90 hover:bg-red-600 text-white flex items-center justify-center transition-all hover:scale-110 shadow-lg"
+                      title="Remove section"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+
                     <div className="p-4 h-full flex flex-col gap-3">
                       <div>
                         <label className="text-[10px] font-bold text-white/80 mb-1 block uppercase tracking-wide">
@@ -1202,6 +1837,25 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
                     <div className="text-lg font-bold text-white">
                       {activeS.name} • {activeS.stylePart}
                     </div>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={handleRemoveAllChords}
+                      variant="outline"
+                      className="border-red-500/50 text-red-500 hover:bg-red-500/10 hover:text-red-400 font-semibold bg-transparent"
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Remove All
+                    </Button>
+
+                    <Button
+                      onClick={() => setShowProgressionDialog(true)}
+                      className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold shadow-lg"
+                    >
+                      <Music className="w-4 h-4 mr-2" />
+                      Chord Progressions
+                    </Button>
                   </div>
 
                   <div className="text-sm text-gray-400">
@@ -1737,6 +2391,138 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
                 </Button>
               ))}
             </div>
+          </div>
+        </div>
+      )}
+
+      {showProgressionDialog && (
+        <div
+          className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => setShowProgressionDialog(false)}
+        >
+          <div
+            className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-2xl p-8 max-w-4xl w-full border-2 border-purple-500/30 shadow-2xl max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-2xl font-bold text-purple-500 flex items-center gap-3">
+                  <Music className="w-7 h-7" />
+                  Chord Progression Library
+                </h3>
+                <p className="text-sm text-gray-400 mt-1">
+                  Browse and add popular chord progressions to your arrangement
+                </p>
+              </div>
+              <Button
+                onClick={() => setShowProgressionDialog(false)}
+                variant="outline"
+                className="border-purple-500/50 hover:bg-purple-500/10"
+              >
+                Close
+              </Button>
+            </div>
+
+            {/* Search and Filter */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div>
+                <label className="text-sm font-semibold text-purple-400 mb-2 block">Search Progressions</label>
+                <input
+                  type="text"
+                  value={progressionSearch}
+                  onChange={(e) => setProgressionSearch(e.target.value)}
+                  placeholder="Search by name or description..."
+                  className="w-full h-12 bg-zinc-800 border border-purple-500/30 rounded-lg px-4 text-white placeholder:text-gray-500"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-semibold text-purple-400 mb-2 block">Filter by Genre</label>
+                <Select value={selectedGenreFilter} onValueChange={setSelectedGenreFilter}>
+                  <SelectTrigger className="h-12 bg-zinc-800 border-purple-500/30 text-white">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="All">All Genres</SelectItem>
+                    <SelectItem value="Pop/Rock">Pop/Rock</SelectItem>
+                    <SelectItem value="Jazz">Jazz</SelectItem>
+                    <SelectItem value="Blues">Blues</SelectItem>
+                    <SelectItem value="Rock">Rock</SelectItem>
+                    <SelectItem value="Ballad">Ballad</SelectItem>
+                    <SelectItem value="Latin">Latin</SelectItem>
+                    <SelectItem value="Gospel">Gospel</SelectItem>
+                    <SelectItem value="Dance/EDM">Dance/EDM</SelectItem>
+                    <SelectItem value="Country">Country</SelectItem>
+                    <SelectItem value="R&B">R&B</SelectItem>
+                    <SelectItem value="Modal">Modal</SelectItem>
+                    <SelectItem value="Progressive">Progressive</SelectItem>
+                    <SelectItem value="Indie">Indie</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* Progressions List */}
+            <div className="space-y-3">
+              {CHORD_PROGRESSIONS.filter((prog) => {
+                const matchesSearch =
+                  progressionSearch === "" ||
+                  prog.name.toLowerCase().includes(progressionSearch.toLowerCase()) ||
+                  prog.description.toLowerCase().includes(progressionSearch.toLowerCase()) ||
+                  prog.chords.some((chord) => chord.toLowerCase().includes(progressionSearch.toLowerCase()))
+
+                const matchesGenre = selectedGenreFilter === "All" || prog.genre === selectedGenreFilter
+
+                return matchesSearch && matchesGenre
+              }).map((progression) => (
+                <div
+                  key={progression.id}
+                  className="bg-zinc-800/50 border border-purple-500/20 rounded-xl p-5 hover:border-purple-500/50 transition-all"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h4 className="text-lg font-bold text-white">{progression.name}</h4>
+                        <span className="px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-semibold rounded-full">
+                          {progression.genre}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-400 mb-3">{progression.description}</p>
+                      <div className="flex flex-wrap gap-2">
+                        {progression.chords.map((chord, idx) => (
+                          <span
+                            key={idx}
+                            className="px-3 py-1 bg-amber-500/20 text-amber-400 font-bold text-sm rounded-lg border border-amber-500/30"
+                          >
+                            {chord}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <Button
+                      onClick={() => handleAddProgression(progression)}
+                      className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold shadow-lg"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {CHORD_PROGRESSIONS.filter((prog) => {
+              const matchesSearch =
+                progressionSearch === "" ||
+                prog.name.toLowerCase().includes(progressionSearch.toLowerCase()) ||
+                prog.description.toLowerCase().includes(progressionSearch.toLowerCase())
+              const matchesGenre = selectedGenreFilter === "All" || prog.genre === selectedGenreFilter
+              return matchesSearch && matchesGenre
+            }).length === 0 && (
+              <div className="text-center py-12">
+                <Music className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                <p className="text-gray-400">No progressions found matching your search</p>
+              </div>
+            )}
           </div>
         </div>
       )}

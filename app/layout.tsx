@@ -34,14 +34,33 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              // Suppress ResizeObserver loop errors (harmless browser warning)
-              window.addEventListener('error', (e) => {
-                if (e.message === 'ResizeObserver loop completed with undelivered notifications.' ||
-                    e.message === 'ResizeObserver loop limit exceeded') {
-                  e.stopImmediatePropagation();
-                  e.preventDefault();
+              (function() {
+                // Helper function to check if error is ResizeObserver related
+                function isResizeObserverError(message) {
+                  if (!message) return false;
+                  const msg = String(message).toLowerCase();
+                  return msg.includes('resizeobserver loop') || 
+                         msg.includes('resize observer loop');
                 }
-              });
+
+                // Suppress ResizeObserver errors in error handler
+                window.addEventListener('error', function(e) {
+                  if (isResizeObserverError(e.message)) {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    return false;
+                  }
+                }, true);
+
+                // Suppress in console
+                const originalConsoleError = console.error;
+                console.error = function(...args) {
+                  if (args[0] && isResizeObserverError(args[0])) {
+                    return;
+                  }
+                  originalConsoleError.apply(console, args);
+                };
+              })();
             `,
           }}
         />
