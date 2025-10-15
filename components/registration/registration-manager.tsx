@@ -202,9 +202,12 @@ export function RegistrationManager({
       },
     }
 
+    const bankNumber = Number.parseInt(currentBank.split(" ")[1])
+
     api.sendCommand({
       type: "registration",
       action: "save",
+      bank: bankNumber,
       slot: currentSlot,
       name: registrationName,
       data: newRegistration.data,
@@ -233,9 +236,12 @@ export function RegistrationManager({
       if (frozenParameters.has("TEMPO")) delete dataToLoad.tempo
     }
 
+    const bankNumber = Number.parseInt(currentBank.split(" ")[1])
+
     api.sendCommand({
       type: "registration",
       action: "load",
+      bank: bankNumber,
       slot: slotNumber,
       data: dataToLoad,
     })
