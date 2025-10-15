@@ -15,10 +15,12 @@ SmartBridge is a comprehensive web-based MIDI control interface for the Yamaha T
 - **Real-time Voice Assignment**: Click any part to instantly browse and assign voices
 - **Visual Voice Indicators**: Each part displays the currently assigned voice name in white text
 - **Style Selection**: Quick access to accompaniment styles with category browser
-- **Tempo Control**: Adjust style tempo from 40-300 BPM
-- **Transport Controls**: Start/Stop accompaniment with visual feedback
-- **Sync Start Toggle**: Enable/disable synchronized style start
-- **Accompaniment On/Off**: Quick toggle for accompaniment playback
+
+**Style Controls**
+- **Transport Buttons**: Start, Stop, and Sync Start with color-coded visual feedback
+- **Variation Selector**: Choose from 11 style variations (Intro 1-3, Main 1-4, Fill In, Outro 1-3)
+- **Tempo Slider**: Adjust style tempo from 30-400 BPM with real-time display
+- **Visual Feedback**: All controls provide immediate visual response
 
 **Visual Design**
 - Premium gradient backgrounds with glass-morphism effects
@@ -61,6 +63,7 @@ SmartBridge is a comprehensive web-based MIDI control interface for the Yamaha T
   - **Reverb Send**: Adjustable reverb amount per channel
   - **Chorus Send**: Adjustable chorus amount per channel
   - **Brightness Control**: Tone adjustment per channel
+  - **EQ Section**: Three-band EQ with Bass, Mid, and High knobs (0-127, 64=flat)
   - **Solo Button**: Isolate individual channels
   - **Mute Button**: Silence individual channels
 
@@ -79,11 +82,36 @@ SmartBridge is a comprehensive web-based MIDI control interface for the Yamaha T
 
 ### 4. Registration Manager - Performance Memory
 
-**8 Registration Slots**
+**Bank Management**
+- **8 Banks Available**: Each bank contains 8 registration slots (64 total registrations)
+- **Bank Selection**: Quick switch between banks with dropdown selector
+- **Bank Operations**: Load, save, and delete entire banks
+- **Bank Naming**: Custom names for easy identification
+
+**8 Registration Slots Per Bank**
 - **Save Complete Setups**: Store entire performance configurations
 - **Slot Management**: Save, load, and delete registrations
 - **Custom Naming**: Give each registration a descriptive name
 - **Timestamp Tracking**: Automatic save time recording
+- **Data Summary Panel**: View detailed breakdown of saved configuration
+
+**Freeze Functionality**
+- **Parameter Protection**: Prevent specific parameters from being overwritten during recall
+- **Freeze Toggle**: Enable/disable freeze mode
+- **Selective Freezing**: Choose which parameters to protect:
+  - Voice assignments
+  - Style selection
+  - Tempo settings
+  - Effect settings
+  - Mixer settings
+- **Visual Indicators**: Clear display of frozen parameters
+
+**Registration Sequence**
+- **Custom Recall Order**: Program the order of slot recalls
+- **Hands-Free Operation**: Advance through sequence with foot pedal or MIDI controller
+- **Sequence Editor**: Drag and drop to reorder slots
+- **Sequence Playback**: Step through programmed sequence
+- **Loop Option**: Repeat sequence continuously
 
 **Saved Data Includes**
 - **All Voice Assignments**: All 4 performance parts
@@ -102,12 +130,25 @@ SmartBridge is a comprehensive web-based MIDI control interface for the Yamaha T
 
 ### 5. Assembly Workbench - Style Creation & Editing
 
+**Premium Interface Design**
+- **Two-Panel Layout**: Source Library (left) and Target Style (right) with clear visual separation
+- **Color-Coded Panels**: Emerald green for source, blue for target
+- **Drag & Drop Feedback**: Instant visual feedback with purple pulsing highlight on drop
+- **Status Indicators**: Clear "Pending" status for uncommitted changes
+- **Professional Styling**: Dark theme with premium gradients and glass-morphism effects
+
 **Hybrid Style Assembly**
 - **Drag & Drop Interface**: Visually copy style parts between sections
-- **11 Style Sections**: Intro 1-3, Main A-D, Fill, Outro 1-3
-- **8 Style Tracks**: Rhythm 1-2, Bass, Chord 1-3, Phrase 1-2
+- **11 Style Sections**: Intro 1-3, Main A-D, Fill In, Break, Ending 1-4
+- **8 Style Tracks**: Rhythm 1, Rhythm 2, Bass, Chord 1, Chord 2, Pad, Phrase 1, Phrase 2
 - **Source Style Preview**: Load and preview any Tyros5 style
 - **Target Style Building**: Create custom hybrid styles
+
+**Workflow Controls**
+- **Execute Button**: Commit pending pattern copies to target style
+- **Undo Button**: Revert last copy operation
+- **Save Button**: Save assembled hybrid style to Tyros5 memory
+- **Clear Visual States**: Pending, copied, and original patterns clearly distinguished
 
 **Style Part Controls**
 - **Solo/Mute Per Track**: Isolate or silence individual tracks

@@ -148,6 +148,11 @@ const unsubscribe = tyrosAPI.onEvent((event) => {
 // Pan control
 { type: "mixer", action: "pan", channel: 1, value: 64 }
 
+// EQ controls
+{ type: "mixer", action: "eq-bass", channel: 1, value: 64 }
+{ type: "mixer", action: "eq-mid", channel: 1, value: 64 }
+{ type: "mixer", action: "eq-high", channel: 1, value: 64 }
+
 // Reverb send
 { type: "mixer", action: "reverb", channel: 1, value: 40 }
 
@@ -183,14 +188,21 @@ const unsubscribe = tyrosAPI.onEvent((event) => {
 { type: "style", action: "start" }
 { type: "style", action: "stop" }
 
+// Sync Start
+{ type: "style", action: "sync-start", enabled: true }
+
 // Select style
 { type: "style", action: "select", category: "Pop & Rock", style: "8BeatModern" }
 
-// Tempo
+// Tempo (30-400 BPM)
 { type: "style", action: "tempo", value: 120 }
 
-// Variation
-{ type: "style", action: "variation", variation: 1 }
+// Variation (11 options)
+{ 
+  type: "style", 
+  action: "variation", 
+  variation: "main-1" // Options: intro-1, intro-2, intro-3, main-1, main-2, main-3, main-4, fill-in, outro-1, outro-2, outro-3
+}
 
 // Fill-ins
 { type: "style", action: "fill-in", fillType: "intro" }
@@ -246,16 +258,90 @@ const unsubscribe = tyrosAPI.onEvent((event) => {
 {
   type: "registration",
   action: "save",
-  slot: 1,
+  bank: 1, // 1-8
+  slot: 1, // 1-8
   name: "My Setup",
   data: { voices: [...], mixer: [...], effects: [...] }
 }
 
-// Load registration
-{ type: "registration", action: "load", slot: 1, data: {...} }
+// Load registration (with optional freeze support)
+{ 
+  type: "registration", 
+  action: "load", 
+  bank: 1,
+  slot: 1, 
+  data: { 
+    voices: [...], // Optional - omit if frozen
+    mixer: [...],  // Optional - omit if frozen
+    effects: [...] // Optional - omit if frozen
+  } 
+}
+
+// Bank management
+{ type: "registration", action: "load-bank", bank: 1 }
+{ type: "registration", action: "save-bank", bank: 1, name: "Bank 1" }
+{ type: "registration", action: "delete-bank", bank: 1 }
+
+// Freeze parameters (prevent loading specific parameters)
+{
+  type: "registration",
+  action: "freeze",
+  parameters: {
+    voices: true,  // Freeze voice assignments
+    style: false,
+    tempo: false,
+    effects: false,
+    mixer: false
+  }
+}
+
+// Registration sequence (program slot recall order)
+{
+  type: "registration",
+  action: "sequence",
+  sequence: [1, 3, 2, 4] // Slot numbers in desired order
+}
 \`\`\`
 
-#### 8. Tyros Control Commands
+#### 8. Assembly/Hybridizer Commands
+\`\`\`typescript
+// Load target style for editing
+{
+  type: "assembly",
+  action: "load-target",
+  category: "Pop & Rock",
+  style: "8BeatModern"
+}
+
+// Load source style to copy from
+{
+  type: "assembly",
+  action: "load-source",
+  category: "Jazz",
+  style: "SwingJazz"
+}
+
+// Copy pattern from source to target
+{
+  type: "assembly",
+  action: "copy-pattern",
+  sourceSection: "Main A",
+  sourceChannel: 1, // 0-7 (Rhythm 1, Rhythm 2, Bass, Chord 1, Chord 2, Pad, Phrase 1, Phrase 2)
+  targetSection: "Main A",
+  targetChannel: 1
+}
+
+// Execute pending copy operations
+{ type: "assembly", action: "execute" }
+
+// Undo last operation
+{ type: "assembly", action: "undo" }
+
+// Save assembled style
+{ type: "assembly", action: "save", name: "My Hybrid Style" }
+\`\`\`
+
+#### 9. Tyros Control Commands
 \`\`\`typescript
 // Local control
 { type: "tyros-control", action: "local-control", enabled: true }
