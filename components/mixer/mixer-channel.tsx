@@ -29,6 +29,7 @@ export function MixerChannel({
 }: MixerChannelProps) {
   const { api } = useMIDI()
   const [volume, setVolume] = useState(100)
+  const [pan, setPan] = useState(64)
   const [reverb, setReverb] = useState(40)
   const [chorus, setChorus] = useState(30)
   const [brightness, setBrightness] = useState(64)
@@ -38,6 +39,16 @@ export function MixerChannel({
     api.sendCommand({
       type: "mixer",
       action: "volume",
+      channel,
+      value,
+    })
+  }
+
+  const handlePanChange = (value: number) => {
+    setPan(value)
+    api.sendCommand({
+      type: "mixer",
+      action: "pan",
       channel,
       value,
     })
@@ -110,10 +121,9 @@ export function MixerChannel({
       </div>
 
       <div className="w-full space-y-2 md:space-y-3 lg:space-y-4 flex-1">
+        <RotaryKnob value={pan} onChange={handlePanChange} label="Pan" displayValue={`${pan}`} size="md" />
         <RotaryKnob value={reverb} onChange={handleReverbChange} label="Reverb" displayValue={`${reverb}`} size="md" />
-
         <RotaryKnob value={chorus} onChange={handleChorusChange} label="Chorus" displayValue={`${chorus}`} size="md" />
-
         <RotaryKnob
           value={brightness}
           onChange={handleBrightnessChange}
