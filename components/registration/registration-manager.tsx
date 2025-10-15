@@ -226,14 +226,12 @@ export function RegistrationManager({
     const registration = registrations[slotNumber - 1]
     if (!registration) return
 
-    // Apply freeze logic - skip frozen parameters
-    const dataToLoad = { ...registration.data }
-    if (freezeEnabled) {
-      if (frozenParameters.has("VOICE")) delete dataToLoad.voices
-      if (frozenParameters.has("MIXER")) delete dataToLoad.mixer
-      if (frozenParameters.has("EFFECT")) delete dataToLoad.effects
-      if (frozenParameters.has("STYLE")) delete dataToLoad.style
-      if (frozenParameters.has("TEMPO")) delete dataToLoad.tempo
+    const dataToLoad = {
+      ...((!freezeEnabled || !frozenParameters.has("VOICE")) && { voices: registration.data.voices }),
+      ...((!freezeEnabled || !frozenParameters.has("MIXER")) && { mixer: registration.data.mixer }),
+      ...((!freezeEnabled || !frozenParameters.has("EFFECT")) && { effects: registration.data.effects }),
+      ...((!freezeEnabled || !frozenParameters.has("STYLE")) && { style: registration.data.style }),
+      ...((!freezeEnabled || !frozenParameters.has("TEMPO")) && { tempo: registration.data.tempo }),
     }
 
     const bankNumber = Number.parseInt(currentBank.split(" ")[1])
