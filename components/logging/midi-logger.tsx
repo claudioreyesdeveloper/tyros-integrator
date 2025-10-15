@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Trash2, Download, Zap } from "lucide-react"
+import { Trash2, Download, Zap, Save } from "lucide-react"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
@@ -21,6 +21,17 @@ export function MidiLogger() {
     console.log("[v0] Autoconnect functionality removed")
   }
 
+  const handleSaveConfiguration = () => {
+    const configuration = {
+      port1,
+      port2,
+      timestamp: new Date().toISOString(),
+    }
+    console.log("[v0] Saving MIDI port configuration:", configuration)
+    // TODO: Implement actual save functionality (localStorage, API, etc.)
+    alert("MIDI port configuration saved!")
+  }
+
   return (
     <div className="p-4 md:p-6 lg:p-8 space-y-6">
       <div className="glossy-panel p-4 md:p-6 lg:p-8">
@@ -29,14 +40,24 @@ export function MidiLogger() {
             <h2 className="text-xl md:text-2xl font-bold text-white mb-2">MIDI Port Configuration</h2>
             <p className="text-sm text-gray-300">Configure MIDI input and output ports</p>
           </div>
-          <Button
-            onClick={handleAutoconnect}
-            className="glossy-button h-9 md:h-10 px-4 md:px-5 text-xs md:text-sm gap-2"
-            size="sm"
-          >
-            <Zap className="w-3 h-3 md:w-4 md:h-4" />
-            Autoconnect
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              onClick={handleAutoconnect}
+              className="glossy-button h-9 md:h-10 px-4 md:px-5 text-xs md:text-sm gap-2"
+              size="sm"
+            >
+              <Zap className="w-3 h-3 md:w-4 md:h-4" />
+              Autoconnect
+            </Button>
+            <Button
+              onClick={handleSaveConfiguration}
+              className="glossy-button h-9 md:h-10 px-4 md:px-5 text-xs md:text-sm gap-2"
+              size="sm"
+            >
+              <Save className="w-3 h-3 md:w-4 md:h-4" />
+              Save
+            </Button>
+          </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">

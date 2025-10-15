@@ -16,7 +16,7 @@ import type { MixerSettings, DSPSettings } from "@/app/page"
 export interface VoiceCommand {
   type: "voice"
   action: "assign"
-  part: number // 1-4 (Left, Right1, Right2, Right3)
+  part: number // 1-4 (Left 1, Left 2, Right 1, Right 2)
   voice: Voice
 }
 
@@ -57,6 +57,27 @@ export interface MixerBrightnessCommand {
   action: "brightness"
   channel: number
   value: number // 0-127
+}
+
+export interface MixerEQBassCommand {
+  type: "mixer"
+  action: "eq-bass"
+  channel: number
+  value: number // 0-127 (64 = flat)
+}
+
+export interface MixerEQMidCommand {
+  type: "mixer"
+  action: "eq-mid"
+  channel: number
+  value: number // 0-127 (64 = flat)
+}
+
+export interface MixerEQHighCommand {
+  type: "mixer"
+  action: "eq-high"
+  channel: number
+  value: number // 0-127 (64 = flat)
 }
 
 export interface MixerMasterVolumeCommand {
@@ -120,13 +141,24 @@ export interface StyleStartStopCommand {
 export interface StyleTempoCommand {
   type: "style"
   action: "tempo"
-  value: number // 40-300 BPM
+  value: number // 30-400 BPM
 }
 
 export interface StyleVariationCommand {
   type: "style"
   action: "variation"
-  variation: number // 1-4
+  variation:
+    | "intro-1"
+    | "intro-2"
+    | "intro-3"
+    | "main-1"
+    | "main-2"
+    | "main-3"
+    | "main-4"
+    | "fill-in"
+    | "outro-1"
+    | "outro-2"
+    | "outro-3"
 }
 
 export interface StyleFillInCommand {
@@ -139,6 +171,49 @@ export interface StyleSyncStartCommand {
   type: "style"
   action: "sync-start"
   enabled: boolean
+}
+
+// ============================================================================
+// ASSEMBLY/HYBRIDIZER COMMANDS
+// ============================================================================
+
+export interface AssemblyLoadTargetCommand {
+  type: "assembly"
+  action: "load-target"
+  category: string
+  style: string
+}
+
+export interface AssemblyLoadSourceCommand {
+  type: "assembly"
+  action: "load-source"
+  category: string
+  style: string
+}
+
+export interface AssemblyCopyPatternCommand {
+  type: "assembly"
+  action: "copy-pattern"
+  sourceSection: string
+  sourceChannel: number
+  targetSection: string
+  targetChannel: number
+}
+
+export interface AssemblyExecuteCommand {
+  type: "assembly"
+  action: "execute"
+}
+
+export interface AssemblyUndoCommand {
+  type: "assembly"
+  action: "undo"
+}
+
+export interface AssemblySaveCommand {
+  type: "assembly"
+  action: "save"
+  name: string
 }
 
 // ============================================================================
@@ -217,6 +292,7 @@ export interface ChordSequenceCommand {
 export interface RegistrationLoadCommand {
   type: "registration"
   action: "load"
+  bank: number // 1-8
   slot: number // 1-8
   data: {
     voices: Voice[]
@@ -228,6 +304,7 @@ export interface RegistrationLoadCommand {
 export interface RegistrationSaveCommand {
   type: "registration"
   action: "save"
+  bank: number // 1-8
   slot: number // 1-8
   name: string
   data: {
@@ -235,6 +312,43 @@ export interface RegistrationSaveCommand {
     mixer: MixerSettings[]
     effects: DSPSettings[]
   }
+}
+
+export interface RegistrationLoadBankCommand {
+  type: "registration"
+  action: "load-bank"
+  bank: number // 1-8
+}
+
+export interface RegistrationSaveBankCommand {
+  type: "registration"
+  action: "save-bank"
+  bank: number // 1-8
+  name: string
+}
+
+export interface RegistrationDeleteBankCommand {
+  type: "registration"
+  action: "delete-bank"
+  bank: number // 1-8
+}
+
+export interface RegistrationFreezeCommand {
+  type: "registration"
+  action: "freeze"
+  parameters: {
+    voices: boolean
+    style: boolean
+    tempo: boolean
+    effects: boolean
+    mixer: boolean
+  }
+}
+
+export interface RegistrationSequenceCommand {
+  type: "registration"
+  action: "sequence"
+  sequence: number[] // Array of slot numbers in order
 }
 
 // ============================================================================
@@ -272,6 +386,9 @@ export type TyrosCommand =
   | MixerReverbCommand
   | MixerChorusCommand
   | MixerBrightnessCommand
+  | MixerEQBassCommand
+  | MixerEQMidCommand
+  | MixerEQHighCommand
   | MixerMasterVolumeCommand
   | MixerGlobalReverbCommand
   | MixerGlobalChorusCommand
@@ -286,6 +403,13 @@ export type TyrosCommand =
   | StyleVariationCommand
   | StyleFillInCommand
   | StyleSyncStartCommand
+  // Assembly
+  | AssemblyLoadTargetCommand
+  | AssemblyLoadSourceCommand
+  | AssemblyCopyPatternCommand
+  | AssemblyExecuteCommand
+  | AssemblyUndoCommand
+  | AssemblySaveCommand
   // Multipad
   | MultipadTriggerCommand
   | MultipadStopCommand
@@ -298,6 +422,11 @@ export type TyrosCommand =
   // Registration
   | RegistrationLoadCommand
   | RegistrationSaveCommand
+  | RegistrationLoadBankCommand
+  | RegistrationSaveBankCommand
+  | RegistrationDeleteBankCommand
+  | RegistrationFreezeCommand
+  | RegistrationSequenceCommand
   // Tyros Control
   | TyrosLocalControlCommand
   | TyrosClockSourceCommand
