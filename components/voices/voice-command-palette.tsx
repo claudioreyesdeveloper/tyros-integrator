@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+
 import { useState, useEffect, useRef } from "react"
 import type { Voice } from "@/lib/voice-data"
 import { VoiceIcon } from "@/components/ui/voice-icon"
@@ -98,7 +100,13 @@ export function VoiceCommandPalette({
 
   const searchResults = searchQuery.trim() ? fuzzySearch(voices, searchQuery, 30) : []
 
-  const sections = []
+  const sections: Array<{
+    title: string
+    icon: React.ComponentType<{ className?: string }>
+    color: string
+    items: Voice[]
+  }> = []
+
   if (searchQuery.trim()) {
     if (searchResults.length > 0) {
       sections.push({ title: "Search Results", icon: Search, color: "text-amber-500", items: searchResults })
