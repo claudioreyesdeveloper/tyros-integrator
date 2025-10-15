@@ -295,9 +295,11 @@ export interface RegistrationLoadCommand {
   bank: number // 1-8
   slot: number // 1-8
   data: {
-    voices: Voice[]
-    mixer: MixerSettings[]
-    effects: DSPSettings[]
+    voices?: Voice[]
+    mixer?: MixerSettings[]
+    effects?: DSPSettings[]
+    style?: string
+    tempo?: number
   }
 }
 
