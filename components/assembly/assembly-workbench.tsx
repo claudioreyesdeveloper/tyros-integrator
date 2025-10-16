@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState, useRef } from "react"
-import { GripVertical, Play, Square, Volume2, VolumeX, Check, Undo, Save, ArrowRight } from "lucide-react"
+import { GripVertical, Play, Square, Volume2, VolumeX, Check, Undo, Save, ChevronDown, ChevronUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
@@ -77,6 +77,8 @@ export function AssemblyWorkbench() {
   const [touchDragData, setTouchDragData] = useState<DragData | null>(null)
   const [touchPosition, setTouchPosition] = useState<{ x: number; y: number } | null>(null)
   const touchTargetRef = useRef<{ section: string; track: string } | null>(null)
+
+  const [isSourceExpanded, setIsSourceExpanded] = useState(true)
 
   const handleSourceStyleChange = (category: string, style: string) => {
     setSourceCategory(category)
@@ -261,107 +263,235 @@ export function AssemblyWorkbench() {
   }
 
   return (
-    <div className="min-h-screen bg-black p-4 md:p-6 lg:p-8">
-      {touchDragData && touchPosition && (
-        <div
-          className="fixed pointer-events-none z-[10000] bg-gradient-to-br from-emerald-500 to-green-600 border-2 border-emerald-400 rounded-xl p-3 shadow-2xl"
-          style={{
-            left: touchPosition.x - 60,
-            top: touchPosition.y - 30,
-            transform: "scale(1.1)",
-          }}
-        >
-          <div className="flex items-center gap-2">
-            <GripVertical className="w-4 h-4 text-white" />
-            <div className="text-sm font-bold text-white">
-              {touchDragData.section} - {touchDragData.track}
-            </div>
+    <div className="min-h-screen bg-black p-2 sm:p-4 md:p-6">
+      {/* Header Controls */}
+      <div className="premium-card p-3 sm:p-6 mb-3 sm:mb-4">
+        <div className="space-y-3 sm:space-y-4">
+          <div>
+            <h1 className="text-xl sm:text-3xl font-bold text-white">Style Assembly</h1>
+            <p className="text-xs sm:text-base text-gray-400 mt-1">Drag patterns from source to target timeline</p>
           </div>
-        </div>
-      )}
 
-      <div className="premium-card p-8 mb-6">
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-          <div className="space-y-2">
-            <h1 className="text-4xl font-bold text-white tracking-tight">Style Assembly</h1>
-            <p className="text-lg text-gray-400">Create hybrid arrangements by mixing patterns from different styles</p>
-          </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap gap-2">
             <Button
               onClick={handleExecute}
               disabled={!pendingCopy}
-              className="glossy-button bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 disabled:opacity-40 disabled:cursor-not-allowed h-12 px-6 text-base font-bold"
+              className="glossy-button bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 disabled:opacity-40 h-10 sm:h-12 px-4 sm:px-6 text-xs sm:text-base font-bold flex-1 sm:flex-none min-w-[120px]"
             >
-              <Check className="w-5 h-5 mr-2" />
+              <Check className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
               Execute
             </Button>
             <Button
               onClick={handleUndo}
               disabled={assemblyHistory.length === 0}
               variant="outline"
-              className="h-12 px-6 text-base font-bold border-2 border-amber-500/40 text-amber-400 hover:bg-amber-500/20 hover:border-amber-500/60 disabled:opacity-40 disabled:cursor-not-allowed bg-black/40"
+              className="h-10 sm:h-12 px-4 sm:px-6 text-xs sm:text-base font-bold border-2 border-amber-500/40 text-amber-400 hover:bg-amber-500/20 disabled:opacity-40 bg-black/40 flex-1 sm:flex-none min-w-[100px]"
             >
-              <Undo className="w-5 h-5 mr-2" />
+              <Undo className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
               Undo
             </Button>
             <Button
               onClick={handleSave}
-              className="glossy-button bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-400 hover:to-cyan-500 h-12 px-6 text-base font-bold"
+              className="glossy-button bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-400 hover:to-cyan-500 h-10 sm:h-12 px-4 sm:px-6 text-xs sm:text-base font-bold flex-1 sm:flex-none min-w-[100px]"
             >
-              <Save className="w-5 h-5 mr-2" />
+              <Save className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
               Save
             </Button>
+            <Button
+              onClick={handlePlayStop}
+              className={cn(
+                "glossy-button h-10 sm:h-12 px-4 sm:px-6 text-xs sm:text-base font-bold flex-1 sm:flex-none min-w-[100px]",
+                isPlaying
+                  ? "bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-400 hover:to-rose-500"
+                  : "bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-400 hover:to-pink-500",
+              )}
+            >
+              {isPlaying ? (
+                <>
+                  <Square className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                  Stop
+                </>
+              ) : (
+                <>
+                  <Play className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                  Play
+                </>
+              )}
+            </Button>
           </div>
+
+          {pendingCopy && (
+            <div className="bg-purple-500/20 border-2 border-purple-500/50 rounded-xl p-3 sm:p-4 animate-pulse">
+              <div className="text-xs sm:text-sm font-bold text-purple-300 mb-1">Pending Copy:</div>
+              <div className="text-sm sm:text-base font-bold text-white">
+                {pendingCopy.source.section} - {pendingCopy.source.track} → {pendingCopy.target.section} -{" "}
+                {pendingCopy.target.track}
+              </div>
+              <div className="text-xs text-purple-400 mt-1">Tap Execute to confirm</div>
+            </div>
+          )}
         </div>
       </div>
 
-      {pendingCopy && (
-        <div className="premium-card p-6 mb-6 bg-gradient-to-r from-amber-500/10 to-orange-500/10 border-2 border-amber-500/60">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-6">
-              <div className="space-y-1">
-                <div className="text-xs font-bold text-emerald-400 uppercase tracking-wider">Source</div>
-                <div className="text-base font-bold text-white">
-                  {pendingCopy.source.section} - {pendingCopy.source.track}
-                </div>
-              </div>
-              <ArrowRight className="w-8 h-8 text-amber-400" />
-              <div className="space-y-1">
-                <div className="text-xs font-bold text-blue-400 uppercase tracking-wider">Target</div>
-                <div className="text-base font-bold text-white">
-                  {pendingCopy.target.section} - {pendingCopy.target.track}
-                </div>
+      <div className="lg:hidden space-y-3 sm:space-y-4">
+        {/* Source Panel - Mobile */}
+        <div className="premium-card overflow-hidden">
+          <button
+            onClick={() => setIsSourceExpanded(!isSourceExpanded)}
+            className="w-full p-4 sm:p-6 flex items-center justify-between hover:bg-white/5 transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-3 h-3 rounded-full bg-gradient-to-r from-emerald-500 to-green-600 animate-pulse" />
+              <div className="text-left">
+                <h2 className="text-lg sm:text-2xl font-bold text-emerald-400">Source Patterns</h2>
+                <p className="text-xs sm:text-sm text-gray-400 mt-0.5">
+                  {sourceCategory} - {sourceStyle} - {sourceSection}
+                </p>
               </div>
             </div>
-            <Button
-              onClick={() => setPendingCopy(null)}
-              variant="ghost"
-              size="sm"
-              className="text-gray-400 hover:text-white hover:bg-white/10"
-            >
-              Cancel
-            </Button>
-          </div>
+            {isSourceExpanded ? (
+              <ChevronUp className="w-6 h-6 text-emerald-400" />
+            ) : (
+              <ChevronDown className="w-6 h-6 text-emerald-400" />
+            )}
+          </button>
+
+          {isSourceExpanded && (
+            <div className="p-4 sm:p-6 pt-0 space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-gray-300 uppercase tracking-wider">Category</label>
+                  <Select
+                    value={sourceCategory}
+                    onValueChange={(val) => handleSourceStyleChange(val, STYLE_NAMES[val]?.[0] || "")}
+                  >
+                    <SelectTrigger className="bg-black/60 border-2 border-emerald-500/40 text-white font-bold h-10 sm:h-11 rounded-xl text-xs sm:text-sm">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-zinc-950 border-2 border-emerald-500/40 text-white">
+                      {STYLE_CATEGORIES.map((cat) => (
+                        <SelectItem
+                          key={cat}
+                          value={cat}
+                          className="text-white font-bold hover:bg-zinc-900 focus:bg-gradient-to-r focus:from-emerald-500 focus:to-green-500 focus:text-black"
+                        >
+                          {cat}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-gray-300 uppercase tracking-wider">Style</label>
+                  <Select value={sourceStyle} onValueChange={(val) => handleSourceStyleChange(sourceCategory, val)}>
+                    <SelectTrigger className="bg-black/60 border-2 border-emerald-500/40 text-white font-bold h-10 sm:h-11 rounded-xl text-xs sm:text-sm">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-zinc-950 border-2 border-emerald-500/40 text-white">
+                      {STYLE_NAMES[sourceCategory]?.map((style) => (
+                        <SelectItem
+                          key={style}
+                          value={style}
+                          className="text-white font-bold hover:bg-zinc-900 focus:bg-gradient-to-r focus:from-emerald-500 focus:to-green-500 focus:text-black"
+                        >
+                          {style}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-gray-300 uppercase tracking-wider">Section</label>
+                  <Select value={sourceSection} onValueChange={setSourceSection}>
+                    <SelectTrigger className="bg-black/60 border-2 border-emerald-500/40 text-white font-bold h-10 sm:h-11 rounded-xl text-xs sm:text-sm">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-zinc-950 border-2 border-emerald-500/40 text-white">
+                      {STYLE_SECTIONS.map((section) => (
+                        <SelectItem
+                          key={section}
+                          value={section}
+                          className="text-white font-bold hover:bg-zinc-900 focus:bg-gradient-to-r focus:from-emerald-500 focus:to-green-500 focus:text-black"
+                        >
+                          {section}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                {STYLE_TRACKS.map((track) => (
+                  <div
+                    key={`source-${sourceSection}-${track}`}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, sourceSection, track)}
+                    onTouchStart={(e) => handleTouchStart(e, sourceSection, track)}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleTouchEnd}
+                    className="bg-gradient-to-br from-emerald-500/20 to-green-500/20 border-2 border-emerald-500/50 rounded-xl p-3 sm:p-4 cursor-grab active:cursor-grabbing hover:from-emerald-500/30 hover:to-green-500/30 hover:border-emerald-400 active:scale-95 transition-all shadow-lg touch-none"
+                  >
+                    <div className="flex items-center gap-2">
+                      <GripVertical className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-xs sm:text-sm font-bold text-white truncate">{track}</div>
+                        <div className="text-[10px] sm:text-xs text-emerald-300 truncate">{sourceSection}</div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 sm:gap-3 pt-2">
+                {STYLE_TRACKS.map((track) => (
+                  <Button
+                    key={`control-${track}`}
+                    size="sm"
+                    variant="outline"
+                    onClick={() => (soloedTrack === track ? handleSolo(track) : handleMute(track))}
+                    className={cn(
+                      "h-9 text-xs font-bold border-2 justify-start",
+                      mutedTracks.has(track)
+                        ? "bg-red-500/20 border-red-500/50 text-red-400"
+                        : soloedTrack === track
+                          ? "bg-yellow-500/20 border-yellow-500/50 text-yellow-400"
+                          : "border-zinc-700 hover:border-emerald-500/50",
+                    )}
+                  >
+                    {mutedTracks.has(track) ? (
+                      <VolumeX className="w-3 h-3 mr-2" />
+                    ) : (
+                      <Volume2 className="w-3 h-3 mr-2" />
+                    )}
+                    {track}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
-      )}
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        {/* Target Panel (LEFT) */}
-        <div className="premium-card p-8 space-y-6">
-          <div className="flex items-center justify-between border-b border-blue-500/30 pb-4">
-            <div>
-              <h2 className="text-2xl font-bold text-blue-400">Target Style</h2>
-              <p className="text-sm text-gray-400 mt-1">Drop patterns here to build your hybrid</p>
-            </div>
-            <div className="text-sm font-bold text-gray-400 bg-blue-500/10 px-4 py-2 rounded-lg border border-blue-500/30">
-              {copiedPatterns.length} patterns
+        {/* Target Panel - Mobile */}
+        <div className="premium-card p-4 sm:p-6">
+          <div className="border-b border-blue-500/30 pb-3 mb-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg sm:text-2xl font-bold text-blue-400">Target Timeline</h2>
+                <p className="text-xs sm:text-sm text-gray-400 mt-0.5">Drop patterns here</p>
+              </div>
+              <div className="text-xs sm:text-sm font-bold text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/30">
+                {copiedPatterns.length} copied
+              </div>
             </div>
           </div>
 
-          <div className="space-y-3">
-            <label className="text-sm font-bold text-gray-300 uppercase tracking-wider">Target Section</label>
+          <div className="space-y-3 mb-4">
+            <label className="text-xs font-bold text-gray-300 uppercase tracking-wider">Target Section</label>
             <Select value={targetSection} onValueChange={setTargetSection}>
-              <SelectTrigger className="bg-black/60 border-2 border-blue-500/40 hover:border-blue-500/60 focus:border-blue-500 text-white font-bold h-12 rounded-xl text-base">
+              <SelectTrigger className="bg-black/60 border-2 border-blue-500/40 text-white font-bold h-10 sm:h-11 rounded-xl text-xs sm:text-sm">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="bg-zinc-950 border-2 border-blue-500/40 text-white">
@@ -378,213 +508,300 @@ export function AssemblyWorkbench() {
             </Select>
           </div>
 
-          <div className="space-y-3">
-            <h3 className="text-sm font-bold text-gray-300 uppercase tracking-wider">Target Channels</h3>
-            <div className="grid grid-cols-2 gap-3">
-              {STYLE_TRACKS.map((track) => {
-                const cellId = `${targetSection}-${track}`
-                const isHovered = hoveredCell === cellId
-                const pattern = getPatternForCell(targetSection, track)
-                const hasCopiedPattern = !!pattern
-                const isPendingTarget =
-                  pendingCopy?.target.section === targetSection && pendingCopy?.target.track === track
+          <div className="grid grid-cols-1 gap-2 sm:gap-3">
+            {STYLE_TRACKS.map((track) => {
+              const cellId = `${targetSection}-${track}`
+              const isHovered = hoveredCell === cellId
+              const pattern = getPatternForCell(targetSection, track)
+              const hasCopiedPattern = !!pattern
+              const isPendingTarget =
+                pendingCopy?.target.section === targetSection && pendingCopy?.target.track === track
 
-                return (
-                  <div
-                    key={`target-${cellId}`}
-                    data-drop-zone="true"
-                    data-section={targetSection}
-                    data-track={track}
-                    onDragOver={(e) => handleDragOver(e, targetSection, track)}
-                    onDragLeave={handleDragLeave}
-                    onDrop={(e) => handleDrop(e, targetSection, track)}
-                    className={cn(
-                      "border-2 border-dashed rounded-xl p-4 transition-all min-h-[90px] flex flex-col items-center justify-center",
-                      isHovered
-                        ? "bg-amber-500/30 border-amber-400 scale-105 shadow-xl shadow-amber-500/30"
-                        : isPendingTarget
-                          ? "bg-purple-500/30 border-purple-400 shadow-xl shadow-purple-500/30 animate-pulse"
-                          : hasCopiedPattern
-                            ? "bg-emerald-500/20 border-emerald-500/60 hover:border-emerald-400 shadow-lg shadow-emerald-500/20"
-                            : "bg-zinc-900/50 border-zinc-700 hover:border-blue-500/50 hover:bg-zinc-900",
-                    )}
-                  >
-                    {hasCopiedPattern ? (
-                      <>
-                        <div className="text-xs font-bold text-emerald-400 text-center uppercase tracking-wide">
-                          {pattern.sourceSection}
-                        </div>
-                        <div className="text-sm font-bold text-white text-center mt-1">{pattern.sourceTrack}</div>
-                        <div className="text-xs text-gray-400 text-center mt-1">→ {track}</div>
-                      </>
-                    ) : isPendingTarget ? (
-                      <>
-                        <div className="text-xs font-bold text-purple-400 text-center uppercase tracking-wide">
-                          Pending
-                        </div>
-                        <div className="text-sm font-bold text-white text-center mt-1">{track}</div>
-                        <div className="text-xs text-purple-300 text-center mt-1">Click Execute</div>
-                      </>
-                    ) : (
-                      <div className="text-sm font-bold text-gray-500 text-center">
-                        {isHovered ? "Drop Here" : track}
-                      </div>
-                    )}
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* Source Panel (RIGHT) */}
-        <div className="premium-card p-8 space-y-6">
-          <div className="border-b border-emerald-500/30 pb-4">
-            <h2 className="text-2xl font-bold text-emerald-400">Source Library</h2>
-            <p className="text-sm text-gray-400 mt-1">Browse and drag patterns to target</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-3">
-              <label className="text-sm font-bold text-gray-300 uppercase tracking-wider">Category</label>
-              <Select
-                value={sourceCategory}
-                onValueChange={(val) => handleSourceStyleChange(val, STYLE_NAMES[val]?.[0] || "")}
-              >
-                <SelectTrigger className="bg-black/60 border-2 border-emerald-500/40 hover:border-emerald-500/60 focus:border-emerald-500 text-white font-bold h-12 rounded-xl text-base">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-zinc-950 border-2 border-emerald-500/40 text-white">
-                  {STYLE_CATEGORIES.map((cat) => (
-                    <SelectItem
-                      key={cat}
-                      value={cat}
-                      className="text-white font-bold hover:bg-zinc-900 focus:bg-gradient-to-r focus:from-emerald-500 focus:to-green-500 focus:text-black"
-                    >
-                      {cat}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-3">
-              <label className="text-sm font-bold text-gray-300 uppercase tracking-wider">Style</label>
-              <Select value={sourceStyle} onValueChange={(val) => handleSourceStyleChange(sourceCategory, val)}>
-                <SelectTrigger className="bg-black/60 border-2 border-emerald-500/40 hover:border-emerald-500/60 focus:border-emerald-500 text-white font-bold h-12 rounded-xl text-base">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-zinc-950 border-2 border-emerald-500/40 text-white">
-                  {STYLE_NAMES[sourceCategory]?.map((style) => (
-                    <SelectItem
-                      key={style}
-                      value={style}
-                      className="text-white font-bold hover:bg-zinc-900 focus:bg-gradient-to-r focus:from-emerald-500 focus:to-green-500 focus:text-black"
-                    >
-                      {style}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            <label className="text-sm font-bold text-gray-300 uppercase tracking-wider">Section</label>
-            <Select value={sourceSection} onValueChange={setSourceSection}>
-              <SelectTrigger className="bg-black/60 border-2 border-emerald-500/40 hover:border-emerald-500/60 focus:border-emerald-500 text-white font-bold h-12 rounded-xl text-base">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-zinc-950 border-2 border-emerald-500/40 text-white">
-                {STYLE_SECTIONS.map((section) => (
-                  <SelectItem
-                    key={section}
-                    value={section}
-                    className="text-white font-bold hover:bg-zinc-900 focus:bg-gradient-to-r focus:from-emerald-500 focus:to-green-500 focus:text-black"
-                  >
-                    {section}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-3">
-            <h3 className="text-sm font-bold text-gray-300 uppercase tracking-wider">Drag Patterns</h3>
-            <div className="grid grid-cols-2 gap-3">
-              {STYLE_TRACKS.map((track) => (
+              return (
                 <div
-                  key={`source-${sourceSection}-${track}`}
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, sourceSection, track)}
-                  onTouchStart={(e) => handleTouchStart(e, sourceSection, track)}
-                  onTouchMove={handleTouchMove}
-                  onTouchEnd={handleTouchEnd}
-                  className="bg-gradient-to-br from-emerald-500/20 to-green-500/20 border-2 border-emerald-500/50 rounded-xl p-4 cursor-grab active:cursor-grabbing hover:from-emerald-500/30 hover:to-green-500/30 hover:border-emerald-400 hover:scale-105 transition-all active:scale-95 shadow-lg shadow-emerald-500/10"
+                  key={`target-${cellId}`}
+                  data-drop-zone="true"
+                  data-section={targetSection}
+                  data-track={track}
+                  onDragOver={(e) => handleDragOver(e, targetSection, track)}
+                  onDragLeave={handleDragLeave}
+                  onDrop={(e) => handleDrop(e, targetSection, track)}
+                  className={cn(
+                    "border-2 border-dashed rounded-xl p-3 sm:p-4 transition-all min-h-[70px] sm:min-h-[80px] flex items-center",
+                    isHovered
+                      ? "bg-amber-500/30 border-amber-400 scale-[1.02] shadow-xl shadow-amber-500/30"
+                      : isPendingTarget
+                        ? "bg-purple-500/30 border-purple-400 shadow-xl shadow-purple-500/30 animate-pulse"
+                        : hasCopiedPattern
+                          ? "bg-emerald-500/20 border-emerald-500/60 shadow-lg"
+                          : "bg-zinc-900/50 border-zinc-700 hover:border-blue-500/50",
+                  )}
                 >
-                  <div className="flex items-center gap-2">
-                    <GripVertical className="w-5 h-5 text-emerald-400 flex-shrink-0" />
-                    <div className="text-sm font-bold text-white">{track}</div>
-                  </div>
+                  {hasCopiedPattern ? (
+                    <div className="flex items-center gap-3 w-full">
+                      <div className="flex-1 min-w-0">
+                        <div className="text-[10px] sm:text-xs font-bold text-emerald-400 uppercase tracking-wide truncate">
+                          {pattern.sourceSection} - {pattern.sourceTrack}
+                        </div>
+                        <div className="text-xs sm:text-sm font-bold text-white truncate">{track}</div>
+                      </div>
+                      <Check className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400 flex-shrink-0" />
+                    </div>
+                  ) : isPendingTarget ? (
+                    <div className="flex items-center gap-3 w-full">
+                      <div className="flex-1 min-w-0">
+                        <div className="text-[10px] sm:text-xs font-bold text-purple-400 uppercase">Pending</div>
+                        <div className="text-xs sm:text-sm font-bold text-white truncate">{track}</div>
+                      </div>
+                      <div className="w-2 h-2 rounded-full bg-purple-400 animate-pulse flex-shrink-0" />
+                    </div>
+                  ) : (
+                    <div className="w-full text-center">
+                      <div className="text-xs sm:text-sm font-bold text-gray-500">{track}</div>
+                      {isHovered && <div className="text-[10px] sm:text-xs text-amber-400 mt-1">Drop Here</div>}
+                      {!isHovered && <div className="text-[10px] sm:text-xs text-gray-600 mt-1">Drag pattern here</div>}
+                    </div>
+                  )}
                 </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-4 pt-6 border-t border-emerald-500/30">
-            <h3 className="text-sm font-bold text-gray-300 uppercase tracking-wider">Preview</h3>
-            <div className="flex items-center gap-3">
-              <Button
-                onClick={handlePlayStop}
-                className={cn(
-                  "glossy-button flex items-center gap-2 h-11 px-5 font-bold",
-                  isPlaying
-                    ? "bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-400 hover:to-rose-500"
-                    : "bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500",
-                )}
-              >
-                {isPlaying ? <Square className="w-5 h-5" /> : <Play className="w-5 h-5" />}
-                {isPlaying ? "Stop" : "Play"}
-              </Button>
-              <span className="text-sm text-gray-400">Preview source pattern</span>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              {STYLE_TRACKS.map((track) => (
-                <div key={track} className="flex items-center gap-2 bg-black/40 rounded-lg p-2 border border-zinc-800">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handleSolo(track)}
-                    className={cn(
-                      "h-8 w-8 p-0 text-xs font-bold border-2",
-                      soloedTrack === track
-                        ? "bg-yellow-500 text-black border-yellow-400"
-                        : "border-zinc-700 hover:border-yellow-500/50",
-                    )}
-                  >
-                    S
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handleMute(track)}
-                    className={cn(
-                      "h-8 w-8 p-0 border-2",
-                      mutedTracks.has(track)
-                        ? "bg-red-500 text-white border-red-400"
-                        : "border-zinc-700 hover:border-red-500/50",
-                    )}
-                  >
-                    {mutedTracks.has(track) ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-                  </Button>
-                  <span className="text-xs text-gray-300 flex-1 truncate font-medium">{track}</span>
-                </div>
-              ))}
-            </div>
+              )
+            })}
           </div>
         </div>
       </div>
+
+      <div className="hidden lg:grid lg:grid-cols-2 gap-4">
+        {/* Source Panel - Desktop */}
+        <div className="premium-card p-6">
+          <div className="border-b border-emerald-500/30 pb-4 mb-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-3 h-3 rounded-full bg-gradient-to-r from-emerald-500 to-green-600 animate-pulse" />
+              <h2 className="text-2xl font-bold text-emerald-400">Source Patterns</h2>
+            </div>
+
+            <div className="grid grid-cols-3 gap-3">
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-300 uppercase tracking-wider">Category</label>
+                <Select
+                  value={sourceCategory}
+                  onValueChange={(val) => handleSourceStyleChange(val, STYLE_NAMES[val]?.[0] || "")}
+                >
+                  <SelectTrigger className="bg-black/60 border-2 border-emerald-500/40 text-white font-bold h-11 rounded-xl">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-zinc-950 border-2 border-emerald-500/40 text-white">
+                    {STYLE_CATEGORIES.map((cat) => (
+                      <SelectItem
+                        key={cat}
+                        value={cat}
+                        className="text-white font-bold hover:bg-zinc-900 focus:bg-gradient-to-r focus:from-emerald-500 focus:to-green-500 focus:text-black"
+                      >
+                        {cat}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-300 uppercase tracking-wider">Style</label>
+                <Select value={sourceStyle} onValueChange={(val) => handleSourceStyleChange(sourceCategory, val)}>
+                  <SelectTrigger className="bg-black/60 border-2 border-emerald-500/40 text-white font-bold h-11 rounded-xl">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-zinc-950 border-2 border-emerald-500/40 text-white">
+                    {STYLE_NAMES[sourceCategory]?.map((style) => (
+                      <SelectItem
+                        key={style}
+                        value={style}
+                        className="text-white font-bold hover:bg-zinc-900 focus:bg-gradient-to-r focus:from-emerald-500 focus:to-green-500 focus:text-black"
+                      >
+                        {style}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-300 uppercase tracking-wider">Section</label>
+                <Select value={sourceSection} onValueChange={setSourceSection}>
+                  <SelectTrigger className="bg-black/60 border-2 border-emerald-500/40 text-white font-bold h-11 rounded-xl">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-zinc-950 border-2 border-emerald-500/40 text-white">
+                    {STYLE_SECTIONS.map((section) => (
+                      <SelectItem
+                        key={section}
+                        value={section}
+                        className="text-white font-bold hover:bg-zinc-900 focus:bg-gradient-to-r focus:from-emerald-500 focus:to-green-500 focus:text-black"
+                      >
+                        {section}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            {STYLE_TRACKS.map((track) => (
+              <div
+                key={`source-desktop-${sourceSection}-${track}`}
+                draggable
+                onDragStart={(e) => handleDragStart(e, sourceSection, track)}
+                className="bg-gradient-to-br from-emerald-500/20 to-green-500/20 border-2 border-emerald-500/50 rounded-xl p-4 cursor-grab active:cursor-grabbing hover:from-emerald-500/30 hover:to-green-500/30 hover:border-emerald-400 active:scale-95 transition-all shadow-lg"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <GripVertical className="w-5 h-5 text-emerald-400" />
+                    <div>
+                      <div className="text-sm font-bold text-white">{track}</div>
+                      <div className="text-xs text-emerald-300">{sourceSection}</div>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleSolo(track)
+                      }}
+                      className={cn(
+                        "h-8 w-8 p-0",
+                        soloedTrack === track ? "bg-yellow-500/20 text-yellow-400" : "text-gray-400",
+                      )}
+                    >
+                      S
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleMute(track)
+                      }}
+                      className={cn(
+                        "h-8 w-8 p-0",
+                        mutedTracks.has(track) ? "bg-red-500/20 text-red-400" : "text-gray-400",
+                      )}
+                    >
+                      {mutedTracks.has(track) ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Target Panel - Desktop */}
+        <div className="premium-card p-6">
+          <div className="border-b border-blue-500/30 pb-4 mb-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-bold text-blue-400">Target Timeline</h2>
+              <div className="text-sm font-bold text-blue-400 bg-blue-500/10 px-4 py-2 rounded-lg border border-blue-500/30">
+                {copiedPatterns.length} patterns copied
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-gray-300 uppercase tracking-wider">Target Section</label>
+              <Select value={targetSection} onValueChange={setTargetSection}>
+                <SelectTrigger className="bg-black/60 border-2 border-blue-500/40 text-white font-bold h-11 rounded-xl">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-zinc-950 border-2 border-blue-500/40 text-white">
+                  {STYLE_SECTIONS.map((section) => (
+                    <SelectItem
+                      key={section}
+                      value={section}
+                      className="text-white font-bold hover:bg-zinc-900 focus:bg-gradient-to-r focus:from-blue-500 focus:to-cyan-500 focus:text-black"
+                    >
+                      {section}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            {STYLE_TRACKS.map((track) => {
+              const cellId = `${targetSection}-${track}`
+              const isHovered = hoveredCell === cellId
+              const pattern = getPatternForCell(targetSection, track)
+              const hasCopiedPattern = !!pattern
+              const isPendingTarget =
+                pendingCopy?.target.section === targetSection && pendingCopy?.target.track === track
+
+              return (
+                <div
+                  key={`target-desktop-${cellId}`}
+                  data-drop-zone="true"
+                  data-section={targetSection}
+                  data-track={track}
+                  onDragOver={(e) => handleDragOver(e, targetSection, track)}
+                  onDragLeave={handleDragLeave}
+                  onDrop={(e) => handleDrop(e, targetSection, track)}
+                  className={cn(
+                    "border-2 border-dashed rounded-xl p-4 transition-all min-h-[80px] flex items-center",
+                    isHovered
+                      ? "bg-amber-500/30 border-amber-400 scale-[1.02] shadow-xl shadow-amber-500/30"
+                      : isPendingTarget
+                        ? "bg-purple-500/30 border-purple-400 shadow-xl shadow-purple-500/30 animate-pulse"
+                        : hasCopiedPattern
+                          ? "bg-emerald-500/20 border-emerald-500/60 shadow-lg"
+                          : "bg-zinc-900/50 border-zinc-700 hover:border-blue-500/50",
+                  )}
+                >
+                  {hasCopiedPattern ? (
+                    <div className="flex items-center gap-3 w-full">
+                      <div className="flex-1">
+                        <div className="text-xs font-bold text-emerald-400 uppercase tracking-wide">
+                          {pattern.sourceSection} - {pattern.sourceTrack}
+                        </div>
+                        <div className="text-sm font-bold text-white">{track}</div>
+                      </div>
+                      <Check className="w-5 h-5 text-emerald-400" />
+                    </div>
+                  ) : isPendingTarget ? (
+                    <div className="flex items-center gap-3 w-full">
+                      <div className="flex-1">
+                        <div className="text-xs font-bold text-purple-400 uppercase">Pending Drop</div>
+                        <div className="text-sm font-bold text-white">{track}</div>
+                      </div>
+                      <div className="w-3 h-3 rounded-full bg-purple-400 animate-pulse" />
+                    </div>
+                  ) : (
+                    <div className="w-full text-center">
+                      <div className="text-sm font-bold text-gray-500">{track}</div>
+                      {isHovered && <div className="text-xs text-amber-400 mt-1">Drop Here</div>}
+                      {!isHovered && <div className="text-xs text-gray-600 mt-1">Drag pattern here</div>}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Touch Drag Preview */}
+      {touchDragData && touchPosition && (
+        <div
+          className="fixed pointer-events-none z-50 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl p-3 shadow-2xl border-2 border-emerald-400 opacity-90"
+          style={{
+            left: touchPosition.x - 60,
+            top: touchPosition.y - 30,
+            width: "120px",
+          }}
+        >
+          <div className="text-xs font-bold text-white text-center truncate">{touchDragData.track}</div>
+          <div className="text-[10px] text-emerald-100 text-center truncate">{touchDragData.section}</div>
+        </div>
+      )}
     </div>
   )
 }
