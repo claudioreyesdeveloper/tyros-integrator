@@ -215,6 +215,32 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
     return crumbs
   }
 
+  const handleCategorySelect = (category: string) => {
+    setSelectedCategory(category)
+    // Close sidebar on mobile after selection
+    if (window.innerWidth < 1024) {
+      setIsSidebarOpen(false)
+    }
+  }
+
+  const handleSubCategorySelect = (sub: string) => {
+    setSelectedSubCategory(sub)
+    // Close sidebar on mobile after selection
+    if (window.innerWidth < 1024) {
+      setIsSidebarOpen(false)
+    }
+  }
+
+  const handleSmartCollectionSelect = (voice: Voice) => {
+    setSelectedVoice(voice)
+    setSelectedCategory(voice.category)
+    setSelectedSubCategory(voice.sub)
+    // Close sidebar on mobile after selection
+    if (window.innerWidth < 1024) {
+      setIsSidebarOpen(false)
+    }
+  }
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -230,24 +256,24 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
 
   return (
     <div className="h-full flex flex-col bg-gradient-to-b from-black via-zinc-950 to-black">
-      <div className="p-4 border-b border-amber-500/20 bg-zinc-900/50 backdrop-blur-sm">
-        <div className="flex items-center gap-3">
+      <div className="p-3 sm:p-4 border-b border-amber-500/20 bg-zinc-900/50 backdrop-blur-sm">
+        <div className="flex items-center gap-2 sm:gap-3">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="lg:hidden text-amber-500 hover:text-amber-400 hover:bg-amber-500/10"
+            className="lg:hidden text-amber-500 hover:text-amber-400 hover:bg-amber-500/10 flex-shrink-0"
           >
             {isSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </Button>
 
           <button
             onClick={() => setIsCommandPaletteOpen(true)}
-            className="flex-1 flex items-center gap-3 px-4 py-3 bg-zinc-900/80 border border-amber-500/30 rounded-lg hover:border-amber-500 hover:bg-zinc-800 transition-all group"
+            className="flex-1 flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 bg-zinc-900/80 border border-amber-500/30 rounded-lg hover:border-amber-500 hover:bg-zinc-800 transition-all group min-w-0"
           >
-            <Command className="w-4 h-4 text-amber-500/70 group-hover:text-amber-500 transition-colors" />
-            <span className="text-white text-sm">Search voices...</span>
-            <kbd className="ml-auto hidden sm:inline-flex items-center gap-1 px-2 py-1 text-xs font-mono text-amber-500/70 bg-zinc-800 rounded border border-amber-500/20">
+            <Command className="w-4 h-4 text-amber-500/70 group-hover:text-amber-500 transition-colors flex-shrink-0" />
+            <span className="text-white text-xs sm:text-sm truncate">Search voices...</span>
+            <kbd className="ml-auto hidden sm:inline-flex items-center gap-1 px-2 py-1 text-xs font-mono text-amber-500/70 bg-zinc-800 rounded border border-amber-500/20 flex-shrink-0">
               <span className="text-[10px]">⌘</span>K
             </kbd>
           </button>
@@ -255,30 +281,52 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
           <Button
             variant="outline"
             onClick={onCancel}
-            className="px-4 bg-zinc-900/80 border border-amber-500/30 hover:border-amber-500 hover:bg-zinc-800 text-white"
+            className="hidden sm:flex px-4 bg-zinc-900/80 border border-amber-500/30 hover:border-amber-500 hover:bg-zinc-800 text-white flex-shrink-0"
           >
             Cancel
           </Button>
           <Button
             onClick={handleAssign}
             disabled={!selectedVoice || currentPart === null}
-            className="glossy-button px-6 font-semibold"
+            className="glossy-button px-3 sm:px-6 font-semibold text-xs sm:text-sm flex-shrink-0"
           >
-            {selectedVoice && currentPart !== null ? `Assign to ${PART_NAMES[currentPart - 1]}` : "Select Voice"}
+            <span className="hidden sm:inline">
+              {selectedVoice && currentPart !== null ? `Assign to ${PART_NAMES[currentPart - 1]}` : "Select Voice"}
+            </span>
+            <span className="sm:hidden">{selectedVoice && currentPart !== null ? `Assign` : "Select"}</span>
           </Button>
         </div>
       </div>
 
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden relative">
+        {isSidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-20 lg:hidden"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+
         <div
           className={cn(
-            "w-64 border-r border-amber-500/20 bg-zinc-900/30 backdrop-blur-sm flex flex-col transition-all duration-300",
+            "w-64 border-r border-amber-500/20 bg-zinc-900/95 backdrop-blur-sm flex flex-col transition-transform duration-300 ease-in-out",
+            "fixed lg:relative z-30 lg:z-0 h-full top-0 left-0",
             isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
-            "absolute lg:relative z-10 h-full lg:z-0",
           )}
         >
           <ScrollArea className="flex-1">
             <div className="p-4 space-y-6">
+              <div className="lg:hidden flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-white">Navigation</h2>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsSidebarOpen(false)}
+                  className="text-amber-500 hover:text-amber-400 hover:bg-amber-500/10"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+
               <div className="space-y-4">
                 <div className="px-2">
                   <h2 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-3">Smart Collections</h2>
@@ -296,11 +344,7 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                       {favorites.slice(0, 5).map((voice, idx) => (
                         <button
                           key={idx}
-                          onClick={() => {
-                            setSelectedVoice(voice)
-                            setSelectedCategory(voice.category)
-                            setSelectedSubCategory(voice.sub)
-                          }}
+                          onClick={() => handleSmartCollectionSelect(voice)}
                           className="w-full text-left px-3 py-2 rounded-lg text-xs text-white hover:bg-amber-500/10 transition-colors flex items-center gap-2"
                         >
                           <VoiceIcon subcategory={voice.sub} category={voice.category} size={16} />
@@ -321,11 +365,7 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                       {mostUsedVoices.map((voice, idx) => (
                         <button
                           key={idx}
-                          onClick={() => {
-                            setSelectedVoice(voice)
-                            setSelectedCategory(voice.category)
-                            setSelectedSubCategory(voice.sub)
-                          }}
+                          onClick={() => handleSmartCollectionSelect(voice)}
                           className="w-full text-left px-3 py-2 rounded-lg text-xs text-white hover:bg-purple-500/10 transition-colors flex items-center gap-2"
                         >
                           <VoiceIcon subcategory={voice.sub} category={voice.category} size={16} />
@@ -349,11 +389,7 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                       {sessionVoices.slice(0, 5).map((voice, idx) => (
                         <button
                           key={idx}
-                          onClick={() => {
-                            setSelectedVoice(voice)
-                            setSelectedCategory(voice.category)
-                            setSelectedSubCategory(voice.sub)
-                          }}
+                          onClick={() => handleSmartCollectionSelect(voice)}
                           className="w-full text-left px-3 py-2 rounded-lg text-xs text-white hover:bg-cyan-500/10 transition-colors flex items-center gap-2"
                         >
                           <VoiceIcon subcategory={voice.sub} category={voice.category} size={16} />
@@ -374,11 +410,7 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                       {recentVoices.slice(0, 5).map((voice, idx) => (
                         <button
                           key={idx}
-                          onClick={() => {
-                            setSelectedVoice(voice)
-                            setSelectedCategory(voice.category)
-                            setSelectedSubCategory(voice.sub)
-                          }}
+                          onClick={() => handleSmartCollectionSelect(voice)}
                           className="w-full text-left px-3 py-2 rounded-lg text-xs text-white hover:bg-blue-500/10 transition-colors flex items-center gap-2"
                         >
                           <VoiceIcon subcategory={voice.sub} category={voice.category} size={16} />
@@ -399,7 +431,7 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                   {categories.map((category) => (
                     <button
                       key={category}
-                      onClick={() => setSelectedCategory(category)}
+                      onClick={() => handleCategorySelect(category)}
                       className={cn(
                         "w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-all flex items-center justify-between group",
                         selectedCategory === category
@@ -422,20 +454,20 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
 
         <div className="flex-1 flex flex-col overflow-hidden">
           {getBreadcrumbs().length > 0 && (
-            <div className="px-6 py-3 border-b border-amber-500/20 bg-zinc-900/30 backdrop-blur-sm">
-              <div className="flex items-center gap-2 text-sm">
+            <div className="px-3 sm:px-6 py-2 sm:py-3 border-b border-amber-500/20 bg-zinc-900/30 backdrop-blur-sm">
+              <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm overflow-x-auto">
                 <button
                   onClick={() => {
                     setSelectedCategory(null)
                     setSelectedSubCategory(null)
                   }}
-                  className="text-amber-500 hover:text-amber-400 transition-colors"
+                  className="text-amber-500 hover:text-amber-400 transition-colors whitespace-nowrap"
                 >
                   Home
                 </button>
                 {getBreadcrumbs().map((crumb, idx) => (
-                  <div key={idx} className="flex items-center gap-2">
-                    <ChevronRight className="w-4 h-4 text-zinc-600" />
+                  <div key={idx} className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+                    <ChevronRight className="w-3 sm:w-4 h-3 sm:h-4 text-zinc-600" />
                     <button
                       onClick={() => {
                         if (idx === 0) {
@@ -443,7 +475,7 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                         }
                       }}
                       className={cn(
-                        "transition-colors",
+                        "transition-colors whitespace-nowrap",
                         idx === getBreadcrumbs().length - 1
                           ? "text-white font-medium"
                           : "text-zinc-400 hover:text-white",
@@ -458,22 +490,24 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
           )}
 
           <ScrollArea className="flex-1">
-            <div className="p-6">
+            <div className="p-3 sm:p-6">
               {!selectedCategory && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
                   {categories.map((category) => (
                     <button
                       key={category}
-                      onClick={() => setSelectedCategory(category)}
-                      className="group relative p-6 rounded-xl bg-gradient-to-br from-zinc-900/80 to-zinc-900/40 border border-amber-500/20 hover:border-amber-500/60 transition-all hover:scale-105 hover:shadow-lg hover:shadow-amber-500/20"
+                      onClick={() => handleCategorySelect(category)}
+                      className="group relative p-4 sm:p-6 rounded-xl bg-gradient-to-br from-zinc-900/80 to-zinc-900/40 border border-amber-500/20 hover:border-amber-500/60 transition-all hover:scale-105 hover:shadow-lg hover:shadow-amber-500/20"
                     >
-                      <div className="flex flex-col items-center gap-3 text-center">
-                        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-500/20 to-yellow-500/20 flex items-center justify-center group-hover:from-amber-500/30 group-hover:to-yellow-500/30 transition-all">
-                          <VoiceIcon subcategory="" category={category} size={32} />
+                      <div className="flex flex-col items-center gap-2 sm:gap-3 text-center">
+                        <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-amber-500/20 to-yellow-500/20 flex items-center justify-center group-hover:from-amber-500/30 group-hover:to-yellow-500/30 transition-all">
+                          <VoiceIcon subcategory="" category={category} size={24} className="sm:w-8 sm:h-8" />
                         </div>
                         <div>
-                          <h3 className="font-bold text-white text-lg mb-1">{category}</h3>
-                          <p className="text-xs text-zinc-500">{getCategoryCount(category)} sub-categories</p>
+                          <h3 className="font-bold text-white text-sm sm:text-lg mb-0.5 sm:mb-1">{category}</h3>
+                          <p className="text-[10px] sm:text-xs text-zinc-500">
+                            {getCategoryCount(category)} sub-categories
+                          </p>
                         </div>
                       </div>
                     </button>
@@ -482,20 +516,25 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
               )}
 
               {selectedCategory && !selectedSubCategory && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
                   {subCategories.map((sub) => (
                     <button
                       key={sub}
-                      onClick={() => setSelectedSubCategory(sub)}
-                      className="group relative p-6 rounded-xl bg-gradient-to-br from-zinc-900/80 to-zinc-900/40 border border-emerald-500/20 hover:border-emerald-500/60 transition-all hover:scale-105 hover:shadow-lg hover:shadow-emerald-500/20"
+                      onClick={() => handleSubCategorySelect(sub)}
+                      className="group relative p-4 sm:p-6 rounded-xl bg-gradient-to-br from-zinc-900/80 to-zinc-900/40 border border-emerald-500/20 hover:border-emerald-500/60 transition-all hover:scale-105 hover:shadow-lg hover:shadow-emerald-500/20"
                     >
-                      <div className="flex flex-col items-center gap-3 text-center">
-                        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center group-hover:from-emerald-500/30 group-hover:to-teal-500/30 transition-all">
-                          <VoiceIcon subcategory={sub} category={selectedCategory} size={32} />
+                      <div className="flex flex-col items-center gap-2 sm:gap-3 text-center">
+                        <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center group-hover:from-emerald-500/30 group-hover:to-teal-500/30 transition-all">
+                          <VoiceIcon
+                            subcategory={sub}
+                            category={selectedCategory}
+                            size={24}
+                            className="sm:w-8 sm:h-8"
+                          />
                         </div>
                         <div>
-                          <h3 className="font-bold text-white text-base mb-1">{sub}</h3>
-                          <p className="text-xs text-zinc-500">{getSubCategoryCount(sub)} voices</p>
+                          <h3 className="font-bold text-white text-sm sm:text-base mb-0.5 sm:mb-1">{sub}</h3>
+                          <p className="text-[10px] sm:text-xs text-zinc-500">{getSubCategoryCount(sub)} voices</p>
                         </div>
                       </div>
                     </button>
@@ -504,34 +543,39 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
               )}
 
               {selectedCategory && selectedSubCategory && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3">
                   {voiceList.map((voice, idx) => (
                     <button
                       key={idx}
                       onClick={() => setSelectedVoice(voice)}
                       className={cn(
-                        "group relative p-4 rounded-lg transition-all text-left",
+                        "group relative p-3 sm:p-4 rounded-lg transition-all text-left",
                         selectedVoice?.voice === voice.voice && selectedVoice?.msb === voice.msb
                           ? "bg-gradient-to-br from-amber-500 to-yellow-500 text-black shadow-lg shadow-amber-500/50 scale-105"
                           : "bg-zinc-900/60 border border-blue-500/20 hover:border-blue-500/60 hover:bg-zinc-800/80 text-white",
                       )}
                     >
-                      <div className="flex items-start gap-3">
+                      <div className="flex items-start gap-2 sm:gap-3">
                         <div
                           className={cn(
-                            "w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0",
+                            "w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center flex-shrink-0",
                             selectedVoice?.voice === voice.voice && selectedVoice?.msb === voice.msb
                               ? "bg-black/20"
                               : "bg-blue-500/10 group-hover:bg-blue-500/20",
                           )}
                         >
-                          <VoiceIcon subcategory={voice.sub} category={voice.category} size={20} />
+                          <VoiceIcon
+                            subcategory={voice.sub}
+                            category={voice.category}
+                            size={16}
+                            className="sm:w-5 sm:h-5"
+                          />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h4 className="font-semibold text-sm mb-1 truncate">{voice.voice}</h4>
+                          <h4 className="font-semibold text-xs sm:text-sm mb-0.5 sm:mb-1 truncate">{voice.voice}</h4>
                           <p
                             className={cn(
-                              "text-xs truncate",
+                              "text-[10px] sm:text-xs truncate",
                               selectedVoice?.voice === voice.voice && selectedVoice?.msb === voice.msb
                                 ? "text-black/70"
                                 : "text-zinc-500",
@@ -550,7 +594,10 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                             isFavorite(voice) ? "text-amber-500" : "text-zinc-600 hover:text-amber-500",
                           )}
                         >
-                          <Star className="w-4 h-4" fill={isFavorite(voice) ? "currentColor" : "none"} />
+                          <Star
+                            className="w-3.5 h-3.5 sm:w-4 sm:h-4"
+                            fill={isFavorite(voice) ? "currentColor" : "none"}
+                          />
                         </button>
                       </div>
                     </button>
