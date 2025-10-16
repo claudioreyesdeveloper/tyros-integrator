@@ -80,7 +80,10 @@ export function HomeScreen({ onSelectVoice, partVoices }: HomeScreenProps) {
             return (
               <button
                 key={partNumber}
-                onClick={() => onSelectVoice(partNumber)}
+                onClick={() => {
+                  console.log("[v0] HomeScreen: Selecting voice for part", partNumber)
+                  onSelectVoice(partNumber)
+                }}
                 className="premium-card p-6 md:p-7 lg:p-8 flex flex-col items-center gap-4 md:gap-5 lg:gap-6 hover:scale-105 transition-all duration-300 group"
               >
                 <div className="w-20 h-20 md:w-22 md:h-22 lg:w-24 lg:h-24 rounded-full bg-gradient-to-br from-secondary to-secondary/60 flex items-center justify-center border-4 border-primary/40 group-hover:border-primary/80 transition-all shadow-lg shadow-primary/20">

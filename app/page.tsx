@@ -41,7 +41,6 @@ interface ChordState {
   clockSource: "internal" | "external"
   accompaniment: boolean
 }
-// </CHANGE>
 
 export interface MixerSettings {
   volume: number
@@ -107,22 +106,34 @@ export default function Home() {
     clockSource: "internal",
     accompaniment: true,
   })
-  // </CHANGE>
 
   const handleSelectVoice = (partNumber: number) => {
+    console.log("[v0] Page: handleSelectVoice called for part", partNumber)
     setCurrentPart(partNumber)
     setPreviousTab(activeTab)
     setActiveTab("voices")
+    console.log("[v0] Page: Switched to voices tab, currentPart set to", partNumber)
   }
 
   const handleVoiceAssigned = (voice: Voice) => {
+    console.log("[v0] Page: handleVoiceAssigned called with voice", voice, "for part", currentPart)
+
     if (currentPart !== null) {
-      setPartVoices((prev) => ({ ...prev, [currentPart]: voice }))
+      setPartVoices((prev) => {
+        const updated = { ...prev, [currentPart]: voice }
+        console.log("[v0] Page: Updated partVoices", updated)
+        return updated
+      })
+    } else {
+      console.log("[v0] Page: ERROR - currentPart is null!")
     }
+
+    console.log("[v0] Page: Switching back to tab", previousTab)
     setActiveTab(previousTab)
   }
 
   const handleCancelVoiceSelection = () => {
+    console.log("[v0] Page: Voice selection cancelled, returning to", previousTab)
     setActiveTab(previousTab)
   }
 
