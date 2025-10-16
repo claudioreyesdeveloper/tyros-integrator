@@ -9,7 +9,7 @@ import { RegistrationManager } from "@/components/registration/registration-mana
 import { MidiLogger } from "@/components/logging/midi-logger"
 import { AssemblyWorkbench } from "@/components/assembly/assembly-workbench"
 import { ChordSequencer } from "@/components/chords/chord-sequencer"
-import type { Voice } from "@/lib/voice-data"
+import type { Voice } from "@/lib/tyros-api"
 import type { Tyros5Configuration, ChannelPartConfig } from "@/lib/types"
 
 type Resolution = "whole" | "half" | "quarter"
