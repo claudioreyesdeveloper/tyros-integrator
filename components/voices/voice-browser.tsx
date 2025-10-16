@@ -5,8 +5,7 @@ import { loadVoiceData, getCategories, getSubCategories, getVoices, type Voice }
 import { useMIDI } from "@/lib/midi-context"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Search } from "lucide-react"
+import { VoiceCommandPalette } from "@/components/voices/voice-command-palette"
 import { cn } from "@/lib/utils"
 import { getVoiceIcon, getSubCategoryColor } from "@/lib/voice-icons"
 import Icon from "@mdi/react"
@@ -48,7 +47,7 @@ const getCategoryColor = (category: string): string => {
 export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBrowserProps) {
   const { api } = useMIDI()
   const [voices, setVoices] = useState<Voice[]>([])
-  const [searchQuery, setSearchQuery] = useState("")
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false)
   const [categories, setCategories] = useState<string[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [subCategories, setSubCategories] = useState<string[]>([])
@@ -56,6 +55,18 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
   const [voiceList, setVoiceList] = useState<Voice[]>([])
   const [selectedVoice, setSelectedVoice] = useState<Voice | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault()
+        setIsCommandPaletteOpen(true)
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [])
 
   useEffect(() => {
     loadVoiceData().then((data) => {
@@ -81,19 +92,6 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
     }
   }, [selectedCategory, selectedSubCategory, voices])
 
-  const filteredVoices = searchQuery
-    ? voices.filter((voice) => voice.voice.toLowerCase().includes(searchQuery.toLowerCase()))
-    : voiceList
-
-  const getCategoryCount = (category: string) => {
-    return getSubCategories(voices, category).length
-  }
-
-  const getSubCategoryCount = (subCategory: string) => {
-    if (!selectedCategory) return 0
-    return getVoices(voices, selectedCategory, subCategory).length
-  }
-
   const handleAssign = () => {
     if (selectedVoice && currentPart !== null) {
       api.sendCommand({
@@ -104,6 +102,28 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
       })
       onVoiceAssigned(selectedVoice)
     }
+  }
+
+  const handleCommandPaletteSelect = (voice: Voice, action?: string) => {
+    setSelectedVoice(voice)
+    if (action === "assign" && currentPart !== null) {
+      api.sendCommand({
+        type: "voice",
+        action: "assign",
+        part: currentPart,
+        voice: voice,
+      })
+      onVoiceAssigned(voice)
+    }
+  }
+
+  const getCategoryCount = (category: string) => {
+    return getSubCategories(voices, category).length
+  }
+
+  const getSubCategoryCount = (subCategory: string) => {
+    if (!selectedCategory) return 0
+    return getVoices(voices, selectedCategory, subCategory).length
   }
 
   if (isLoading) {
@@ -119,21 +139,27 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
 
   return (
     <div className="h-full flex flex-col bg-gradient-to-br from-black via-zinc-950 to-zinc-900">
-      {/* Header */}
-      <div className="p-6 border-b border-amber-500/20 bg-gradient-to-r from-zinc-900/80 via-zinc-900/60 to-zinc-900/80 backdrop-blur-xl space-y-4 shadow-2xl shadow-black/50">
-        {/* Search Bar */}
-        <div className="relative group">
-          <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-500/70 group-focus-within:text-amber-400 transition-colors" />
-          <Input
-            type="text"
-            placeholder="Search voices..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-14 h-16 text-base bg-zinc-900/90 border-2 border-amber-500/30 rounded-2xl shadow-xl shadow-amber-500/10 focus:border-amber-500 focus:shadow-amber-500/30 transition-all text-white placeholder:text-zinc-500 font-medium"
-          />
-        </div>
+      <VoiceCommandPalette
+        isOpen={isCommandPaletteOpen}
+        onClose={() => setIsCommandPaletteOpen(false)}
+        voices={voices}
+        onSelectVoice={handleCommandPaletteSelect}
+        currentPart={currentPart}
+      />
 
-        {/* Action Buttons */}
+      <div className="p-6 border-b border-amber-500/20 bg-gradient-to-r from-zinc-900/80 via-zinc-900/60 to-zinc-900/80 backdrop-blur-xl space-y-4 shadow-2xl shadow-black/50">
+        <button
+          onClick={() => setIsCommandPaletteOpen(true)}
+          className="w-full h-16 px-5 flex items-center gap-3 bg-zinc-900/90 border-2 border-amber-500/30 rounded-2xl shadow-xl shadow-amber-500/10 hover:border-amber-500 hover:shadow-amber-500/30 transition-all group"
+        >
+          <span className="text-amber-500/70 group-hover:text-amber-400 transition-colors text-base font-medium">
+            Quick search (⌘K)
+          </span>
+          <kbd className="ml-auto px-3 py-1.5 text-xs font-mono text-amber-500/70 bg-zinc-800 rounded border border-amber-500/20">
+            ⌘K
+          </kbd>
+        </button>
+
         <div className="flex gap-3">
           <Button
             variant="outline"
@@ -152,9 +178,7 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
         </div>
       </div>
 
-      {/* Three Column Layout */}
       <div className="flex-1 grid grid-cols-3 gap-6 p-6 overflow-hidden">
-        {/* Column 1: Categories */}
         <div className="flex flex-col gap-4">
           <h3 className="text-xs font-bold text-amber-500/80 uppercase tracking-widest px-3 flex items-center gap-2">
             <span className="w-1 h-4 bg-gradient-to-b from-amber-500 to-yellow-500 rounded-full"></span>
@@ -207,7 +231,6 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
           </ScrollArea>
         </div>
 
-        {/* Column 2: Sub-Categories */}
         <div className="flex flex-col gap-4">
           <h3 className="text-xs font-bold text-amber-500/80 uppercase tracking-widest px-3 flex items-center gap-2">
             <span className="w-1 h-4 bg-gradient-to-b from-amber-500 to-yellow-500 rounded-full"></span>
@@ -266,7 +289,6 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
           </ScrollArea>
         </div>
 
-        {/* Column 3: Voices */}
         <div className="flex flex-col gap-4">
           <h3 className="text-xs font-bold text-amber-500/80 uppercase tracking-widest px-3 flex items-center gap-2">
             <span className="w-1 h-4 bg-gradient-to-b from-amber-500 to-yellow-500 rounded-full"></span>
@@ -275,42 +297,48 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
           <ScrollArea className="flex-1">
             {selectedSubCategory ? (
               <div className="space-y-2.5 pr-3">
-                {filteredVoices.map((voice, index) => {
-                  const iconPath = getVoiceIcon(voice.sub, selectedCategory || undefined)
-                  const iconColor = getSubCategoryColor(voice.sub, selectedCategory || undefined)
+                {voiceList.length > 0 ? (
+                  voiceList.map((voice, index) => {
+                    const iconPath = getVoiceIcon(voice.sub, voice.category)
+                    const iconColor = getSubCategoryColor(voice.sub, voice.category)
 
-                  return (
-                    <Button
-                      key={index}
-                      onClick={() => setSelectedVoice(voice)}
-                      className={cn(
-                        "w-full justify-start px-6 py-5 rounded-2xl text-sm font-bold transition-all duration-300 flex items-center gap-4 shadow-lg",
-                        selectedVoice?.voice === voice.voice && selectedVoice?.msb === voice.msb
-                          ? "bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 text-black shadow-2xl shadow-amber-500/60 scale-[1.02]"
-                          : "bg-gradient-to-br from-zinc-900/80 to-zinc-900/50 hover:from-zinc-800/90 hover:to-zinc-800/60 text-white border-2 border-amber-500/20 hover:border-amber-500/50 hover:shadow-xl hover:shadow-amber-500/20",
-                      )}
-                    >
-                      <div
+                    return (
+                      <Button
+                        key={index}
+                        onClick={() => setSelectedVoice(voice)}
                         className={cn(
-                          "p-2 rounded-xl transition-all",
-                          selectedVoice?.voice === voice.voice
-                            ? "bg-black/20"
-                            : "bg-zinc-800/50 group-hover:bg-zinc-700/50",
+                          "w-full justify-start px-6 py-5 rounded-2xl text-sm font-bold transition-all duration-300 flex items-center gap-4 shadow-lg",
+                          selectedVoice?.voice === voice.voice && selectedVoice?.msb === voice.msb
+                            ? "bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 text-black shadow-2xl shadow-amber-500/60 scale-[1.02]"
+                            : "bg-gradient-to-br from-zinc-900/80 to-zinc-900/50 hover:from-zinc-800/90 hover:to-zinc-800/60 text-white border-2 border-amber-500/20 hover:border-amber-500/50 hover:shadow-xl hover:shadow-amber-500/20",
                         )}
                       >
-                        <Icon
-                          path={iconPath}
-                          size={0.9}
+                        <div
                           className={cn(
-                            "flex-shrink-0",
-                            selectedVoice?.voice === voice.voice ? "text-black" : iconColor,
+                            "p-2 rounded-xl transition-all",
+                            selectedVoice?.voice === voice.voice
+                              ? "bg-black/20"
+                              : "bg-zinc-800/50 group-hover:bg-zinc-700/50",
                           )}
-                        />
-                      </div>
-                      <span className="text-left">{voice.voice}</span>
-                    </Button>
-                  )
-                })}
+                        >
+                          <Icon
+                            path={iconPath}
+                            size={0.9}
+                            className={cn(
+                              "flex-shrink-0",
+                              selectedVoice?.voice === voice.voice ? "text-black" : iconColor,
+                            )}
+                          />
+                        </div>
+                        <div className="flex-1 text-left">{voice.voice}</div>
+                      </Button>
+                    )
+                  })
+                ) : (
+                  <div className="flex items-center justify-center h-full">
+                    <p className="text-center text-zinc-500 py-8 font-medium">No voices found</p>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="flex items-center justify-center h-full">
