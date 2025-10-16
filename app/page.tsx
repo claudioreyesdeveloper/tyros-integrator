@@ -41,7 +41,6 @@ interface ChordState {
   clockSource: "internal" | "external"
   accompaniment: boolean
 }
-// &lt;/CHANGE&gt;
 
 export interface MixerSettings {
   volume: number
@@ -61,19 +60,19 @@ export interface DSPSettings {
     msb_Dec: number
     lsb_Dec: number
   }
-  parameters: Record&lt;string, number&gt;
+  parameters: Record<string, number>
 }
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("home")
-  const [currentPart, setCurrentPart] = useState&lt;number | null&gt;(null)
-  const [previousTab, setPreviousTab] = useState&lt;string&gt;("home")
+  const [currentPart, setCurrentPart] = useState<number | null>(null)
+  const [previousTab, setPreviousTab] = useState<string>("home")
   const [mixerBank, setMixerBank] = useState(0)
-  const [partVoices, setPartVoices] = useState&lt;Record&lt;number, Voice&gt;&gt;({})
-  const [channelEffects, setChannelEffects] = useState&lt;Record&lt;number, string&gt;&gt;({})
+  const [partVoices, setPartVoices] = useState<Record<number, Voice>>({})
+  const [channelEffects, setChannelEffects] = useState<Record<number, string>>({})
 
-  const [channelMixer, setChannelMixer] = useState&lt;Record&lt;number, MixerSettings&gt;&gt;({})
-  const [channelDSP, setChannelDSP] = useState&lt;Record&lt;number, DSPSettings&gt;&gt;({})
+  const [channelMixer, setChannelMixer] = useState<Record<number, MixerSettings>>({})
+  const [channelDSP, setChannelDSP] = useState<Record<number, DSPSettings>>({})
 
   const [globalSettings, setGlobalSettings] = useState({
     masterTranspose: 0,
@@ -87,7 +86,7 @@ export default function Home() {
     chorusSendGlobal: 30,
   })
 
-  const [chordState, setChordState] = useState&lt;ChordState&gt;({
+  const [chordState, setChordState] = useState<ChordState>({
     sections: [
       {
         id: "section-1",
@@ -95,7 +94,7 @@ export default function Home() {
         bars: 4,
         stylePart: "Intro 1",
         color: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-        chords: [] as Chord[], // Explicitly typed as Chord[]
+        chords: [],
       },
     ],
     activeSection: "section-1",
@@ -107,30 +106,29 @@ export default function Home() {
     clockSource: "internal",
     accompaniment: true,
   })
-  // &lt;/CHANGE&gt;
 
-  const handleSelectVoice = (partNumber: number) =&gt; {
+  const handleSelectVoice = (partNumber: number) => {
     setCurrentPart(partNumber)
     setPreviousTab(activeTab)
     setActiveTab("voices")
   }
 
-  const handleVoiceAssigned = (voice: Voice) =&gt; {
+  const handleVoiceAssigned = (voice: Voice) => {
     if (currentPart !== null) {
-      setPartVoices((prev) =&gt; ({ ...prev, [currentPart]: voice }))
+      setPartVoices((prev) => ({ ...prev, [currentPart]: voice }))
     }
     setActiveTab(previousTab)
   }
 
-  const handleCancelVoiceSelection = () =&gt; {
+  const handleCancelVoiceSelection = () => {
     setActiveTab(previousTab)
   }
 
-  const handleEffectAssigned = (channel: number, effectName: string) =&gt; {
-    setChannelEffects((prev) =&gt; ({ ...prev, [channel]: effectName }))
+  const handleEffectAssigned = (channel: number, effectName: string) => {
+    setChannelEffects((prev) => ({ ...prev, [channel]: effectName }))
   }
 
-  const handleLoadConfiguration = (config: Tyros5Configuration) =&gt; {
+  const handleLoadConfiguration = (config: Tyros5Configuration) => {
     // Update global settings
     if (config.GlobalSettings) {
       setGlobalSettings({
@@ -151,11 +149,11 @@ export default function Home() {
 
     // Update channel parts
     if (config.ChannelParts) {
-      const newPartVoices: Record&lt;number, Voice&gt; = {}
-      const newChannelMixer: Record&lt;number, MixerSettings&gt; = {}
-      const newChannelDSP: Record&lt;number, DSPSettings&gt; = {}
+      const newPartVoices: Record<number, Voice> = {}
+      const newChannelMixer: Record<number, MixerSettings> = {}
+      const newChannelDSP: Record<number, DSPSettings> = {}
 
-      config.ChannelParts.forEach((channel: ChannelPartConfig) =&gt; {
+      config.ChannelParts.forEach((channel: ChannelPartConfig) => {
         const channelID = channel.ChannelID
 
         // Load voice if present
@@ -196,50 +194,50 @@ export default function Home() {
   }
 
   return (
-    &lt;div className="min-h-screen flex flex-col relative"&gt;
-      &lt;div
+    <div className="min-h-screen flex flex-col relative">
+      <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage:
             "url(https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_0068-KWOtxG3niqNY0qYM5S7YiwzptMfF9k.png)",
         }}
-      /&gt;
-      &lt;div className="absolute inset-0 bg-black/60" /&gt;
-      &lt;div className="relative z-10 flex flex-col min-h-screen"&gt;
-        &lt;header className="border-b border-primary/30"&gt;
-          &lt;div className="px-4 md:px-6 lg:px-8 py-2 md:py-3 flex items-center justify-between"&gt;
-            &lt;div&gt;
-              &lt;h1 className="text-lg md:text-xl lg:text-2xl font-bold text-white drop-shadow-lg"&gt;SmartBridge&lt;/h1&gt;
-              &lt;p className="text-xs md:text-sm text-gray-300 drop-shadow-md"&gt;Professional MIDI Controller&lt;/p&gt;
-            &lt;/div&gt;
-          &lt;/div&gt;
-          &lt;TabNavigation activeTab={activeTab} onTabChange={setActiveTab} /&gt;
-        &lt;/header&gt;
+      />
+      <div className="absolute inset-0 bg-black/60" />
+      <div className="relative z-10 flex flex-col min-h-screen">
+        <header className="border-b border-primary/30">
+          <div className="px-4 md:px-6 lg:px-8 py-2 md:py-3 flex items-center justify-between">
+            <div>
+              <h1 className="text-lg md:text-xl lg:text-2xl font-bold text-white drop-shadow-lg">SmartBridge</h1>
+              <p className="text-xs md:text-sm text-gray-300 drop-shadow-md">Professional MIDI Controller</p>
+            </div>
+          </div>
+          <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
+        </header>
 
-        &lt;main className="flex-1 overflow-auto"&gt;
-          {activeTab === "home" && &lt;HomeScreen onSelectVoice={handleSelectVoice} partVoices={partVoices} /&gt;}
+        <main className="flex-1 overflow-auto">
+          {activeTab === "home" && <HomeScreen onSelectVoice={handleSelectVoice} partVoices={partVoices} />}
 
           {activeTab === "voices" && (
-            &lt;VoiceBrowser
+            <VoiceBrowser
               currentPart={currentPart}
               onVoiceAssigned={handleVoiceAssigned}
               onCancel={handleCancelVoiceSelection}
-            /&gt;
+            />
           )}
 
           {activeTab === "mixer" && (
-            &lt;MixerInterface
+            <MixerInterface
               onSelectVoice={handleSelectVoice}
               partVoices={partVoices}
               channelEffects={channelEffects}
               onEffectAssigned={handleEffectAssigned}
               currentBank={mixerBank}
               onBankChange={setMixerBank}
-            /&gt;
+            />
           )}
 
           {activeTab === "registration" && (
-            &lt;RegistrationManager
+            <RegistrationManager
               partVoices={partVoices}
               channelMixer={channelMixer}
               channelDSP={channelDSP}
@@ -247,16 +245,16 @@ export default function Home() {
               globalSettings={globalSettings}
               globalEffects={globalEffects}
               onLoadConfiguration={handleLoadConfiguration}
-            /&gt;
+            />
           )}
 
-          {activeTab === "assembly" && &lt;AssemblyWorkbench /&gt;}
+          {activeTab === "assembly" && <AssemblyWorkbench />}
 
-          {activeTab === "chords" && &lt;ChordSequencer chordState={chordState} setChordState={setChordState} /&gt;}
+          {activeTab === "chords" && <ChordSequencer chordState={chordState} setChordState={setChordState} />}
 
-          {activeTab === "logging" && &lt;MidiLogger /&gt;}
-        &lt;/main&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
+          {activeTab === "logging" && <MidiLogger />}
+        </main>
+      </div>
+    </div>
   )
 }
