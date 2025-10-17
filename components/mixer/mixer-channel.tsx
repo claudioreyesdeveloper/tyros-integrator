@@ -129,10 +129,8 @@ export function MixerChannel({
             max="127"
             value={volume}
             onChange={(e) => handleVolumeChange(Number(e.target.value))}
-            orient="vertical"
             className="h-32 slider-vertical"
             style={{
-              writingMode: "bt-lr",
               WebkitAppearance: "slider-vertical",
               width: "8px",
             }}
