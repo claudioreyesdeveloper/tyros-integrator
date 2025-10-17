@@ -17,7 +17,7 @@ const LayoutContext = createContext<LayoutContextType | undefined>(undefined)
 export function LayoutProvider({ children }: { children: React.ReactNode }) {
   const [mode, setMode] = useState<LayoutMode>("auto")
   const [effectiveMode, setEffectiveMode] = useState<EffectiveMode>("desktop")
-  const updateTimeoutRef = useRef<NodeJS.Timeout>()
+  const updateTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     const updateEffectiveMode = () => {
