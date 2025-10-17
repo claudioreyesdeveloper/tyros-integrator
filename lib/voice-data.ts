@@ -14,7 +14,7 @@ export async function loadVoiceData(): Promise<Voice[]> {
 
   try {
     const response = await fetch(
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Tyros_voice_2_fully_cleaned-JnGv1yEjmPwmLsVYN7KvWs2KzFQ6am.csv",
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Tyros_voice_2_fully_cleaned%20%281%29-ORwlsBv5E2q8Ql6MwefrfwDMRkW8oC.csv",
     )
     const csvText = await response.text()
 
@@ -24,7 +24,7 @@ export async function loadVoiceData(): Promise<Voice[]> {
     for (const line of lines) {
       if (!line.trim()) continue
 
-      const [category, sub, voice, msb, lsb, prg] = line.split(",").map((s) => s.trim())
+      const [category, sub, voice, msb, lsb, prg] = line.split(";").map((s) => s.trim())
       if (category && sub && voice) {
         voices.push({ category, sub, voice, msb, lsb, prg })
       }
@@ -40,16 +40,14 @@ export async function loadVoiceData(): Promise<Voice[]> {
 
 export function getCategories(voices: Voice[]): string[] {
   const categories = new Set(voices.map((v) => v.category))
-  return Array.from(categories).sort()
+  return Array.from(categories)
 }
 
 export function getSubCategories(voices: Voice[], category: string): string[] {
   const subs = new Set(voices.filter((v) => v.category === category).map((v) => v.sub))
-  return Array.from(subs).sort()
+  return Array.from(subs)
 }
 
 export function getVoices(voices: Voice[], category: string, subCategory: string): Voice[] {
-  return voices
-    .filter((v) => v.category === category && v.sub === subCategory)
-    .sort((a, b) => a.voice.localeCompare(b.voice))
+  return voices.filter((v) => v.category === category && v.sub === subCategory)
 }
