@@ -64,15 +64,16 @@ export function HomeScreen({ onSelectVoice, partVoices }: HomeScreenProps) {
   }
 
   return (
-    <div className="h-full flex flex-col items-center justify-center p-6 md:p-10 lg:p-8">
+    <div className="h-full flex flex-col items-center justify-center p-4 md:p-6 lg:p-8">
+      {/* Content */}
       <div className="w-full h-full flex flex-col items-center justify-center">
-        <div className="text-center mb-10 md:mb-14 lg:mb-12">
-          <h1 className="text-7xl md:text-9xl lg:text-8xl font-bold text-white mb-4 drop-shadow-[0_6px_16px_rgba(255,255,255,0.6)] tracking-tight">
+        <div className="text-center mb-8 md:mb-10 lg:mb-12">
+          <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-4 drop-shadow-[0_4px_12px_rgba(255,107,0,0.5)] tracking-tight">
             Welcome
           </h1>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10 lg:gap-8 max-w-7xl w-full mb-8 md:mb-12 lg:mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 lg:gap-6 max-w-7xl w-full mb-6 md:mb-7 lg:mb-8">
           {[1, 2, 3, 4].map((partNumber) => {
             const voice = partVoices[partNumber]
 
@@ -83,22 +84,18 @@ export function HomeScreen({ onSelectVoice, partVoices }: HomeScreenProps) {
                   console.log("[v0] HomeScreen: Selecting voice for part", partNumber)
                   onSelectVoice(partNumber)
                 }}
-                className="premium-card p-8 md:p-12 lg:p-10 flex flex-col items-center gap-6 md:gap-10 lg:gap-8 hover:scale-105 transition-all duration-300 group min-h-[240px] md:min-h-[320px] lg:min-h-[240px]"
+                className="premium-card p-6 md:p-7 lg:p-8 flex flex-col items-center gap-4 md:gap-5 lg:gap-6 hover:scale-105 transition-all duration-300 group"
               >
-                <div className="w-24 h-24 md:w-32 md:h-32 lg:w-28 lg:h-28 rounded-full bg-gradient-to-br from-secondary to-secondary/60 flex items-center justify-center border-4 md:border-[6px] lg:border-4 border-primary/50 group-hover:border-primary/90 transition-all shadow-lg shadow-primary/30">
-                  <VoiceIcon
-                    subcategory={voice?.sub || ""}
-                    className="text-primary w-14 h-14 md:w-20 md:h-20 lg:w-14 lg:h-14"
-                    size={56}
-                  />
+                <div className="w-20 h-20 md:w-22 md:h-22 lg:w-24 lg:h-24 rounded-full bg-gradient-to-br from-secondary to-secondary/60 flex items-center justify-center border-4 border-primary/40 group-hover:border-primary transition-all shadow-lg shadow-primary/20">
+                  <VoiceIcon subcategory={voice?.sub || ""} className="text-primary" size={48} />
                 </div>
 
                 <div className="text-center w-full">
-                  <h3 className="premium-text text-2xl md:text-4xl lg:text-3xl mb-3">{PART_NAMES[partNumber - 1]}</h3>
+                  <h3 className="premium-label text-xl md:text-2xl lg:text-2xl mb-2">{PART_NAMES[partNumber - 1]}</h3>
                   {voice ? (
-                    <p className="text-base md:text-2xl lg:text-xl font-semibold text-white">{voice.voice}</p>
+                    <p className="text-sm md:text-base lg:text-lg font-semibold text-white">{voice.voice}</p>
                   ) : (
-                    <p className="text-sm md:text-lg lg:text-base text-muted-foreground">No Voice</p>
+                    <p className="text-xs md:text-sm text-muted-foreground">No Voice</p>
                   )}
                 </div>
               </button>
@@ -106,49 +103,40 @@ export function HomeScreen({ onSelectVoice, partVoices }: HomeScreenProps) {
           })}
         </div>
 
-        <div className="max-w-full md:max-w-2xl lg:max-w-md w-full px-4 md:px-0 mb-8 md:mb-12 lg:mb-8">
+        <div className="max-w-full md:max-w-lg lg:max-w-md w-full px-4 md:px-0 mb-6">
           <StylesSelector />
         </div>
 
-        <div className="max-w-full md:max-w-4xl lg:max-w-3xl w-full px-4 md:px-0 mb-8">
-          <div className="premium-card p-8 md:p-12 lg:p-8">
-            <h3 className="section-header">Style Controls</h3>
+        <div className="max-w-full md:max-w-2xl w-full px-4 md:px-0 mb-6">
+          <div className="premium-card p-6">
+            <h3 className="premium-text text-lg mb-4">Style Controls</h3>
 
-            <div className="flex gap-4 md:gap-6 lg:gap-4 mb-8 md:mb-12 lg:mb-8">
-              <Button
-                onClick={handleStart}
-                disabled={isPlaying}
-                className="flex-1 h-16 md:h-20 lg:h-16 bg-green-600 hover:bg-green-700 text-white text-base md:text-xl lg:text-base font-bold shadow-lg"
-              >
-                <Play className="w-5 h-5 md:w-7 md:h-7 lg:w-5 lg:h-5 mr-2" />
+            {/* Transport buttons */}
+            <div className="flex gap-3 mb-6">
+              <Button onClick={handleStart} disabled={isPlaying} className="flex-1">
+                <Play className="w-4 h-4 mr-2" />
                 Start
               </Button>
-              <Button
-                onClick={handleStop}
-                disabled={!isPlaying}
-                className="flex-1 h-16 md:h-20 lg:h-16 bg-red-600 hover:bg-red-700 text-white text-base md:text-xl lg:text-base font-bold shadow-lg"
-              >
-                <Square className="w-5 h-5 md:w-7 md:h-7 lg:w-5 lg:h-5 mr-2" />
+              <Button onClick={handleStop} disabled={!isPlaying} variant="destructive" className="flex-1">
+                <Square className="w-4 h-4 mr-2" />
                 Stop
               </Button>
-              <Button
-                onClick={handleSyncStart}
-                className="flex-1 h-16 md:h-20 lg:h-16 bg-blue-600 hover:bg-blue-700 text-white text-base md:text-xl lg:text-base font-bold shadow-lg"
-              >
-                <PlayCircle className="w-5 h-5 md:w-7 md:h-7 lg:w-5 lg:h-5 mr-2" />
+              <Button onClick={handleSyncStart} className="flex-1">
+                <PlayCircle className="w-4 h-4 mr-2" />
                 Sync Start
               </Button>
             </div>
 
-            <div className="mb-8 md:mb-12 lg:mb-8">
-              <label className="premium-label mb-3 md:mb-4 lg:mb-3 block">Variation</label>
+            {/* Variation selector */}
+            <div className="mb-6">
+              <label className="text-sm font-medium text-white mb-2 block">Variation</label>
               <Select value={variation} onValueChange={handleVariationChange}>
-                <SelectTrigger className="w-full h-14 md:h-20 lg:h-14 text-base md:text-xl lg:text-base font-semibold">
+                <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   {VARIATION_OPTIONS.map((option) => (
-                    <SelectItem key={option} value={option} className="md:text-xl lg:text-base md:py-4 lg:py-2">
+                    <SelectItem key={option} value={option}>
                       {option}
                     </SelectItem>
                   ))}
@@ -156,10 +144,11 @@ export function HomeScreen({ onSelectVoice, partVoices }: HomeScreenProps) {
               </Select>
             </div>
 
+            {/* Tempo slider */}
             <div>
-              <div className="flex justify-between items-center mb-3 md:mb-5 lg:mb-3">
-                <label className="premium-label">Tempo</label>
-                <span className="value-display">{tempo} BPM</span>
+              <div className="flex justify-between items-center mb-2">
+                <label className="text-sm font-medium text-white">Tempo</label>
+                <span className="text-sm font-semibold text-white">{tempo} BPM</span>
               </div>
               <Slider
                 value={[tempo]}
@@ -173,15 +162,15 @@ export function HomeScreen({ onSelectVoice, partVoices }: HomeScreenProps) {
           </div>
         </div>
 
-        <div className="mt-10 md:mt-14 lg:mt-12 flex flex-col md:flex-row items-center gap-6 md:gap-10 lg:gap-8 text-sm md:text-lg lg:text-base glossy-panel px-8 md:px-12 lg:px-10 py-4 md:py-6 lg:py-5">
-          <div className="flex items-center gap-4 md:gap-6 lg:gap-4">
-            <div className="w-4 h-4 md:w-6 md:h-6 lg:w-4 lg:h-4 rounded-full bg-primary animate-pulse shadow-lg shadow-primary/60" />
-            <span className="premium-label text-base md:text-xl lg:text-base">MIDI: Connected</span>
+        <div className="mt-8 md:mt-10 lg:mt-12 flex flex-col md:flex-row items-center gap-4 md:gap-6 text-xs md:text-sm glossy-panel px-6 md:px-8 py-3 md:py-4">
+          <div className="flex items-center gap-3">
+            <div className="w-3 h-3 rounded-full bg-primary animate-pulse shadow-lg shadow-primary/50" />
+            <span className="premium-label">MIDI: Connected</span>
           </div>
-          <div className="hidden md:block w-px h-8 md:h-12 lg:h-8 bg-border" />
-          <div className="flex items-center gap-4 md:gap-6 lg:gap-4">
-            <div className="w-4 h-4 md:w-6 md:h-6 lg:w-4 lg:h-4 rounded-full bg-primary shadow-lg shadow-primary/60" />
-            <span className="premium-label text-base md:text-xl lg:text-base">SmartBridge Ready</span>
+          <div className="hidden md:block w-px h-6 bg-border" />
+          <div className="flex items-center gap-3">
+            <div className="w-3 h-3 rounded-full bg-primary shadow-lg shadow-primary/50" />
+            <span className="premium-label">SmartBridge Ready</span>
           </div>
         </div>
       </div>

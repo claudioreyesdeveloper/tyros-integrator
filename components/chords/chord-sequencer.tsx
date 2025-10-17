@@ -22,6 +22,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast"
 import { useMIDI } from "@/lib/midi-context"
 import { cn } from "@/lib/utils"
+import { useLayout } from "@/lib/layout-context" // Add layout context to check if we're on desktop or iPad
 
 const STYLE_PARTS = [
   "Intro 1",
@@ -631,6 +632,8 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
   const { api } = useMIDI()
   const { toast } = useToast()
 
+  const { effectiveMode } = useLayout()
+
   const {
     sections,
     activeSection,
@@ -725,6 +728,12 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
   const [touchStartPos, setTouchStartPos] = useState<{ x: number; y: number } | null>(null)
   const [isDragging, setIsDragging] = useState(false)
 
+  const [resizingChord, setResizingChord] = useState<{ sectionId: string; chordId: string } | null>(null)
+  const [chordResizeStartX, setChordResizeStartX] = useState(0)
+  const [chordResizeStartDuration, setChordResizeStartDuration] = useState(0)
+  const [chordResizePreviewDuration, setChordResizePreviewDuration] = useState<number | null>(null)
+  const chordResizeAnimationFrame = useRef<number | null>(null)
+
   useEffect(() => {
     if (editingCell && inputRef.current) {
       inputRef.current.focus()
@@ -781,6 +790,59 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
       }
     }
   }, [resizingSection, resizeStartX, resizeStartBars, resizePreviewBars])
+
+  useEffect(() => {
+    if (resizingChord && effectiveMode === "desktop") {
+      const handleMouseMove = (e: MouseEvent) => {
+        if (chordResizeAnimationFrame.current) {
+          cancelAnimationFrame(chordResizeAnimationFrame.current)
+        }
+
+        chordResizeAnimationFrame.current = requestAnimationFrame(() => {
+          const deltaX = e.clientX - chordResizeStartX
+          const beatWidth = 80 // Approximate width per beat in the grid
+          const deltaDuration = Math.round(deltaX / beatWidth)
+          const newDuration = Math.max(1, Math.min(4, chordResizeStartDuration + deltaDuration))
+          setChordResizePreviewDuration(newDuration)
+        })
+      }
+
+      const handleMouseUp = () => {
+        if (chordResizeAnimationFrame.current) {
+          cancelAnimationFrame(chordResizeAnimationFrame.current)
+          chordResizeAnimationFrame.current = null
+        }
+
+        if (chordResizePreviewDuration !== null && resizingChord) {
+          const { sectionId, chordId } = resizingChord
+          setSections(
+            sections.map((s) => {
+              if (s.id === sectionId) {
+                return {
+                  ...s,
+                  chords: s.chords.map((c) => (c.id === chordId ? { ...c, duration: chordResizePreviewDuration } : c)),
+                }
+              }
+              return s
+            }),
+          )
+        }
+
+        setResizingChord(null)
+        setChordResizePreviewDuration(null)
+      }
+
+      window.addEventListener("mousemove", handleMouseMove)
+      window.addEventListener("mouseup", handleMouseUp)
+      return () => {
+        if (chordResizeAnimationFrame.current) {
+          cancelAnimationFrame(chordResizeAnimationFrame.current)
+        }
+        window.removeEventListener("mousemove", handleMouseMove)
+        window.removeEventListener("mouseup", handleMouseUp)
+      }
+    }
+  }, [resizingChord, chordResizeStartX, chordResizeStartDuration, chordResizePreviewDuration, effectiveMode, sections])
 
   const handleAddSection = () => {
     const newSection: Section = {
@@ -956,6 +1018,10 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
         category: selectedCategory,
         style: selectedStyle,
         tempo,
+        localControl,
+        clockSource,
+        accompaniment,
+        resolution,
         savedAt: new Date().toISOString(),
       },
     }
@@ -997,15 +1063,20 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
             if (songData.metadata.category) setSelectedCategory(songData.metadata.category)
             if (songData.metadata.style) setSelectedStyle(songData.metadata.style)
             if (songData.metadata.tempo) setTempo(songData.metadata.tempo)
+            if (songData.metadata.localControl !== undefined) setLocalControl(songData.metadata.localControl)
+            if (songData.metadata.clockSource) setClockSource(songData.metadata.clockSource)
+            if (songData.metadata.accompaniment !== undefined) setAccompaniment(songData.metadata.accompaniment)
+            if (songData.metadata.resolution) setResolution(songData.metadata.resolution)
           }
           toast({
             title: "Song Loaded",
             description: "Song imported successfully",
           })
         } catch (error) {
+          console.error("Error loading song:", error)
           toast({
             title: "Error",
-            description: "Failed to load song file",
+            description: "Failed to load song file. Ensure it's a valid Tyros Composer JSON.",
             variant: "destructive",
           })
         }
@@ -1377,37 +1448,18 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
     const startBeat = 0
 
     const numChords = progression.chords.length
-    let beatsPerChord = 4 // Default: 1 bar per chord
 
-    if (numChords <= 4) {
-      // Short progressions: 1 bar per chord (4 beats)
-      beatsPerChord = 4
-    } else if (numChords <= 6) {
-      // Medium progressions: 1 bar per chord
-      beatsPerChord = 4
-    } else if (numChords <= 8) {
-      // 8-chord progressions: 1 bar per chord (8 bars total)
-      beatsPerChord = 4
-    } else if (numChords <= 12) {
-      // 12-chord progressions (like 12-bar blues): 1 bar per chord
-      beatsPerChord = 4
-    } else if (numChords <= 16) {
-      // 16-chord progressions: 0.5 bars per chord (8 bars total)
-      beatsPerChord = 2
-    } else {
-      // Very long progressions: 0.25 bars per chord
-      beatsPerChord = 1
-    }
+    const beatsPerChord = 1 // Always 1 beat (1/4 bar) per chord
 
-    const requiredBeats = numChords * beatsPerChord
-    const updatedBars = Math.max(activeS.bars, Math.ceil(requiredBeats / 4))
+    const beatsPerBar = 4
+    const requiredBeats = numChords * beatsPerBar // Need 1 bar per chord
+    const updatedBars = Math.max(activeS.bars, numChords) // One bar per chord
 
-    // Create new chords from the progression
     const newChords: Chord[] = progression.chords.map((chordSymbol, index) => ({
       id: `chord-${Date.now()}-${index}`,
       symbol: chordSymbol,
-      beat: startBeat + index * beatsPerChord,
-      duration: beatsPerChord,
+      beat: startBeat + index * beatsPerBar, // Place at start of each bar (0, 4, 8, 12, ...)
+      duration: beatsPerChord, // Always 1 beat
     }))
 
     setSections(sections.map((s) => (s.id === activeS.id ? { ...s, chords: newChords, bars: updatedBars } : s)))
@@ -1472,6 +1524,14 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
   }
 
   const activeS = sections.find((s) => s.id === activeSection)
+
+  const handleChordResizeStart = (e: React.MouseEvent, sectionId: string, chordId: string, currentDuration: number) => {
+    e.stopPropagation()
+    e.preventDefault()
+    setResizingChord({ sectionId, chordId })
+    setChordResizeStartX(e.clientX)
+    setChordResizeStartDuration(currentDuration)
+  }
 
   // Add drag-and-drop handlers for chords
   const handleChordDragStart = (e: React.DragEvent, sectionId: string, chordId: string) => {
@@ -1915,24 +1975,47 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
                               }}
                               onTouchMove={handleChordTouchMove}
                               onTouchEnd={(e) => handleChordTouchEnd(e, activeS.id)}
-                              className="relative w-full h-full flex flex-col bg-gradient-to-br from-amber-500 to-amber-600 text-black cursor-move overflow-hidden"
+                              className="relative w-full h-full flex flex-col bg-gradient-to-br from-orange-500 to-orange-600 text-black cursor-move overflow-hidden"
                             >
                               {/* Drag Handle - Top Left */}
                               <div className="absolute top-3 left-3 opacity-60 pointer-events-none">
                                 <GripVertical className="w-6 h-6 text-black" />
                               </div>
 
+                              {effectiveMode === "desktop" && (
+                                <div
+                                  draggable={false}
+                                  onDragStart={(e) => {
+                                    e.preventDefault()
+                                    e.stopPropagation()
+                                  }}
+                                  className="absolute right-0 top-0 bottom-0 w-3 cursor-ew-resize hover:bg-black/30 flex items-center justify-center transition-colors z-10"
+                                  onMouseDown={(e) => handleChordResizeStart(e, activeS.id, chord.id, chord.duration)}
+                                  title="Drag to resize chord"
+                                >
+                                  <div className="w-1 h-8 bg-white/60 rounded-full"></div>
+                                </div>
+                              )}
+
                               {/* Chord Name - Center */}
                               <div className="flex-1 flex flex-col items-center justify-center pt-4">
                                 <span className="font-bold text-4xl mb-2">{chord.symbol}</span>
                                 <span className="text-base text-black/70 font-semibold">
-                                  {chord.duration === 4
-                                    ? "1 bar"
-                                    : chord.duration === 2
-                                      ? "½ bar"
-                                      : chord.duration === 3
+                                  {resizingChord?.chordId === chord.id && chordResizePreviewDuration !== null
+                                    ? chordResizePreviewDuration === 4
+                                      ? "1 bar"
+                                      : chordResizePreviewDuration === 3
                                         ? "¾ bar"
-                                        : "¼ bar"}
+                                        : chordResizePreviewDuration === 2
+                                          ? "½ bar"
+                                          : "¼ bar"
+                                    : chord.duration === 4
+                                      ? "1 bar"
+                                      : chord.duration === 2
+                                        ? "½ bar"
+                                        : chord.duration === 3
+                                          ? "¾ bar"
+                                          : "¼ bar"}
                                 </span>
                               </div>
 

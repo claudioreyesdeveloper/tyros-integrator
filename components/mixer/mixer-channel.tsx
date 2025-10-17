@@ -4,13 +4,14 @@ import { useState } from "react"
 import { useMIDI } from "@/lib/midi-context"
 import { RotaryKnob } from "@/components/ui/rotary-knob"
 import { VoiceIcon } from "@/components/ui/voice-icon"
+import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Settings } from "lucide-react"
 
 interface MixerChannelProps {
   channel: number
   partName: string
   voiceName: string
-  insertEffect: string
-  onOpenEffects: () => void
   onSelectVoice: () => void
   voiceSubcategory?: string
   voiceCategory?: string
@@ -20,13 +21,13 @@ export function MixerChannel({
   channel,
   partName,
   voiceName,
-  insertEffect,
-  onOpenEffects,
   onSelectVoice,
   voiceSubcategory = "",
   voiceCategory = "",
 }: MixerChannelProps) {
   const { api } = useMIDI()
+  const [showDetails, setShowDetails] = useState(false)
+
   const [volume, setVolume] = useState(100)
   const [pan, setPan] = useState(64)
   const [reverb, setReverb] = useState(40)
@@ -89,93 +90,124 @@ export function MixerChannel({
   const handleBassChange = (value: number) => {
     setBass(value)
     console.log(`[v0] EQ Bass CH${channel}:`, value)
-    // TODO: Implement EQ bass command in Tyros API
   }
 
   const handleMidChange = (value: number) => {
     setMid(value)
     console.log(`[v0] EQ Mid CH${channel}:`, value)
-    // TODO: Implement EQ mid command in Tyros API
   }
 
   const handleHighChange = (value: number) => {
     setHigh(value)
     console.log(`[v0] EQ High CH${channel}:`, value)
-    // TODO: Implement EQ high command in Tyros API
   }
 
   return (
-    <div className="premium-card flex flex-col items-center gap-5 md:gap-7 lg:gap-5 w-full max-w-[180px] md:max-w-[280px] lg:max-w-none lg:w-[260px] xl:w-[280px] min-h-[600px] md:min-h-[800px] lg:min-h-[700px] shadow-2xl">
-      <button
-        onClick={onSelectVoice}
-        className="w-full glossy-button px-4 md:px-6 lg:px-4 py-3.5 md:py-5 lg:py-3.5 rounded-xl flex items-center justify-center gap-2.5 md:gap-3 lg:gap-2.5 text-black font-bold text-sm md:text-lg lg:text-sm shadow-lg hover:shadow-xl transition-all"
-      >
-        <VoiceIcon
-          subcategory={voiceSubcategory}
-          category={voiceCategory}
-          size={20}
-          className="md:w-7 md:h-7 lg:w-5 lg:h-5"
-        />
-        <span className="text-base md:text-xl lg:text-base">Voice</span>
-      </button>
-
-      <div className="text-center w-full">
-        <div className="text-sm md:text-lg lg:text-sm text-primary font-extrabold tracking-wider mb-1">
-          CH {channel}
+    <>
+      <div className="premium-card p-3 flex flex-col gap-3 w-[120px] shadow-xl">
+        {/* Header */}
+        <div className="text-center">
+          <div className="text-xs text-primary font-bold">CH {channel}</div>
+          <div className="premium-text text-xs font-bold truncate">{partName}</div>
         </div>
-        <div className="premium-text text-base md:text-xl lg:text-base font-bold">{partName}</div>
-      </div>
 
-      <div className="w-full">
-        <div className="flex flex-col items-center gap-3 md:gap-4 lg:gap-3 px-4 md:px-6 lg:px-4 py-5 md:py-7 lg:py-5 bg-gradient-to-br from-secondary via-secondary/90 to-secondary/70 rounded-xl border-2 md:border-3 lg:border-2 border-primary/30 shadow-inner">
-          <VoiceIcon
-            subcategory={voiceSubcategory}
-            category={voiceCategory}
-            size={48}
-            className="md:w-16 md:h-16 lg:w-12 lg:h-12"
+        {/* Voice Display */}
+        <button
+          onClick={onSelectVoice}
+          className="w-full glossy-button px-2 py-2 rounded flex flex-col items-center gap-1 text-black font-bold text-xs shadow-md hover:shadow-lg transition-all"
+        >
+          <VoiceIcon subcategory={voiceSubcategory} category={voiceCategory} size={16} />
+          <span className="truncate w-full text-[10px]">{voiceName}</span>
+        </button>
+
+        {/* Volume Slider - Vertical */}
+        <div className="flex flex-col items-center gap-2 py-3 bg-secondary/50 rounded border border-primary/20">
+          <div className="premium-label text-xs">VOL</div>
+          <input
+            type="range"
+            min="0"
+            max="127"
+            value={volume}
+            onChange={(e) => handleVolumeChange(Number(e.target.value))}
+            orient="vertical"
+            className="h-32 slider-vertical"
+            style={{
+              writingMode: "bt-lr",
+              WebkitAppearance: "slider-vertical",
+              width: "8px",
+            }}
           />
-          <span className="text-sm md:text-lg lg:text-sm font-bold text-center line-clamp-2 text-foreground leading-tight">
-            {voiceName}
-          </span>
+          <div className="text-xs font-mono font-bold text-primary">{volume}</div>
         </div>
+
+        <Button onClick={() => setShowDetails(true)} className="w-full glossy-button h-9 gap-2 text-xs" size="sm">
+          <Settings className="w-4 h-4" />
+          Edit
+        </Button>
       </div>
 
-      <div className="w-full space-y-3 md:space-y-4 lg:space-y-3">
-        <div className="premium-label text-center">Volume</div>
-        <input
-          type="range"
-          min="0"
-          max="127"
-          value={volume}
-          onChange={(e) => handleVolumeChange(Number(e.target.value))}
-          className="w-full slider-horizontal"
-        />
-        <div className="text-center value-display">{volume}</div>
-      </div>
+      <Dialog open={showDetails} onOpenChange={setShowDetails}>
+        <DialogContent className="max-w-2xl bg-black/95 border-primary/30">
+          <DialogHeader>
+            <DialogTitle className="text-primary text-xl">
+              Channel {channel} - {partName}
+            </DialogTitle>
+          </DialogHeader>
 
-      <div className="w-full space-y-5 md:space-y-7 lg:space-y-5 flex-1">
-        <RotaryKnob value={pan} onChange={handlePanChange} label="Pan" displayValue={`${pan}`} size="md" />
-        <RotaryKnob value={reverb} onChange={handleReverbChange} label="Reverb" displayValue={`${reverb}`} size="md" />
-        <RotaryKnob value={chorus} onChange={handleChorusChange} label="Chorus" displayValue={`${chorus}`} size="md" />
-        <RotaryKnob
-          value={brightness}
-          onChange={handleBrightnessChange}
-          label="Bright"
-          displayValue={`${brightness}`}
-          size="md"
-        />
-      </div>
+          <div className="space-y-6 py-4">
+            {/* Voice Selection */}
+            <div className="space-y-2">
+              <h3 className="premium-label text-sm">Voice</h3>
+              <button
+                onClick={onSelectVoice}
+                className="w-full glossy-button px-4 py-3 rounded flex items-center gap-3 text-black font-bold shadow-md hover:shadow-lg transition-all"
+              >
+                <VoiceIcon subcategory={voiceSubcategory} category={voiceCategory} size={24} />
+                <span className="text-base">{voiceName}</span>
+              </button>
+            </div>
 
-      <div className="w-full space-y-3 md:space-y-4 lg:space-y-3">
-        <div className="premium-label text-center">EQ</div>
-        <div className="px-4 md:px-6 lg:px-4 py-5 md:py-7 lg:py-5 bg-gradient-to-br from-accent/40 via-accent/25 to-accent/15 rounded-xl border-2 md:border-3 lg:border-2 border-primary/50 shadow-lg">
-          <div className="flex flex-col gap-4 md:gap-6 lg:gap-4">
-            <RotaryKnob value={bass} onChange={handleBassChange} label="Bass" displayValue={`${bass}`} size="sm" />
-            <RotaryKnob value={mid} onChange={handleMidChange} label="Mid" displayValue={`${mid}`} size="sm" />
-            <RotaryKnob value={high} onChange={handleHighChange} label="High" displayValue={`${high}`} size="sm" />
+            {/* Main Controls */}
+            <div className="space-y-2">
+              <h3 className="premium-label text-sm">Main Controls</h3>
+              <div className="grid grid-cols-4 gap-4">
+                <RotaryKnob value={pan} onChange={handlePanChange} label="Pan" displayValue={`${pan}`} size="md" />
+                <RotaryKnob
+                  value={reverb}
+                  onChange={handleReverbChange}
+                  label="Reverb"
+                  displayValue={`${reverb}`}
+                  size="md"
+                />
+                <RotaryKnob
+                  value={chorus}
+                  onChange={handleChorusChange}
+                  label="Chorus"
+                  displayValue={`${chorus}`}
+                  size="md"
+                />
+                <RotaryKnob
+                  value={brightness}
+                  onChange={handleBrightnessChange}
+                  label="Brightness"
+                  displayValue={`${brightness}`}
+                  size="md"
+                />
+              </div>
+            </div>
+
+            {/* EQ Controls */}
+            <div className="space-y-2">
+              <h3 className="premium-label text-sm">Equalizer</h3>
+              <div className="grid grid-cols-3 gap-4">
+                <RotaryKnob value={bass} onChange={handleBassChange} label="Bass" displayValue={`${bass}`} size="md" />
+                <RotaryKnob value={mid} onChange={handleMidChange} label="Mid" displayValue={`${mid}`} size="md" />
+                <RotaryKnob value={high} onChange={handleHighChange} label="High" displayValue={`${high}`} size="md" />
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </div>
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }

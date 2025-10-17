@@ -1,45 +1,69 @@
 "use client"
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
+import type React from "react"
+import { createContext, useContext, useState, useEffect, useRef } from "react"
 
 type LayoutMode = "auto" | "desktop" | "ipad"
+type EffectiveMode = "desktop" | "ipad"
 
 interface LayoutContextType {
-  layoutMode: LayoutMode
-  setLayoutMode: (mode: LayoutMode) => void
-  effectiveMode: "desktop" | "ipad"
+  mode: LayoutMode
+  effectiveMode: EffectiveMode
+  setMode: (mode: LayoutMode) => void
 }
 
 const LayoutContext = createContext<LayoutContextType | undefined>(undefined)
 
-export function LayoutProvider({ children }: { children: ReactNode }) {
-  const [layoutMode, setLayoutMode] = useState<LayoutMode>("auto")
-  const [effectiveMode, setEffectiveMode] = useState<"desktop" | "ipad">("desktop")
+export function LayoutProvider({ children }: { children: React.ReactNode }) {
+  const [mode, setMode] = useState<LayoutMode>("auto")
+  const [effectiveMode, setEffectiveMode] = useState<EffectiveMode>("desktop")
+  const updateTimeoutRef = useRef<NodeJS.Timeout>()
 
   useEffect(() => {
     const updateEffectiveMode = () => {
-      if (layoutMode === "auto") {
-        // Auto-detect based on screen size (iPad range: 768-1024px)
-        const isIPadSize = window.innerWidth >= 768 && window.innerWidth <= 1024
-        setEffectiveMode(isIPadSize ? "ipad" : "desktop")
+      if (mode === "auto") {
+        // Auto mode: detect based on screen size
+        const isTablet = window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches
+        setEffectiveMode(isTablet ? "ipad" : "desktop")
       } else {
-        setEffectiveMode(layoutMode)
+        // Manual mode: use selected mode
+        setEffectiveMode(mode as EffectiveMode)
       }
     }
 
     updateEffectiveMode()
-    window.addEventListener("resize", updateEffectiveMode)
-    return () => window.removeEventListener("resize", updateEffectiveMode)
-  }, [layoutMode])
+
+    if (mode === "auto") {
+      const mediaQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)")
+      mediaQuery.addEventListener("change", updateEffectiveMode)
+      return () => mediaQuery.removeEventListener("change", updateEffectiveMode)
+    }
+  }, [mode])
 
   useEffect(() => {
-    document.body.setAttribute("data-layout-mode", effectiveMode)
-    console.log("[v0] Layout mode changed to:", effectiveMode)
+    if (updateTimeoutRef.current) {
+      clearTimeout(updateTimeoutRef.current)
+    }
+
+    updateTimeoutRef.current = setTimeout(() => {
+      requestAnimationFrame(() => {
+        try {
+          document.body.setAttribute("data-layout-mode", effectiveMode)
+        } catch (error) {
+          // Silently catch any errors during attribute setting
+          console.debug("Layout mode update:", effectiveMode)
+        }
+      })
+    }, 50) // Small debounce to batch rapid changes
+
+    return () => {
+      if (updateTimeoutRef.current) {
+        clearTimeout(updateTimeoutRef.current)
+      }
+    }
   }, [effectiveMode])
 
-  return (
-    <LayoutContext.Provider value={{ layoutMode, setLayoutMode, effectiveMode }}>{children}</LayoutContext.Provider>
-  )
+  return <LayoutContext.Provider value={{ mode, effectiveMode, setMode }}>{children}</LayoutContext.Provider>
 }
 
 export function useLayout() {

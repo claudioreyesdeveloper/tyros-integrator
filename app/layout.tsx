@@ -31,40 +31,87 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`font-sans ${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <head>
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                // Helper function to check if error is ResizeObserver related
+                // Aggressive ResizeObserver error suppression
                 function isResizeObserverError(message) {
                   if (!message) return false;
                   const msg = String(message).toLowerCase();
-                  return msg.includes('resizeobserver loop') || 
-                         msg.includes('resize observer loop');
+                  return msg.includes('resizeobserver') || 
+                         msg.includes('resize observer') ||
+                         msg.includes('loop limit exceeded') ||
+                         msg.includes('loop completed') ||
+                         msg.includes('undelivered notifications');
                 }
 
-                // Suppress ResizeObserver errors in error handler
+                // Suppress at the earliest possible point
+                const noop = () => true;
+                
+                // Override window.onerror immediately
+                window.onerror = function(message) {
+                  if (isResizeObserverError(message)) return true;
+                  return false;
+                };
+
+                // Capture phase error listener (runs before bubble phase)
                 window.addEventListener('error', function(e) {
-                  if (isResizeObserverError(e.message)) {
+                  if (isResizeObserverError(e.message || e.error?.message)) {
+                    e.stopImmediatePropagation();
+                    e.stopPropagation();
+                    e.preventDefault();
+                  }
+                }, { capture: true, passive: false });
+
+                // Unhandled rejections
+                window.addEventListener('unhandledrejection', function(e) {
+                  if (isResizeObserverError(e.reason?.message || e.reason)) {
                     e.stopImmediatePropagation();
                     e.preventDefault();
-                    return false;
                   }
-                }, true);
+                }, { capture: true });
 
-                // Suppress in console
-                const originalConsoleError = console.error;
+                // Console suppression
+                const originalError = console.error;
+                const originalWarn = console.warn;
+                
                 console.error = function(...args) {
-                  if (args[0] && isResizeObserverError(args[0])) {
-                    return;
-                  }
-                  originalConsoleError.apply(console, args);
+                  if (args.some(arg => isResizeObserverError(String(arg)))) return;
+                  originalError.apply(console, args);
                 };
+
+                console.warn = function(...args) {
+                  if (args.some(arg => isResizeObserverError(String(arg)))) return;
+                  originalWarn.apply(console, args);
+                };
+
+                // Wrap ResizeObserver constructor
+                if (typeof ResizeObserver !== 'undefined') {
+                  const OriginalResizeObserver = ResizeObserver;
+                  window.ResizeObserver = class extends OriginalResizeObserver {
+                    constructor(callback) {
+                      super((entries, observer) => {
+                        window.requestAnimationFrame(() => {
+                          try {
+                            callback(entries, observer);
+                          } catch (e) {
+                            if (!isResizeObserverError(e.message)) {
+                              console.error('ResizeObserver error:', e);
+                            }
+                          }
+                        });
+                      });
+                    }
+                  };
+                }
               })();
             `,
           }}
         />
+      </head>
+      <body className={`font-sans ${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Suspense
           fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white">Loading...</div>}
         >

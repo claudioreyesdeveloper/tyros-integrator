@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button"
 import { VoiceCommandPalette } from "@/components/voices/voice-command-palette"
 import { cn } from "@/lib/utils"
 import { getVoiceIcon, getSubCategoryColor } from "@/lib/voice-icons"
-import Icon from "@mdi/react"
 
 interface VoiceBrowserProps {
   currentPart: number | null
@@ -187,7 +186,7 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
           <ScrollArea className="flex-1">
             <div className="space-y-2.5 pr-3">
               {categories.map((category) => {
-                const iconPath = getVoiceIcon(category)
+                const IconComponent = getVoiceIcon(category)
                 const iconColor = getCategoryColor(category)
 
                 return (
@@ -207,10 +206,11 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                         selectedCategory === category ? "bg-black/20" : "bg-zinc-800/50 group-hover:bg-zinc-700/50",
                       )}
                     >
-                      <Icon
-                        path={iconPath}
-                        size={0.9}
-                        className={cn("flex-shrink-0", selectedCategory === category ? "text-black" : iconColor)}
+                      <IconComponent
+                        className={cn(
+                          "w-5 h-5 flex-shrink-0",
+                          selectedCategory === category ? "text-black" : iconColor,
+                        )}
                       />
                     </div>
                     <span className="flex-1 text-left">{category}</span>
@@ -240,7 +240,7 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
             {selectedCategory ? (
               <div className="space-y-2.5 pr-3">
                 {subCategories.map((sub) => {
-                  const iconPath = getVoiceIcon(sub, selectedCategory)
+                  const IconComponent = getVoiceIcon(sub, selectedCategory)
                   const iconColor = getSubCategoryColor(sub, selectedCategory)
 
                   return (
@@ -260,10 +260,11 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                           selectedSubCategory === sub ? "bg-black/20" : "bg-zinc-800/50 group-hover:bg-zinc-700/50",
                         )}
                       >
-                        <Icon
-                          path={iconPath}
-                          size={0.9}
-                          className={cn("flex-shrink-0", selectedSubCategory === sub ? "text-black" : iconColor)}
+                        <IconComponent
+                          className={cn(
+                            "w-5 h-5 flex-shrink-0",
+                            selectedSubCategory === sub ? "text-black" : iconColor,
+                          )}
                         />
                       </div>
                       <span className="flex-1 text-left">{sub}</span>
@@ -299,7 +300,7 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
               <div className="space-y-2.5 pr-3">
                 {voiceList.length > 0 ? (
                   voiceList.map((voice, index) => {
-                    const iconPath = getVoiceIcon(voice.sub, voice.category)
+                    const IconComponent = getVoiceIcon(voice.sub, voice.category)
                     const iconColor = getSubCategoryColor(voice.sub, voice.category)
 
                     return (
@@ -321,11 +322,9 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                               : "bg-zinc-800/50 group-hover:bg-zinc-700/50",
                           )}
                         >
-                          <Icon
-                            path={iconPath}
-                            size={0.9}
+                          <IconComponent
                             className={cn(
-                              "flex-shrink-0",
+                              "w-5 h-5 flex-shrink-0",
                               selectedVoice?.voice === voice.voice ? "text-black" : iconColor,
                             )}
                           />
