@@ -105,30 +105,43 @@ export function MixerChannel({
   }
 
   return (
-    <div className="premium-card p-3 md:p-4 lg:p-5 flex flex-col items-center gap-2 md:gap-3 lg:gap-4 w-full max-w-[160px] md:max-w-[170px] lg:max-w-none lg:w-[220px] xl:w-[240px] min-h-[450px] md:min-h-[500px] lg:min-h-[550px] shadow-2xl">
+    <div className="premium-card flex flex-col items-center gap-5 md:gap-7 lg:gap-5 w-full max-w-[180px] md:max-w-[280px] lg:max-w-none lg:w-[260px] xl:w-[280px] min-h-[600px] md:min-h-[800px] lg:min-h-[700px] shadow-2xl">
       <button
         onClick={onSelectVoice}
-        className="w-full glossy-button px-2 md:px-3 lg:px-4 py-2 md:py-2.5 lg:py-3 rounded-lg flex items-center justify-center gap-2 text-black font-bold text-xs md:text-sm shadow-lg hover:shadow-xl transition-all"
+        className="w-full glossy-button px-4 md:px-6 lg:px-4 py-3.5 md:py-5 lg:py-3.5 rounded-xl flex items-center justify-center gap-2.5 md:gap-3 lg:gap-2.5 text-black font-bold text-sm md:text-lg lg:text-sm shadow-lg hover:shadow-xl transition-all"
       >
-        <VoiceIcon subcategory={voiceSubcategory} category={voiceCategory} size={18} />
-        Voice
+        <VoiceIcon
+          subcategory={voiceSubcategory}
+          category={voiceCategory}
+          size={20}
+          className="md:w-7 md:h-7 lg:w-5 lg:h-5"
+        />
+        <span className="text-base md:text-xl lg:text-base">Voice</span>
       </button>
 
-      {/* Track Header */}
       <div className="text-center w-full">
-        <div className="text-xs text-primary font-bold tracking-wider">CH {channel}</div>
-        <div className="premium-text text-xs md:text-sm mt-1 font-bold">{partName}</div>
+        <div className="text-sm md:text-lg lg:text-sm text-primary font-extrabold tracking-wider mb-1">
+          CH {channel}
+        </div>
+        <div className="premium-text text-base md:text-xl lg:text-base font-bold">{partName}</div>
       </div>
 
       <div className="w-full">
-        <div className="flex flex-col items-center gap-2 px-2 md:px-3 py-3 md:py-4 lg:py-5 bg-gradient-to-br from-secondary via-secondary/90 to-secondary/70 rounded-lg border-2 border-primary/20 shadow-inner">
-          <VoiceIcon subcategory={voiceSubcategory} category={voiceCategory} size={40} />
-          <span className="text-xs font-bold text-center line-clamp-2 text-foreground">{voiceName}</span>
+        <div className="flex flex-col items-center gap-3 md:gap-4 lg:gap-3 px-4 md:px-6 lg:px-4 py-5 md:py-7 lg:py-5 bg-gradient-to-br from-secondary via-secondary/90 to-secondary/70 rounded-xl border-2 md:border-3 lg:border-2 border-primary/30 shadow-inner">
+          <VoiceIcon
+            subcategory={voiceSubcategory}
+            category={voiceCategory}
+            size={48}
+            className="md:w-16 md:h-16 lg:w-12 lg:h-12"
+          />
+          <span className="text-sm md:text-lg lg:text-sm font-bold text-center line-clamp-2 text-foreground leading-tight">
+            {voiceName}
+          </span>
         </div>
       </div>
 
-      <div className="w-full space-y-2">
-        <div className="premium-label text-center text-xs">Volume</div>
+      <div className="w-full space-y-3 md:space-y-4 lg:space-y-3">
+        <div className="premium-label text-center">Volume</div>
         <input
           type="range"
           min="0"
@@ -137,10 +150,10 @@ export function MixerChannel({
           onChange={(e) => handleVolumeChange(Number(e.target.value))}
           className="w-full slider-horizontal"
         />
-        <div className="text-center text-xs md:text-sm font-mono font-bold text-primary drop-shadow-md">{volume}</div>
+        <div className="text-center value-display">{volume}</div>
       </div>
 
-      <div className="w-full space-y-2 md:space-y-3 lg:space-y-4 flex-1">
+      <div className="w-full space-y-5 md:space-y-7 lg:space-y-5 flex-1">
         <RotaryKnob value={pan} onChange={handlePanChange} label="Pan" displayValue={`${pan}`} size="md" />
         <RotaryKnob value={reverb} onChange={handleReverbChange} label="Reverb" displayValue={`${reverb}`} size="md" />
         <RotaryKnob value={chorus} onChange={handleChorusChange} label="Chorus" displayValue={`${chorus}`} size="md" />
@@ -153,10 +166,10 @@ export function MixerChannel({
         />
       </div>
 
-      <div className="w-full space-y-2">
-        <div className="premium-label text-center text-xs">EQ</div>
-        <div className="px-2 md:px-3 py-3 md:py-4 bg-gradient-to-br from-accent/30 via-accent/20 to-accent/10 rounded-lg border-2 border-primary/40 shadow-lg">
-          <div className="flex flex-col gap-2">
+      <div className="w-full space-y-3 md:space-y-4 lg:space-y-3">
+        <div className="premium-label text-center">EQ</div>
+        <div className="px-4 md:px-6 lg:px-4 py-5 md:py-7 lg:py-5 bg-gradient-to-br from-accent/40 via-accent/25 to-accent/15 rounded-xl border-2 md:border-3 lg:border-2 border-primary/50 shadow-lg">
+          <div className="flex flex-col gap-4 md:gap-6 lg:gap-4">
             <RotaryKnob value={bass} onChange={handleBassChange} label="Bass" displayValue={`${bass}`} size="sm" />
             <RotaryKnob value={mid} onChange={handleMidChange} label="Mid" displayValue={`${mid}`} size="sm" />
             <RotaryKnob value={high} onChange={handleHighChange} label="High" displayValue={`${high}`} size="sm" />

@@ -4,78 +4,59 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.16 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.16 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.82 0.22 75);
+  --primary-foreground: oklch(0.1 0 0);
+  --secondary: oklch(0.22 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.25 0 0);
+  --muted-foreground: oklch(0.65 0 0);
+  --accent: oklch(0.28 0 0);
+  --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --destructive-foreground: oklch(0.985 0 0);
+  --success: oklch(0.65 0.18 145);
+  --success-foreground: oklch(0.985 0 0);
+  --warning: oklch(0.75 0.15 65);
+  --warning-foreground: oklch(0.1 0 0);
+  --border: oklch(0.3 0 0);
+  --input: oklch(0.25 0 0);
+  --ring: oklch(0.82 0.22 75);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-  --font-inter: "Inter", sans-serif;
-  --font-jetbrains-mono: "JetBrains Mono", monospace;
-  --font-geist-sans: "Geist", sans-serif;
-  --font-geist-mono: "Geist Mono", monospace;
-}
-
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
+  --radius: 0.75rem;
+  --sidebar: oklch(0.18 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-primary: oklch(0.82 0.22 75);
+  --sidebar-primary-foreground: oklch(0.1 0 0);
+  --sidebar-accent: oklch(0.25 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  --sidebar-border: oklch(0.3 0 0);
+  --sidebar-ring: oklch(0.82 0.22 75);
+
+  /* iOS 26 Design System Colors from Apple Design Resources */
+  --ios-blue: oklch(0.55 0.18 250);
+  --ios-blue-light: oklch(0.65 0.16 250);
+  --ios-blue-dark: oklch(0.45 0.2 250);
+  --ios-teal: oklch(0.65 0.12 190);
+  --ios-teal-light: oklch(0.75 0.1 190);
+  --ios-teal-dark: oklch(0.55 0.14 190);
+  --ios-gradient-start: oklch(0.45 0.2 250);
+  --ios-gradient-mid: oklch(0.5 0.16 220);
+  --ios-gradient-end: oklch(0.6 0.14 190);
+
+  /* iOS 26 System Font Stack */
+  --font-geist-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial,
+    sans-serif;
+  --font-geist-mono: "SF Mono", "Monaco", "Menlo", "Courier New", monospace;
 }
 
 @theme inline {
@@ -95,6 +76,10 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -123,120 +108,737 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
+    font-size: 1.0625rem; /* 17px - iOS standard body text */
+    line-height: 1.47; /* iOS standard line height */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* iOS 26 iPad Mode - Complete Redesign with Gradient Aesthetic */
+  body[data-layout-mode="ipad"] {
+    font-size: 1.375rem; /* 22px for iPad */
+    line-height: 1.45;
+    background: linear-gradient(
+      135deg,
+      var(--ios-gradient-start) 0%,
+      var(--ios-gradient-mid) 35%,
+      oklch(0.145 0 0) 50%,
+      var(--ios-gradient-mid) 65%,
+      var(--ios-gradient-end) 100%
+    );
+    background-attachment: fixed;
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    body[data-layout-mode="auto"] {
+      font-size: 1.375rem;
+      line-height: 1.45;
+      background: linear-gradient(
+        135deg,
+        var(--ios-gradient-start) 0%,
+        var(--ios-gradient-mid) 35%,
+        oklch(0.145 0 0) 50%,
+        var(--ios-gradient-mid) 65%,
+        var(--ios-gradient-end) 100%
+      );
+      background-attachment: fixed;
+    }
   }
 }
 
-/* Premium glossy components for Yamaha Smart Pianist aesthetic */
 @layer components {
+  /* iOS 26 Frosted Glass Panels */
   .glossy-panel {
-    background: linear-gradient(135deg, oklch(0.16 0 0) 0%, oklch(0.12 0 0) 50%, oklch(0.1 0 0) 100%);
-    border: 2px solid oklch(0.75 0.18 75 / 0.5);
-    border-radius: 0.875rem;
-    box-shadow: 0 8px 32px oklch(0 0 0 / 0.6), inset 0 1px 0 oklch(1 0 0 / 0.15), 0 0 40px oklch(0.75 0.18 75 / 0.2), 0
-      4px 16px oklch(0.75 0.18 75 / 0.15);
+    background: linear-gradient(
+      135deg,
+      oklch(0.18 0 0 / 0.85) 0%,
+      oklch(0.14 0 0 / 0.9) 50%,
+      oklch(0.12 0 0 / 0.95) 100%
+    );
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border: 2px solid oklch(0.82 0.22 75 / 0.3);
+    border-radius: 1.25rem;
+    box-shadow: 0 12px 40px oklch(0 0 0 / 0.5), inset 0 1px 0 oklch(1 0 0 / 0.1), 0 0 48px oklch(0.82 0.22 75 / 0.15);
   }
 
+  body[data-layout-mode="ipad"] .glossy-panel {
+    background: linear-gradient(
+      135deg,
+      oklch(0.2 0 0 / 0.75) 0%,
+      oklch(0.16 0 0 / 0.85) 50%,
+      oklch(0.14 0 0 / 0.9) 100%
+    );
+    backdrop-filter: blur(60px) saturate(200%);
+    -webkit-backdrop-filter: blur(60px) saturate(200%);
+    border: 5px solid transparent;
+    border-radius: 2.5rem;
+    box-shadow: 0 12px 60px oklch(0 0 0 / 0.6), inset 0 1px 0 oklch(1 0 0 / 0.15), 0 0 80px var(--ios-blue) / 0.2, 0
+      10px 30px var(--ios-teal) / 0.15;
+    position: relative;
+  }
+
+  body[data-layout-mode="ipad"] .glossy-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 2.5rem;
+    padding: 5px;
+    background: linear-gradient(135deg, var(--ios-blue), var(--ios-teal));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    body[data-layout-mode="auto"] .glossy-panel {
+      background: linear-gradient(
+        135deg,
+        oklch(0.2 0 0 / 0.75) 0%,
+        oklch(0.16 0 0 / 0.85) 50%,
+        oklch(0.14 0 0 / 0.9) 100%
+      );
+      backdrop-filter: blur(60px) saturate(200%);
+      -webkit-backdrop-filter: blur(60px) saturate(200%);
+      border: 5px solid transparent;
+      border-radius: 2.5rem;
+      box-shadow: 0 20px 60px oklch(0 0 0 / 0.6), inset 0 2px 0 oklch(1 0 0 / 0.15), 0 0 80px var(--ios-blue) / 0.2, 0
+        10px 30px var(--ios-teal) / 0.15;
+      position: relative;
+    }
+
+    body[data-layout-mode="auto"] .glossy-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 2.5rem;
+      padding: 5px;
+      background: linear-gradient(135deg, var(--ios-blue), var(--ios-teal));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+  }
+
+  /* iOS 26 Buttons with Gradient */
   .glossy-button {
-    background: linear-gradient(135deg, oklch(0.82 0.22 75) 0%, oklch(0.75 0.18 75) 50%, oklch(0.68 0.15 75) 100%);
-    border: 2px solid oklch(0.88 0.24 75);
-    box-shadow: 0 6px 16px oklch(0.75 0.18 75 / 0.5), inset 0 1px 0 oklch(1 0 0 / 0.4), 0 0 24px
-      oklch(0.75 0.18 75 / 0.35), 0 2px 8px oklch(0 0 0 / 0.3);
-    transition: all 0.2s ease;
+    background: linear-gradient(135deg, oklch(0.88 0.24 75) 0%, oklch(0.82 0.22 75) 50%, oklch(0.75 0.18 75) 100%);
+    border: 2px solid oklch(0.92 0.26 75 / 0.5);
+    border-radius: 0.875rem;
+    box-shadow: 0 8px 20px oklch(0.82 0.22 75 / 0.4), inset 0 1px 0 oklch(1 0 0 / 0.3), 0 0 32px
+      oklch(0.82 0.22 75 / 0.2);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 44px;
+    font-weight: 600;
+    font-size: 1.0625rem;
+    letter-spacing: -0.01em;
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+  }
+
+  body[data-layout-mode="ipad"] .glossy-button {
+    min-height: 88px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    padding: 1.75rem 3rem;
+    border: none;
+    border-radius: 1.5rem;
+    background: linear-gradient(135deg, var(--ios-blue) 0%, var(--ios-teal) 100%);
+    box-shadow: 0 12px 32px var(--ios-blue) / 0.5, inset 0 2px 0 oklch(1 0 0 / 0.4), 0 0 48px var(--ios-teal) / 0.4, 0
+      6px 16px oklch(0 0 0 / 0.3);
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    body[data-layout-mode="auto"] .glossy-button {
+      min-height: 88px;
+      font-size: 1.5rem;
+      font-weight: 600;
+      padding: 1.75rem 3rem;
+      border: none;
+      border-radius: 1.5rem;
+      background: linear-gradient(135deg, var(--ios-blue) 0%, var(--ios-teal) 100%);
+      box-shadow: 0 12px 32px var(--ios-blue) / 0.5, inset 0 2px 0 oklch(1 0 0 / 0.4), 0 0 48px var(--ios-teal) / 0.4, 0
+        6px 16px oklch(0 0 0 / 0.3);
+    }
   }
 
   .glossy-button:hover {
-    background: linear-gradient(135deg, oklch(0.88 0.24 75) 0%, oklch(0.8 0.2 75) 50%, oklch(0.72 0.17 75) 100%);
-    box-shadow: 0 8px 24px oklch(0.75 0.18 75 / 0.6), inset 0 1px 0 oklch(1 0 0 / 0.5), 0 0 36px
-      oklch(0.75 0.18 75 / 0.45), 0 4px 12px oklch(0 0 0 / 0.4);
-    transform: translateY(-2px);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 12px 28px oklch(0.82 0.22 75 / 0.5), inset 0 1px 0 oklch(1 0 0 / 0.4), 0 0 44px
+      oklch(0.82 0.22 75 / 0.3);
+  }
+
+  body[data-layout-mode="ipad"] .glossy-button:hover {
+    transform: scale(1.05);
+    filter: brightness(1.15);
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    body[data-layout-mode="auto"] .glossy-button:hover {
+      transform: scale(1.05);
+      filter: brightness(1.15);
+    }
   }
 
   .glossy-button:active {
-    transform: translateY(0);
-    box-shadow: 0 4px 12px oklch(0.75 0.18 75 / 0.5), inset 0 1px 0 oklch(1 0 0 / 0.3), 0 0 20px
-      oklch(0.75 0.18 75 / 0.3);
+    transform: translateY(0) scale(0.98);
   }
 
+  body[data-layout-mode="ipad"] .glossy-button:active {
+    transform: scale(0.95);
+    filter: brightness(0.9);
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    body[data-layout-mode="auto"] .glossy-button:active {
+      transform: scale(0.95);
+      filter: brightness(0.9);
+    }
+  }
+
+  /* iOS 26 Cards with Frosted Glass */
   .premium-card {
-    background: linear-gradient(135deg, oklch(0.16 0 0) 0%, oklch(0.12 0 0) 50%, oklch(0.09 0 0) 100%);
-    border: 2px solid oklch(0.75 0.18 75 / 0.35);
-    border-radius: 0.875rem;
-    box-shadow: 0 8px 24px oklch(0 0 0 / 0.5), inset 0 1px 0 oklch(1 0 0 / 0.08), 0 0 28px oklch(0.75 0.18 75 / 0.15), 0
-      4px 12px oklch(0.75 0.18 75 / 0.1);
+    background: linear-gradient(
+      135deg,
+      oklch(0.18 0 0 / 0.8) 0%,
+      oklch(0.14 0 0 / 0.85) 50%,
+      oklch(0.11 0 0 / 0.9) 100%
+    );
+    backdrop-filter: blur(30px) saturate(150%);
+    -webkit-backdrop-filter: blur(30px) saturate(150%);
+    border: 2px solid oklch(0.82 0.22 75 / 0.25);
+    border-radius: 1.25rem;
+    box-shadow: 0 10px 32px oklch(0 0 0 / 0.4), inset 0 1px 0 oklch(1 0 0 / 0.08), 0 0 36px oklch(0.82 0.22 75 / 0.12);
+    padding: 1.75rem;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
+  body[data-layout-mode="ipad"] .premium-card {
+    padding: 4rem;
+    border: none;
+    border-radius: 2.5rem;
+    background: linear-gradient(135deg, oklch(0.2 0 0 / 0.7) 0%, oklch(0.16 0 0 / 0.8) 50%, oklch(0.14 0 0 / 0.85) 100%);
+    backdrop-filter: blur(50px) saturate(180%);
+    -webkit-backdrop-filter: blur(50px) saturate(180%);
+    box-shadow: 0 16px 48px oklch(0 0 0 / 0.5), inset 0 2px 0 oklch(1 0 0 / 0.12), 0 0 64px var(--ios-blue) / 0.15, 0
+      8px 24px var(--ios-teal) / 0.12;
+    position: relative;
+  }
+
+  body[data-layout-mode="ipad"] .premium-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 2.5rem;
+    padding: 4px;
+    background: linear-gradient(135deg, var(--ios-blue) / 0.4, var(--ios-teal) / 0.4);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    body[data-layout-mode="auto"] .premium-card {
+      padding: 4rem;
+      border: none;
+      border-radius: 2.5rem;
+      background: linear-gradient(
+        135deg,
+        oklch(0.2 0 0 / 0.7) 0%,
+        oklch(0.16 0 0 / 0.8) 50%,
+        oklch(0.14 0 0 / 0.85) 100%
+      );
+      backdrop-filter: blur(50px) saturate(180%);
+      -webkit-backdrop-filter: blur(50px) saturate(180%);
+      box-shadow: 0 16px 48px oklch(0 0 0 / 0.5), inset 0 2px 0 oklch(1 0 0 / 0.12), 0 0 64px var(--ios-blue) / 0.15, 0
+        8px 24px var(--ios-teal) / 0.12;
+      position: relative;
+    }
+
+    body[data-layout-mode="auto"] .premium-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 2.5rem;
+      padding: 4px;
+      background: linear-gradient(135deg, var(--ios-blue) / 0.4, var(--ios-teal) / 0.4);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+  }
+
+  /* iOS 26 Rotary Knobs with Gradient */
   .premium-knob {
-    width: 3.5rem;
-    height: 3.5rem;
+    width: 3.125rem;
+    height: 3.125rem;
     border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, oklch(0.28 0 0), oklch(0.14 0 0), oklch(0.1 0 0));
-    border: 3px solid oklch(0.75 0.18 75 / 0.5);
-    box-shadow: 0 6px 16px oklch(0 0 0 / 0.6), inset 0 2px 6px oklch(1 0 0 / 0.15), 0 0 20px oklch(0.75 0.18 75 / 0.25),
-      inset 0 -2px 4px oklch(0 0 0 / 0.4);
+    background: radial-gradient(circle at 35% 35%, oklch(0.32 0 0), oklch(0.2 0 0), oklch(0.14 0 0));
+    border: 3px solid oklch(0.82 0.22 75 / 0.5);
+    box-shadow: 0 8px 20px oklch(0 0 0 / 0.6), inset 0 2px 8px oklch(1 0 0 / 0.15), 0 0 28px oklch(0.82 0.22 75 / 0.25),
+      inset 0 -3px 6px oklch(0 0 0 / 0.4);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body[data-layout-mode="ipad"] .premium-knob {
+    width: 5rem; /* 80px */
+    height: 5rem;
+    border: none;
+    background: radial-gradient(circle at 35% 35%, var(--ios-teal-light), var(--ios-blue), var(--ios-blue-dark));
+    box-shadow: 0 12px 32px oklch(0 0 0 / 0.7), inset 0 3px 12px oklch(1 0 0 / 0.2), 0 0 48px var(--ios-blue) / 0.35,
+      inset 0 -4px 8px oklch(0 0 0 / 0.5);
+    position: relative;
+  }
+
+  body[data-layout-mode="ipad"] .premium-knob::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    padding: 2px;
+    background: linear-gradient(135deg, var(--ios-blue), var(--ios-teal));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    body[data-layout-mode="auto"] .premium-knob {
+      width: 5rem;
+      height: 5rem;
+      border: none;
+      background: radial-gradient(circle at 35% 35%, var(--ios-teal-light), var(--ios-blue), var(--ios-blue-dark));
+      box-shadow: 0 12px 32px oklch(0 0 0 / 0.7), inset 0 3px 12px oklch(1 0 0 / 0.2), 0 0 48px var(--ios-blue) / 0.35,
+        inset 0 -4px 8px oklch(0 0 0 / 0.5);
+      position: relative;
+    }
+
+    body[data-layout-mode="auto"] .premium-knob::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border-radius: 50%;
+      padding: 2px;
+      background: linear-gradient(135deg, var(--ios-blue), var(--ios-teal));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
   }
 
   .premium-knob:hover {
-    border-color: oklch(0.75 0.18 75 / 0.7);
-    box-shadow: 0 8px 20px oklch(0 0 0 / 0.7), inset 0 2px 6px oklch(1 0 0 / 0.2), 0 0 32px oklch(0.75 0.18 75 / 0.35),
-      inset 0 -2px 4px oklch(0 0 0 / 0.5);
+    transform: scale(1.08);
+    border-color: oklch(0.82 0.22 75 / 0.75);
+    box-shadow: 0 10px 24px oklch(0 0 0 / 0.7), inset 0 2px 8px oklch(1 0 0 / 0.2), 0 0 40px oklch(0.82 0.22 75 / 0.35);
   }
 
+  body[data-layout-mode="ipad"] .premium-knob:hover {
+    transform: scale(1.12);
+    filter: brightness(1.2);
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    body[data-layout-mode="auto"] .premium-knob:hover {
+      transform: scale(1.12);
+      filter: brightness(1.2);
+    }
+  }
+
+  .premium-knob:active {
+    transform: scale(0.95);
+  }
+
+  body[data-layout-mode="ipad"] .premium-knob:active {
+    transform: scale(1.05);
+    filter: brightness(0.85);
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    body[data-layout-mode="auto"] .premium-knob:active {
+      transform: scale(1.05);
+      filter: brightness(0.85);
+    }
+  }
+
+  /* iOS 26 Typography with Gradient Text */
   .premium-label {
-    font-weight: 800;
-    font-size: 0.75rem;
+    font-weight: 600;
+    font-size: 0.875rem;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: oklch(0.75 0.18 75);
-    text-shadow: 0 0 12px oklch(0.75 0.18 75 / 0.4);
+    letter-spacing: 0.05em;
+    color: oklch(0.82 0.22 75);
+    text-shadow: 0 0 16px oklch(0.82 0.22 75 / 0.4);
+  }
+
+  body[data-layout-mode="ipad"] .premium-label {
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    text-transform: none;
+    background: linear-gradient(135deg, var(--ios-blue-light), var(--ios-teal-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    filter: drop-shadow(0 0 20px var(--ios-blue) / 0.3);
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    body[data-layout-mode="auto"] .premium-label {
+      font-size: 1.75rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      text-transform: none;
+      background: linear-gradient(135deg, var(--ios-blue-light), var(--ios-teal-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: none;
+      filter: drop-shadow(0 0 20px var(--ios-blue) / 0.3);
+    }
   }
 
   .premium-text {
-    font-weight: 700;
-    color: oklch(0.96 0 0);
-    text-shadow: 0 0 12px oklch(0.75 0.18 75 / 0.35), 0 2px 4px oklch(0 0 0 / 0.5);
+    font-weight: 600;
+    color: oklch(0.985 0 0);
+    text-shadow: 0 0 16px oklch(0.82 0.22 75 / 0.3), 0 2px 6px oklch(0 0 0 / 0.5);
   }
 
+  body[data-layout-mode="ipad"] .premium-text {
+    font-weight: 500;
+    font-size: 1.5rem;
+    letter-spacing: -0.01em;
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    body[data-layout-mode="auto"] .premium-text {
+      font-weight: 500;
+      font-size: 1.5rem;
+      letter-spacing: -0.01em;
+    }
+  }
+
+  /* iOS 26 Value Displays with Gradient */
+  .value-display {
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: oklch(0.82 0.22 75);
+    text-shadow: 0 0 20px oklch(0.82 0.22 75 / 0.5), 0 2px 4px oklch(0 0 0 / 0.7);
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  body[data-layout-mode="ipad"] .value-display {
+    font-size: 2.5rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--ios-blue-light), var(--ios-teal-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    filter: drop-shadow(0 0 24px var(--ios-blue) / 0.4);
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    body[data-layout-mode="auto"] .value-display {
+      font-size: 2.5rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, var(--ios-blue-light), var(--ios-teal-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: none;
+      filter: drop-shadow(0 0 24px var(--ios-blue) / 0.4);
+    }
+  }
+
+  /* iOS 26 Section Headers */
+  .section-header {
+    font-size: 1.125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: oklch(0.82 0.22 75);
+    text-shadow: 0 0 20px oklch(0.82 0.22 75 / 0.4);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  body[data-layout-mode="ipad"] .section-header {
+    font-size: 2.25rem;
+    margin-bottom: 3rem;
+    gap: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-transform: none;
+    background: linear-gradient(135deg, var(--ios-blue-light), var(--ios-teal-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    filter: drop-shadow(0 0 24px var(--ios-blue) / 0.3);
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    body[data-layout-mode="auto"] .section-header {
+      font-size: 2.25rem;
+      margin-bottom: 3rem;
+      gap: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      text-transform: none;
+      background: linear-gradient(135deg, var(--ios-blue-light), var(--ios-teal-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: none;
+      filter: drop-shadow(0 0 24px var(--ios-blue) / 0.3);
+    }
+  }
+
+  .section-header::before {
+    content: "";
+    width: 5px;
+    height: 2rem;
+    background: linear-gradient(to bottom, oklch(0.92 0.26 75), oklch(0.82 0.22 75));
+    border-radius: 3px;
+    box-shadow: 0 0 12px oklch(0.82 0.22 75 / 0.5);
+  }
+
+  body[data-layout-mode="ipad"] .section-header::before {
+    width: 10px;
+    height: 4rem;
+    background: linear-gradient(to bottom, var(--ios-blue-light), var(--ios-teal));
+    box-shadow: 0 0 20px var(--ios-blue) / 0.6;
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    body[data-layout-mode="auto"] .section-header::before {
+      width: 10px;
+      height: 4rem;
+      background: linear-gradient(to bottom, var(--ios-blue-light), var(--ios-teal));
+      box-shadow: 0 0 20px var(--ios-blue) / 0.6;
+    }
+  }
+
+  /* iOS 26 Sliders with Gradient Track */
   .slider-horizontal {
-    height: 0.875rem;
-    background: linear-gradient(to right, oklch(0.14 0 0), oklch(0.22 0 0));
-    border-radius: 0.5rem;
-    border: 2px solid oklch(0.75 0.18 75 / 0.4);
+    height: 1.25rem;
+    background: linear-gradient(to right, oklch(0.16 0 0), oklch(0.24 0 0));
+    border-radius: 0.75rem;
+    border: 2px solid oklch(0.82 0.22 75 / 0.4);
     appearance: none;
     cursor: pointer;
-    box-shadow: inset 0 2px 6px oklch(0 0 0 / 0.6), 0 0 12px oklch(0.75 0.18 75 / 0.15);
+    box-shadow: inset 0 2px 8px oklch(0 0 0 / 0.6), 0 0 16px oklch(0.82 0.22 75 / 0.15);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Fixed iPad slider to have proper proportions - thinner track with appropriately sized thumb */
+  body[data-layout-mode="ipad"] .slider-horizontal {
+    height: 0.75rem; /* Thin track like iOS */
+    border: none;
+    border-radius: 0.5rem;
+    background: linear-gradient(to right, oklch(0.18 0 0), oklch(0.26 0 0));
+    box-shadow: inset 0 2px 6px oklch(0 0 0 / 0.7), 0 0 16px var(--ios-blue) / 0.15;
+    position: relative;
+  }
+
+  body[data-layout-mode="ipad"] .slider-horizontal::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 0.5rem;
+    padding: 2px;
+    background: linear-gradient(to right, var(--ios-blue) / 0.3, var(--ios-teal) / 0.3);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    body[data-layout-mode="auto"] .slider-horizontal {
+      height: 0.75rem;
+      border: none;
+      border-radius: 0.5rem;
+      background: linear-gradient(to right, oklch(0.18 0 0), oklch(0.26 0 0));
+      box-shadow: inset 0 2px 6px oklch(0 0 0 / 0.7), 0 0 16px var(--ios-blue) / 0.15;
+      position: relative;
+    }
+
+    body[data-layout-mode="auto"] .slider-horizontal::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border-radius: 0.5rem;
+      padding: 2px;
+      background: linear-gradient(to right, var(--ios-blue) / 0.3, var(--ios-teal) / 0.3);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
   }
 
   .slider-horizontal::-webkit-slider-thumb {
     appearance: none;
-    width: 1.75rem;
-    height: 1.75rem;
+    width: 3rem;
+    height: 3rem;
     border-radius: 50%;
-    background: linear-gradient(135deg, oklch(0.82 0.22 75), oklch(0.72 0.17 75), oklch(0.65 0.14 75));
-    border: 3px solid oklch(0.88 0.24 75);
+    background: linear-gradient(135deg, oklch(0.88 0.24 75), oklch(0.78 0.19 75), oklch(0.7 0.16 75));
+    border: 3px solid oklch(0.92 0.26 75 / 0.6);
     cursor: pointer;
-    box-shadow: 0 4px 12px oklch(0.75 0.18 75 / 0.6), inset 0 1px 0 oklch(1 0 0 / 0.4), 0 0 20px
-      oklch(0.75 0.18 75 / 0.5), 0 2px 6px oklch(0 0 0 / 0.4);
-    transition: all 0.2s ease;
+    box-shadow: 0 5px 16px oklch(0.82 0.22 75 / 0.6), inset 0 1px 0 oklch(1 0 0 / 0.4), 0 0 24px
+      oklch(0.82 0.22 75 / 0.5);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .slider-horizontal::-webkit-slider-thumb:hover {
-    background: linear-gradient(135deg, oklch(0.88 0.24 75), oklch(0.78 0.19 75), oklch(0.7 0.16 75));
-    box-shadow: 0 6px 16px oklch(0.75 0.18 75 / 0.7), inset 0 1px 0 oklch(1 0 0 / 0.5), 0 0 28px
-      oklch(0.75 0.18 75 / 0.6), 0 3px 8px oklch(0 0 0 / 0.5);
+  /* Reduced iPad slider thumb to 3.5rem (56px) for proper iOS proportions */
+  body[data-layout-mode="ipad"] .slider-horizontal::-webkit-slider-thumb {
+    width: 3.5rem; /* 56px - iOS standard touch target */
+    height: 3.5rem;
+    border: 4px solid oklch(1 0 0 / 0.15);
+    background: radial-gradient(circle at 35% 35%, var(--ios-teal-light), var(--ios-blue), var(--ios-blue-dark));
+    box-shadow: 0 6px 20px var(--ios-blue) / 0.6, inset 0 2px 0 oklch(1 0 0 / 0.4), 0 0 28px var(--ios-teal) / 0.5, 0
+      2px 8px oklch(0 0 0 / 0.4);
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    body[data-layout-mode="auto"] .slider-horizontal::-webkit-slider-thumb {
+      width: 3.5rem;
+      height: 3.5rem;
+      border: 4px solid oklch(1 0 0 / 0.15);
+      background: radial-gradient(circle at 35% 35%, var(--ios-teal-light), var(--ios-blue), var(--ios-blue-dark));
+      box-shadow: 0 6px 20px var(--ios-blue) / 0.6, inset 0 2px 0 oklch(1 0 0 / 0.4), 0 0 28px var(--ios-teal) / 0.5, 0
+        2px 8px oklch(0 0 0 / 0.4);
+    }
   }
 
   .slider-horizontal::-moz-range-thumb {
-    width: 1.75rem;
-    height: 1.75rem;
+    width: 3rem;
+    height: 3rem;
     border-radius: 50%;
-    background: linear-gradient(135deg, oklch(0.82 0.22 75), oklch(0.72 0.17 75), oklch(0.65 0.14 75));
-    border: 3px solid oklch(0.88 0.24 75);
+    background: linear-gradient(135deg, oklch(0.88 0.24 75), oklch(0.78 0.19 75), oklch(0.7 0.16 75));
+    border: 3px solid oklch(0.92 0.26 75 / 0.6);
     cursor: pointer;
-    box-shadow: 0 4px 12px oklch(0.75 0.18 75 / 0.6), inset 0 1px 0 oklch(1 0 0 / 0.4), 0 0 20px
-      oklch(0.75 0.18 75 / 0.5), 0 2px 6px oklch(0 0 0 / 0.4);
+    box-shadow: 0 5px 16px oklch(0.82 0.22 75 / 0.6), inset 0 1px 0 oklch(1 0 0 / 0.4), 0 0 24px
+      oklch(0.82 0.22 75 / 0.5);
+  }
+
+  /* Fixed Firefox slider thumb sizing for iPad */
+  body[data-layout-mode="ipad"] .slider-horizontal::-moz-range-thumb {
+    width: 3.5rem;
+    height: 3.5rem;
+    border: 4px solid oklch(1 0 0 / 0.15);
+    background: radial-gradient(circle at 35% 35%, var(--ios-teal-light), var(--ios-blue), var(--ios-blue-dark));
+    box-shadow: 0 6px 20px var(--ios-blue) / 0.6, inset 0 2px 0 oklch(1 0 0 / 0.4), 0 0 28px var(--ios-teal) / 0.5, 0
+      2px 8px oklch(0 0 0 / 0.4);
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    body[data-layout-mode="auto"] .slider-horizontal::-moz-range-thumb {
+      width: 3.5rem;
+      height: 3.5rem;
+      border: 4px solid oklch(1 0 0 / 0.15);
+      background: radial-gradient(circle at 35% 35%, var(--ios-teal-light), var(--ios-blue), var(--ios-blue-dark));
+      box-shadow: 0 6px 20px var(--ios-blue) / 0.6, inset 0 2px 0 oklch(1 0 0 / 0.4), 0 0 28px var(--ios-teal) / 0.5, 0
+        2px 8px oklch(0 0 0 / 0.4);
+    }
+  }
+
+  /* iOS 26 Text Fields */
+  .ios-text-field {
+    min-height: 44px;
+    padding: 0.875rem 1.25rem;
+    border-radius: 0.875rem;
+    border: 2px solid oklch(0.3 0 0);
+    background: oklch(0.16 0 0 / 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    color: oklch(0.985 0 0);
+    font-size: 1.0625rem;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  body[data-layout-mode="ipad"] .ios-text-field {
+    min-height: 88px;
+    padding: 1.75rem 2.5rem;
+    font-size: 1.5rem;
+    border: none;
+    border-radius: 1.5rem;
+    background: oklch(0.18 0 0 / 0.7);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    position: relative;
+  }
+
+  body[data-layout-mode="ipad"] .ios-text-field::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: 1.5rem;
+    padding: 4px;
+    background: linear-gradient(135deg, var(--ios-blue) / 0.3, var(--ios-teal) / 0.3);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    body[data-layout-mode="auto"] .ios-text-field {
+      min-height: 88px;
+      padding: 1.75rem 2.5rem;
+      font-size: 1.5rem;
+      border: none;
+      border-radius: 1.5rem;
+      background: oklch(0.18 0 0 / 0.7);
+      backdrop-filter: blur(40px);
+      -webkit-backdrop-filter: blur(40px);
+      position: relative;
+    }
+
+    body[data-layout-mode="auto"] .ios-text-field::before {
+      content: "";
+      position: absolute;
+      inset: -4px;
+      border-radius: 1.5rem;
+      padding: 4px;
+      background: linear-gradient(135deg, var(--ios-blue) / 0.3, var(--ios-teal) / 0.3);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+  }
+
+  .ios-text-field:focus {
+    outline: none;
+    border-color: oklch(0.82 0.22 75);
+    box-shadow: 0 0 0 4px oklch(0.82 0.22 75 / 0.2);
+  }
+
+  body[data-layout-mode="ipad"] .ios-text-field:focus::before {
+    background: linear-gradient(135deg, var(--ios-blue), var(--ios-teal));
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    body[data-layout-mode="auto"] .ios-text-field:focus::before {
+      background: linear-gradient(135deg, var(--ios-blue), var(--ios-teal));
+    }
   }
 }

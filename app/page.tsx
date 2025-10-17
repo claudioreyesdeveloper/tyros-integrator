@@ -6,7 +6,7 @@ import { HomeScreen } from "@/components/home/home-screen"
 import { VoiceBrowser } from "@/components/voices/voice-browser"
 import { MixerInterface } from "@/components/mixer/mixer-interface"
 import { RegistrationManager } from "@/components/registration/registration-manager"
-import { MidiLogger } from "@/components/logging/midi-logger"
+import { ConfigPanel } from "@/components/config/config-panel"
 import { AssemblyWorkbench } from "@/components/assembly/assembly-workbench"
 import { ChordSequencer } from "@/components/chords/chord-sequencer"
 import type { Voice } from "@/lib/voice-data"
@@ -218,12 +218,6 @@ export default function Home() {
       <div className="absolute inset-0 bg-black/60" />
       <div className="relative z-10 flex flex-col min-h-screen">
         <header className="border-b border-primary/30">
-          <div className="px-4 md:px-6 lg:px-8 py-2 md:py-3 flex items-center justify-between">
-            <div>
-              <h1 className="text-lg md:text-xl lg:text-2xl font-bold text-white drop-shadow-lg">SmartBridge</h1>
-              <p className="text-xs md:text-sm text-gray-300 drop-shadow-md">Professional MIDI Controller</p>
-            </div>
-          </div>
           <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
         </header>
 
@@ -265,7 +259,7 @@ export default function Home() {
 
           {activeTab === "chords" && <ChordSequencer chordState={chordState} setChordState={setChordState} />}
 
-          {activeTab === "logging" && <MidiLogger />}
+          {activeTab === "config" && <ConfigPanel />}
         </main>
       </div>
     </div>

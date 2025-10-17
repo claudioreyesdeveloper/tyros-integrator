@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { MIDIProvider } from "@/lib/midi-context"
+import { LayoutProvider } from "@/lib/layout-context"
 import { Suspense } from "react"
 import "./globals.css"
 
@@ -67,7 +68,9 @@ export default function RootLayout({
         <Suspense
           fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white">Loading...</div>}
         >
-          <MIDIProvider>{children}</MIDIProvider>
+          <LayoutProvider>
+            <MIDIProvider>{children}</MIDIProvider>
+          </LayoutProvider>
         </Suspense>
       </body>
     </html>
