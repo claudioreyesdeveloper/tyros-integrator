@@ -180,18 +180,18 @@ export function MixerInterface({
       <input ref={fileInputRef} type="file" accept=".json" onChange={handleFileChange} className="hidden" />
 
       <div className="mb-3 flex flex-col sm:flex-row justify-end gap-2">
-        <Button onClick={handleOpenMix} className="glossy-button h-9 px-4 gap-2 text-xs" size="sm">
+        <Button onClick={handleOpenMix} className="h-9 px-4 gap-2 text-xs" size="sm">
           <Upload className="w-3.5 h-3.5" />
           Open Mix
         </Button>
-        <Button onClick={handleSaveMix} className="glossy-button h-9 px-4 gap-2 text-xs" size="sm">
+        <Button onClick={handleSaveMix} className="h-9 px-4 gap-2 text-xs" size="sm">
           <Download className="w-3.5 h-3.5" />
           Save Mix
         </Button>
       </div>
 
       <div className="mb-3 grid grid-cols-1 md:grid-cols-3 gap-2">
-        <div className="glossy-panel p-2.5 shadow-xl">
+        <div className="glossy-panel p-2.5">
           <div className="flex items-center gap-2 mb-2">
             <Volume2 className="w-4 h-4 text-primary" />
             <h3 className="premium-label text-[10px]">Master Volume</h3>
@@ -203,13 +203,13 @@ export function MixerInterface({
               max="127"
               value={masterVolume}
               onChange={(e) => handleMasterVolumeChange(Number(e.target.value))}
-              className="flex-1 slider-horizontal"
+              className="flex-1 slider-horizontal h-2"
             />
-            <span className="text-sm font-mono font-bold text-primary w-10 text-right">{masterVolume}</span>
+            <span className="premium-text text-sm w-10 text-right">{masterVolume}</span>
           </div>
         </div>
 
-        <div className="glossy-panel p-2.5 shadow-xl">
+        <div className="glossy-panel p-2.5">
           <div className="flex items-center gap-2 mb-2">
             <Waves className="w-4 h-4 text-primary" />
             <h3 className="premium-label text-[10px]">Global Reverb</h3>
@@ -221,13 +221,13 @@ export function MixerInterface({
               max="127"
               value={globalReverb}
               onChange={(e) => handleGlobalReverbChange(Number(e.target.value))}
-              className="flex-1 slider-horizontal"
+              className="flex-1 slider-horizontal h-2"
             />
-            <span className="text-sm font-mono font-bold text-primary w-10 text-right">{globalReverb}</span>
+            <span className="premium-text text-sm w-10 text-right">{globalReverb}</span>
           </div>
         </div>
 
-        <div className="glossy-panel p-2.5 shadow-xl">
+        <div className="glossy-panel p-2.5">
           <div className="flex items-center gap-2 mb-2">
             <Sparkles className="w-4 h-4 text-primary" />
             <h3 className="premium-label text-[10px]">Global Chorus</h3>
@@ -239,9 +239,9 @@ export function MixerInterface({
               max="127"
               value={globalChorus}
               onChange={(e) => handleGlobalChorusChange(Number(e.target.value))}
-              className="flex-1 slider-horizontal"
+              className="flex-1 slider-horizontal h-2"
             />
-            <span className="text-sm font-mono font-bold text-primary w-10 text-right">{globalChorus}</span>
+            <span className="premium-text text-sm w-10 text-right">{globalChorus}</span>
           </div>
         </div>
       </div>
@@ -251,10 +251,10 @@ export function MixerInterface({
           <button
             key={index}
             onClick={() => handleBankChange(index)}
-            className={`flex-1 px-2 py-2 rounded font-bold text-[10px] transition-all shadow-md hover:shadow-lg ${
+            className={`flex-1 px-2 py-2 rounded font-bold text-[10px] transition-all border-2 ${
               currentBank === index
-                ? "glossy-button text-black"
-                : "bg-secondary text-foreground border border-border/40 hover:border-primary/50"
+                ? "bg-secondary border-primary text-white"
+                : "bg-secondary/50 border-border/40 text-foreground hover:border-primary/50"
             }`}
           >
             <div className="premium-text text-[11px]">{name}</div>
@@ -265,7 +265,7 @@ export function MixerInterface({
         ))}
       </div>
 
-      <div className="flex-1 glossy-panel p-4 shadow-xl overflow-hidden">
+      <div className="flex-1 premium-card p-4 overflow-hidden">
         <div className="h-full overflow-x-auto overflow-y-hidden">
           <div className="flex justify-center gap-3 h-full pb-2 min-w-max">
             {channels.map((ch) => (

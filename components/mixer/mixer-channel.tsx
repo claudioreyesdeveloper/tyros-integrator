@@ -104,24 +104,24 @@ export function MixerChannel({
 
   return (
     <>
-      <div className="premium-card p-3 flex flex-col gap-3 w-[120px] shadow-xl">
+      <div className="premium-card p-3 flex flex-col gap-3 w-[120px]">
         {/* Header */}
         <div className="text-center">
-          <div className="text-xs text-primary font-bold">CH {channel}</div>
-          <div className="premium-text text-xs font-bold truncate">{partName}</div>
+          <div className="premium-label text-xs">CH {channel}</div>
+          <div className="premium-text text-xs truncate">{partName}</div>
         </div>
 
         {/* Voice Display */}
         <button
           onClick={onSelectVoice}
-          className="w-full glossy-button px-2 py-2 rounded flex flex-col items-center gap-1 text-black font-bold text-xs shadow-md hover:shadow-lg transition-all"
+          className="w-full bg-secondary hover:bg-secondary/80 border-2 border-primary/40 hover:border-primary/60 transition-all px-2 py-2 rounded flex flex-col items-center gap-1 font-bold text-xs"
         >
           <VoiceIcon subcategory={voiceSubcategory} category={voiceCategory} size={16} />
-          <span className="truncate w-full text-[10px]">{voiceName}</span>
+          <span className="truncate w-full text-[10px] text-white">{voiceName}</span>
         </button>
 
         {/* Volume Slider - Vertical */}
-        <div className="flex flex-col items-center gap-2 py-3 bg-secondary/50 rounded border border-primary/20">
+        <div className="flex flex-col items-center gap-2 py-3 bg-secondary/50 rounded border border-border">
           <div className="premium-label text-xs">VOL</div>
           <input
             type="range"
@@ -129,16 +129,20 @@ export function MixerChannel({
             max="127"
             value={volume}
             onChange={(e) => handleVolumeChange(Number(e.target.value))}
-            className="h-32 slider-vertical"
+            className="h-32"
             style={{
               WebkitAppearance: "slider-vertical",
               width: "8px",
+              background: "oklch(0.14 0 0)",
+              borderRadius: "0.5rem",
+              border: "2px solid oklch(0.22 0 0)",
+              cursor: "pointer",
             }}
           />
-          <div className="text-xs font-mono font-bold text-primary">{volume}</div>
+          <div className="premium-text text-xs">{volume}</div>
         </div>
 
-        <Button onClick={() => setShowDetails(true)} className="w-full glossy-button h-9 gap-2 text-xs" size="sm">
+        <Button onClick={() => setShowDetails(true)} className="w-full h-9 gap-2 text-xs" size="sm">
           <Settings className="w-4 h-4" />
           Edit
         </Button>
@@ -147,7 +151,7 @@ export function MixerChannel({
       <Dialog open={showDetails} onOpenChange={setShowDetails}>
         <DialogContent className="max-w-2xl bg-black/95 border-primary/30">
           <DialogHeader>
-            <DialogTitle className="text-primary text-xl">
+            <DialogTitle className="premium-text text-xl">
               Channel {channel} - {partName}
             </DialogTitle>
           </DialogHeader>
@@ -158,10 +162,10 @@ export function MixerChannel({
               <h3 className="premium-label text-sm">Voice</h3>
               <button
                 onClick={onSelectVoice}
-                className="w-full glossy-button px-4 py-3 rounded flex items-center gap-3 text-black font-bold shadow-md hover:shadow-lg transition-all"
+                className="w-full bg-secondary hover:bg-secondary/80 border-2 border-primary/40 hover:border-primary/60 transition-all px-4 py-3 rounded flex items-center gap-3 font-bold"
               >
                 <VoiceIcon subcategory={voiceSubcategory} category={voiceCategory} size={24} />
-                <span className="text-base">{voiceName}</span>
+                <span className="text-base text-white">{voiceName}</span>
               </button>
             </div>
 
