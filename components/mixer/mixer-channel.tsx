@@ -4,9 +4,8 @@ import { useState } from "react"
 import { useMIDI } from "@/lib/midi-context"
 import { RotaryKnob } from "@/components/ui/rotary-knob"
 import { VoiceIcon } from "@/components/ui/voice-icon"
-import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Settings } from "lucide-react"
+import { Music } from "lucide-react"
 
 interface MixerChannelProps {
   channel: number
@@ -104,54 +103,67 @@ export function MixerChannel({
 
   return (
     <>
-      <div className="premium-card p-3 flex flex-col gap-3 w-[120px]">
-        {/* Header */}
+      <div className="bg-black border-2 border-zinc-800 rounded-lg p-3 flex flex-col gap-3 w-[140px] h-full">
+        {/* Voice Button */}
+        <button
+          onClick={onSelectVoice}
+          className="w-full bg-[#FFA500] hover:bg-[#FF9500] transition-all px-3 py-2.5 rounded-lg font-bold text-sm text-black"
+        >
+          Voice
+        </button>
+
+        {/* Channel Name */}
         <div className="text-center">
-          <div className="premium-label text-xs">CH {channel}</div>
-          <div className="premium-text text-xs truncate">{partName}</div>
+          <div className="text-white font-bold text-sm truncate">{partName}</div>
         </div>
 
         {/* Voice Display */}
-        <button
-          onClick={onSelectVoice}
-          className="w-full bg-secondary hover:bg-secondary/80 border-2 border-primary/40 hover:border-primary/60 transition-all px-2 py-2 rounded flex flex-col items-center gap-1 font-bold text-xs"
-        >
-          <VoiceIcon subcategory={voiceSubcategory} category={voiceCategory} size={16} />
-          <span className="truncate w-full text-[10px] text-white">{voiceName}</span>
-        </button>
+        <div className="bg-zinc-200 rounded-lg p-3 flex flex-col items-center justify-center gap-2 min-h-[80px]">
+          {voiceName === "No Voice" ? (
+            <>
+              <Music className="w-8 h-8 text-zinc-400" />
+              <span className="text-xs font-medium text-black">No Voice</span>
+            </>
+          ) : (
+            <>
+              <VoiceIcon subcategory={voiceSubcategory} category={voiceCategory} size={24} />
+              <span className="text-xs font-medium text-black text-center truncate w-full">{voiceName}</span>
+            </>
+          )}
+        </div>
 
-        {/* Volume Slider - Vertical */}
-        <div className="flex flex-col items-center gap-2 py-3 bg-secondary/50 rounded border border-border">
-          <div className="premium-label text-xs">VOL</div>
+        {/* Volume Section */}
+        <div className="flex flex-col items-center gap-2 py-3">
+          <div className="text-[#FFA500] font-bold text-xs uppercase tracking-wider">Volume</div>
           <input
             type="range"
             min="0"
             max="127"
             value={volume}
             onChange={(e) => handleVolumeChange(Number(e.target.value))}
-            className="h-32"
-            style={{
-              WebkitAppearance: "slider-vertical",
-              width: "8px",
-              background: "oklch(0.14 0 0)",
-              borderRadius: "0.5rem",
-              border: "2px solid oklch(0.22 0 0)",
-              cursor: "pointer",
-            }}
+            className="w-full h-2 bg-zinc-800 rounded-full appearance-none cursor-pointer
+              [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 
+              [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#FFA500] 
+              [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-lg
+              [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full 
+              [&::-moz-range-thumb]:bg-[#FFA500] [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
           />
-          <div className="premium-text text-xs">{volume}</div>
+          <div className="text-white font-bold text-sm">{volume}</div>
         </div>
 
-        <Button onClick={() => setShowDetails(true)} className="w-full h-9 gap-2 text-xs" size="sm">
-          <Settings className="w-4 h-4" />
+        {/* Edit button to open detailed controls popup */}
+        <button
+          onClick={() => setShowDetails(true)}
+          className="w-full bg-zinc-800 hover:bg-zinc-700 transition-all px-3 py-2 rounded-lg font-bold text-xs text-[#FFA500] border border-zinc-700"
+        >
           Edit
-        </Button>
+        </button>
       </div>
 
       <Dialog open={showDetails} onOpenChange={setShowDetails}>
-        <DialogContent className="max-w-2xl bg-black/95 border-primary/30">
+        <DialogContent className="max-w-2xl bg-black border-2 border-zinc-800">
           <DialogHeader>
-            <DialogTitle className="premium-text text-xl">
+            <DialogTitle className="text-white text-xl font-bold">
               Channel {channel} - {partName}
             </DialogTitle>
           </DialogHeader>
@@ -159,19 +171,19 @@ export function MixerChannel({
           <div className="space-y-6 py-4">
             {/* Voice Selection */}
             <div className="space-y-2">
-              <h3 className="premium-label text-sm">Voice</h3>
+              <h3 className="text-[#FFA500] font-bold text-sm uppercase tracking-wider">Voice</h3>
               <button
                 onClick={onSelectVoice}
-                className="w-full bg-secondary hover:bg-secondary/80 border-2 border-primary/40 hover:border-primary/60 transition-all px-4 py-3 rounded flex items-center gap-3 font-bold"
+                className="w-full bg-[#FFA500] hover:bg-[#FF9500] transition-all px-4 py-3 rounded-lg flex items-center gap-3 font-bold text-black"
               >
                 <VoiceIcon subcategory={voiceSubcategory} category={voiceCategory} size={24} />
-                <span className="text-base text-white">{voiceName}</span>
+                <span className="text-base">{voiceName}</span>
               </button>
             </div>
 
             {/* Main Controls */}
             <div className="space-y-2">
-              <h3 className="premium-label text-sm">Main Controls</h3>
+              <h3 className="text-[#FFA500] font-bold text-sm uppercase tracking-wider">Main Controls</h3>
               <div className="grid grid-cols-4 gap-4">
                 <RotaryKnob value={pan} onChange={handlePanChange} label="Pan" displayValue={`${pan}`} size="md" />
                 <RotaryKnob
@@ -200,7 +212,7 @@ export function MixerChannel({
 
             {/* EQ Controls */}
             <div className="space-y-2">
-              <h3 className="premium-label text-sm">Equalizer</h3>
+              <h3 className="text-[#FFA500] font-bold text-sm uppercase tracking-wider">Equalizer</h3>
               <div className="grid grid-cols-3 gap-4">
                 <RotaryKnob value={bass} onChange={handleBassChange} label="Bass" displayValue={`${bass}`} size="md" />
                 <RotaryKnob value={mid} onChange={handleMidChange} label="Mid" displayValue={`${mid}`} size="md" />

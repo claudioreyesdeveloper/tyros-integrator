@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState, useRef } from "react"
 import { MixerChannel } from "./mixer-channel"
-import { Volume2, Waves, Sparkles, Download, Upload } from "lucide-react"
+import { Download, Upload } from "lucide-react"
 import type { Voice } from "@/lib/voice-data"
 import { Button } from "@/components/ui/button"
 import { useMIDI } from "@/lib/midi-context"
@@ -176,96 +176,106 @@ export function MixerInterface({
   }
 
   return (
-    <div className="h-full flex flex-col p-3 md:p-4 bg-gradient-to-b from-background via-black/95 to-black">
+    <div className="h-full flex flex-col p-4 bg-black">
       <input ref={fileInputRef} type="file" accept=".json" onChange={handleFileChange} className="hidden" />
 
-      <div className="mb-3 flex flex-col sm:flex-row justify-end gap-2">
-        <Button onClick={handleOpenMix} className="h-9 px-4 gap-2 text-xs" size="sm">
-          <Upload className="w-3.5 h-3.5" />
+      <div className="mb-4 flex flex-col sm:flex-row justify-end gap-2">
+        <Button
+          onClick={handleOpenMix}
+          className="h-10 px-6 gap-2 text-sm font-bold bg-[#FFA500] hover:bg-[#FF9500] text-black border-none"
+        >
+          <Upload className="w-4 h-4" />
           Open Mix
         </Button>
-        <Button onClick={handleSaveMix} className="h-9 px-4 gap-2 text-xs" size="sm">
-          <Download className="w-3.5 h-3.5" />
+        <Button
+          onClick={handleSaveMix}
+          className="h-10 px-6 gap-2 text-sm font-bold bg-[#FFA500] hover:bg-[#FF9500] text-black border-none"
+        >
+          <Download className="w-4 h-4" />
           Save Mix
         </Button>
       </div>
 
-      <div className="mb-3 grid grid-cols-1 md:grid-cols-3 gap-2">
-        <div className="glossy-panel p-2.5">
-          <div className="flex items-center gap-2 mb-2">
-            <Volume2 className="w-4 h-4 text-primary" />
-            <h3 className="premium-label text-[10px]">Master Volume</h3>
-          </div>
-          <div className="flex items-center gap-2">
+      <div className="mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-black border-2 border-zinc-800 rounded-lg p-4">
+          <h3 className="text-[#FFA500] font-bold text-xs uppercase tracking-wider mb-3">Master Volume</h3>
+          <div className="flex items-center gap-3">
             <input
               type="range"
               min="0"
               max="127"
               value={masterVolume}
               onChange={(e) => handleMasterVolumeChange(Number(e.target.value))}
-              className="flex-1 slider-horizontal h-2"
+              className="flex-1 h-2 bg-zinc-800 rounded-full appearance-none cursor-pointer
+                [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 
+                [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#FFA500] 
+                [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-lg
+                [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full 
+                [&::-moz-range-thumb]:bg-[#FFA500] [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
             />
-            <span className="premium-text text-sm w-10 text-right">{masterVolume}</span>
+            <span className="text-white font-bold text-lg w-12 text-right">{masterVolume}</span>
           </div>
         </div>
 
-        <div className="glossy-panel p-2.5">
-          <div className="flex items-center gap-2 mb-2">
-            <Waves className="w-4 h-4 text-primary" />
-            <h3 className="premium-label text-[10px]">Global Reverb</h3>
-          </div>
-          <div className="flex items-center gap-2">
+        <div className="bg-black border-2 border-zinc-800 rounded-lg p-4">
+          <h3 className="text-[#FFA500] font-bold text-xs uppercase tracking-wider mb-3">Global Reverb</h3>
+          <div className="flex items-center gap-3">
             <input
               type="range"
               min="0"
               max="127"
               value={globalReverb}
               onChange={(e) => handleGlobalReverbChange(Number(e.target.value))}
-              className="flex-1 slider-horizontal h-2"
+              className="flex-1 h-2 bg-zinc-800 rounded-full appearance-none cursor-pointer
+                [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 
+                [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#FFA500] 
+                [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-lg
+                [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full 
+                [&::-moz-range-thumb]:bg-[#FFA500] [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
             />
-            <span className="premium-text text-sm w-10 text-right">{globalReverb}</span>
+            <span className="text-white font-bold text-lg w-12 text-right">{globalReverb}</span>
           </div>
         </div>
 
-        <div className="glossy-panel p-2.5">
-          <div className="flex items-center gap-2 mb-2">
-            <Sparkles className="w-4 h-4 text-primary" />
-            <h3 className="premium-label text-[10px]">Global Chorus</h3>
-          </div>
-          <div className="flex items-center gap-2">
+        <div className="bg-black border-2 border-zinc-800 rounded-lg p-4">
+          <h3 className="text-[#FFA500] font-bold text-xs uppercase tracking-wider mb-3">Global Chorus</h3>
+          <div className="flex items-center gap-3">
             <input
               type="range"
               min="0"
               max="127"
               value={globalChorus}
               onChange={(e) => handleGlobalChorusChange(Number(e.target.value))}
-              className="flex-1 slider-horizontal h-2"
+              className="flex-1 h-2 bg-zinc-800 rounded-full appearance-none cursor-pointer
+                [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 
+                [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#FFA500] 
+                [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-lg
+                [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full 
+                [&::-moz-range-thumb]:bg-[#FFA500] [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
             />
-            <span className="premium-text text-sm w-10 text-right">{globalChorus}</span>
+            <span className="text-white font-bold text-lg w-12 text-right">{globalChorus}</span>
           </div>
         </div>
       </div>
 
-      <div className="flex gap-1.5 mb-3">
+      <div className="flex gap-2 mb-4">
         {BANK_NAMES.map((name, index) => (
           <button
             key={index}
             onClick={() => handleBankChange(index)}
-            className={`flex-1 px-2 py-2 rounded font-bold text-[10px] transition-all border-2 ${
-              currentBank === index
-                ? "bg-secondary border-primary text-white"
-                : "bg-secondary/50 border-border/40 text-foreground hover:border-primary/50"
+            className={`flex-1 px-3 py-3 rounded-lg font-bold text-xs transition-all ${
+              currentBank === index ? "bg-[#FFA500] text-black" : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700"
             }`}
           >
-            <div className="premium-text text-[11px]">{name}</div>
-            <div className="text-[9px] opacity-80 mt-0.5">
+            <div className="text-sm">{name}</div>
+            <div className="text-[10px] opacity-70 mt-1">
               (Ch {index * 8 + 1}-{index * 8 + 8})
             </div>
           </button>
         ))}
       </div>
 
-      <div className="flex-1 premium-card p-4 overflow-hidden">
+      <div className="flex-1 overflow-hidden">
         <div className="h-full overflow-x-auto overflow-y-hidden">
           <div className="flex justify-center gap-3 h-full pb-2 min-w-max">
             {channels.map((ch) => (

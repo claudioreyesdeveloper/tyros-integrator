@@ -91,23 +91,24 @@ export function RotaryKnob({ value, min = 0, max = 127, onChange, label, display
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
         className={`${sizeClasses[size]} relative cursor-pointer select-none touch-none`}
-        style={{
-          transform: `rotate(${rotation}deg)`,
-          transition: isDragging ? "none" : "transform 0.1s ease-out",
-        }}
       >
-        <div className="absolute inset-0 rounded-full bg-secondary border-2 border-border shadow-lg">
-          <div className="absolute inset-2 rounded-full bg-background/40" />
-          <div className="absolute top-1 left-1/2 -translate-x-1/2 w-1 h-3 bg-primary rounded-full shadow-md" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-primary/50 rounded-full" />
+        <div className="absolute inset-0 rounded-full bg-gradient-to-b from-zinc-300 to-zinc-100 shadow-lg border border-zinc-400">
+          <div
+            className="absolute top-1 left-1/2 w-1 h-5 bg-zinc-800 rounded-full"
+            style={{
+              transform: `translateX(-50%) rotate(${rotation}deg)`,
+              transformOrigin: "center 2rem",
+              transition: isDragging ? "none" : "transform 0.1s ease-out",
+            }}
+          />
         </div>
       </div>
 
       {displayValue && (
-        <div className="text-xs font-mono font-bold text-primary min-w-[3ch] text-center">{displayValue}</div>
+        <div className="text-xs font-mono font-bold text-white min-w-[3ch] text-center">{displayValue}</div>
       )}
 
-      {label && <div className="premium-label text-xs">{label}</div>}
+      {label && <div className="text-[#FFA500] font-bold text-xs uppercase tracking-wider">{label}</div>}
     </div>
   )
 }
