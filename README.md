@@ -51,7 +51,7 @@ tyros5-integrator/
 ├── lib/
 │   ├── tyros-api.ts        # Unified Tyros5 API (⭐ MAIN API)
 │   ├── midi-context.tsx    # MIDI context provider
-│   ├── voice-data.ts       # Voice database (1000+ voices)
+│   ├── voice-data.ts       # Voice database (1000+ voices from CSV)
 │   ├── effect-data.ts      # Effects database
 │   ├── styles-data.ts      # Styles database
 │   ├── types.ts            # TypeScript type definitions
@@ -88,6 +88,50 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 pnpm build
 pnpm start
 \`\`\`
+
+## Voice Database
+
+### Data Source
+
+The application loads voice data from a CSV file hosted on Vercel Blob Storage:
+
+**URL**: `https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Tyros_voice_2_fully_cleaned%20%281%29-ORwlsBv5E2q8Ql6MwefrfwDMRkW8oC.csv`
+
+**Format**: Semicolon-separated values (SSV)
+- Schema: `MainCategory;SubCategory;VoiceName;MSB;LSB;PRG`
+- Example: `Premium Pack;Vintage Synth;BriteSawPerc;104;17;88`
+
+### Voice Structure
+
+Each voice contains:
+- **category**: Main instrument category (Piano, Guitar, Strings, etc.)
+- **sub**: Subcategory (Grand Piano, Electric Piano, etc.)
+- **voice**: Specific voice name
+- **msb**: MIDI Bank Select MSB (0-127)
+- **lsb**: MIDI Bank Select LSB (0-127)
+- **prg**: MIDI Program Change (0-127)
+
+### Loading and Caching
+
+The voice database is loaded asynchronously on application start:
+
+\`\`\`typescript
+import { loadVoiceData, getCategories, getSubCategories, getVoices } from '@/lib/voice-data'
+
+// Load all voices (cached after first load)
+const voices = await loadVoiceData()
+
+// Get unique categories (preserves CSV order)
+const categories = getCategories(voices)
+
+// Get subcategories for a category (preserves CSV order)
+const subs = getSubCategories(voices, "Piano")
+
+// Get voices for a category and subcategory (preserves CSV order)
+const pianoVoices = getVoices(voices, "Piano", "Grand Piano")
+\`\`\`
+
+**Important**: The voice data maintains the exact order from the CSV file. Categories, subcategories, and individual voices appear in the same sequence as the source data, preserving any intentional ordering from Yamaha's voice organization.
 
 ## API Documentation
 
@@ -139,6 +183,12 @@ const unsubscribe = tyrosAPI.onEvent((event) => {
   }
 }
 \`\`\`
+
+**Voice Assignment Process**:
+1. User selects voice from browser (1000+ voices organized by category)
+2. UI sends voice command with MIDI parameters (MSB, LSB, PRG)
+3. Backend translates to MIDI Bank Select + Program Change messages
+4. Tyros5 loads the specified voice on the target part
 
 #### 2. Mixer Commands
 \`\`\`typescript
@@ -447,6 +497,12 @@ app.post('/api/tyros/command', async (req, res) => {
 
 ### Voice Browser Enhancements
 
+**Data Management**
+- Loads 1000+ voices from CSV on application start
+- Caches voice data to prevent repeated fetches
+- Preserves original CSV ordering for categories and voices
+- Efficient filtering by category and subcategory
+
 **Modern Sidebar + Card Grid Layout**
 - Collapsible left sidebar with category navigation
 - Large visual cards for categories, sub-categories, and voices
@@ -466,12 +522,6 @@ app.post('/api/tyros/command', async (req, res) => {
 - **This Session**: Voices used in current session
 - **Recently Used**: Last 10 voices accessed
 - All collections accessible from sidebar and command palette
-
-**Persistent Storage**
-- Favorites saved to localStorage
-- Usage tracking for "Most Used" feature
-- Session tracking for "This Session" feature
-- Recent voices history maintained
 
 ### Chord Sequencer Enhancements
 
@@ -523,6 +573,9 @@ The application follows a clean architecture:
 
 1. **Presentation Layer** (`components/`): UI components
 2. **Business Logic** (`lib/`): API, data, and utilities
+   - `voice-data.ts`: Voice database loader with CSV parsing
+   - `tyros-api.ts`: Unified command API
+   - `types.ts`: TypeScript definitions
 3. **Application Layer** (`app/`): Routing and layout
 4. **Hooks** (`hooks/`): Reusable React hooks
 
@@ -533,13 +586,16 @@ The application follows a clean architecture:
 3. Use `useMIDI()` hook to access API
 4. Call `api.sendCommand()` with typed commands
 
-### Testing
+### Voice Data Updates
 
-The mock implementation logs all commands to the console, allowing you to:
-- Test UI without hardware
-- Verify command structure
-- Debug command flow
-- Validate before backend integration
+To update the voice database:
+
+1. Upload new CSV file to Vercel Blob Storage
+2. Update the CSV URL in `lib/voice-data.ts`
+3. Ensure CSV format matches: `MainCategory;SubCategory;VoiceName;MSB;LSB;PRG`
+4. Test voice loading and selection in the voice browser
+
+The application will automatically parse and cache the new voice data on next load.
 
 ## Troubleshooting
 
