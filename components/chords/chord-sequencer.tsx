@@ -1681,69 +1681,69 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
   const availableExtensions = CHORD_EXTENSIONS[selectedQuality] || ["none"]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 text-white">
-      <div className="container mx-auto p-4 lg:p-6 space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <Music className="w-8 h-8 text-amber-500" />
-            <h1 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-amber-500 to-amber-300 bg-clip-text text-transparent">
-              Tyros Composer
-            </h1>
-          </div>
-
-          <Button
-            onClick={() => setShowMobileControls(!showMobileControls)}
-            className="lg:hidden bg-amber-500 hover:bg-amber-600 text-black"
-            size="sm"
-          >
-            <Settings className="w-4 h-4 mr-2" />
-            Controls
-          </Button>
+    <div className="min-h-screen bg-black text-white p-6">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <Music className="w-8 h-8 text-amber-500" />
+          <h1 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-amber-500 to-amber-300 bg-clip-text text-transparent">
+            Tyros Composer
+          </h1>
         </div>
 
-        {/* Style & Category - moved to top */}
-        <div className="bg-zinc-900/50 backdrop-blur-sm rounded-xl p-6 border border-amber-500/20 shadow-xl">
-          <h3 className="text-lg font-bold text-amber-500 uppercase mb-4 flex items-center gap-2">
-            <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
-            Style & Category
-          </h3>
+        <Button
+          onClick={() => setShowMobileControls(!showMobileControls)}
+          className="lg:hidden bg-amber-500 hover:bg-amber-600 text-black"
+          size="sm"
+        >
+          <Settings className="w-4 h-4 mr-2" />
+          Controls
+        </Button>
+      </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="text-sm text-gray-400 mb-2 block font-semibold">Category</label>
-              <Select value={selectedCategory} onValueChange={handleCategoryChange}>
-                <SelectTrigger className="bg-zinc-800 border-amber-500/30 text-white h-12 text-base">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {STYLE_CATEGORIES.map((cat) => (
-                    <SelectItem key={cat} value={cat}>
-                      {cat}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+      {/* Style & Category - moved to top */}
+      <div className="bg-zinc-900/50 backdrop-blur-sm rounded-xl p-6 border border-amber-500/20 shadow-xl mb-6">
+        <h3 className="text-lg font-bold text-amber-500 uppercase mb-4 flex items-center gap-2">
+          <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+          Style & Category
+        </h3>
 
-            <div>
-              <label className="text-sm text-gray-400 mb-2 block font-semibold">Style</label>
-              <Select value={selectedStyle} onValueChange={setSelectedStyle}>
-                <SelectTrigger className="bg-zinc-800 border-amber-500/30 text-white h-12 text-base">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {STYLES_BY_CATEGORY[selectedCategory]?.map((style) => (
-                    <SelectItem key={style} value={style}>
-                      {style}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="text-sm text-gray-400 mb-2 block font-semibold">Category</label>
+            <Select value={selectedCategory} onValueChange={handleCategoryChange}>
+              <SelectTrigger className="bg-zinc-800 border-amber-500/30 text-white h-12 text-base">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {STYLE_CATEGORIES.map((cat) => (
+                  <SelectItem key={cat} value={cat}>
+                    {cat}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <label className="text-sm text-gray-400 mb-2 block font-semibold">Style</label>
+            <Select value={selectedStyle} onValueChange={setSelectedStyle}>
+              <SelectTrigger className="bg-zinc-800 border-amber-500/30 text-white h-12 text-base">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {STYLES_BY_CATEGORY[selectedCategory]?.map((style) => (
+                  <SelectItem key={style} value={style}>
+                    {style}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
+      </div>
 
+      <div className="max-w-[1800px] mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
           {/* Main Content */}
           <div className="space-y-6">
@@ -1761,7 +1761,7 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
                     className="bg-blue-500 hover:bg-blue-600 text-white font-semibold"
                   >
                     <FolderOpen className="w-4 h-4 mr-1" />
-                    Open Song
+                    <span className={effectiveMode === "ipad" ? "hidden" : ""}>Open Song</span>
                   </Button>
                   <Button
                     onClick={handleSaveSong}
@@ -1769,7 +1769,7 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
                     className="bg-green-500 hover:bg-green-600 text-white font-semibold"
                   >
                     <Save className="w-4 h-4 mr-1" />
-                    Save Song
+                    <span className={effectiveMode === "ipad" ? "hidden" : ""}>Save Song</span>
                   </Button>
                   <Button
                     onClick={handleAddSection}
@@ -1777,7 +1777,7 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
                     className="bg-amber-500 hover:bg-amber-600 text-black font-semibold"
                   >
                     <Plus className="w-4 h-4 mr-1" />
-                    Add Section
+                    <span className={effectiveMode === "ipad" ? "hidden" : ""}>Add Section</span>
                   </Button>
                 </div>
               </div>
