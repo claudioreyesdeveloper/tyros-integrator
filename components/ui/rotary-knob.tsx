@@ -28,6 +28,18 @@ export function RotaryKnob({ value, min = 0, max = 127, onChange, label, display
     lg: "w-20 h-20",
   }
 
+  const indicatorSizes = {
+    sm: "w-0.5 h-4",
+    md: "w-1 h-5",
+    lg: "w-1 h-6",
+  }
+
+  const indicatorOrigins = {
+    sm: "center 1.5rem",
+    md: "center 2rem",
+    lg: "center 2.5rem",
+  }
+
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault()
     setIsDragging(true)
@@ -92,12 +104,14 @@ export function RotaryKnob({ value, min = 0, max = 127, onChange, label, display
         onTouchStart={handleTouchStart}
         className={`${sizeClasses[size]} relative cursor-pointer select-none touch-none`}
       >
-        <div className="absolute inset-0 rounded-full bg-gradient-to-b from-zinc-300 to-zinc-100 shadow-lg border border-zinc-400">
+        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-zinc-200 via-zinc-100 to-zinc-300 shadow-[0_4px_12px_rgba(0,0,0,0.4),inset_0_1px_2px_rgba(255,255,255,0.8),inset_0_-2px_4px_rgba(0,0,0,0.2)] border-2 border-zinc-400/50">
+          <div className="absolute inset-[6px] rounded-full bg-gradient-to-br from-zinc-300 via-zinc-200 to-zinc-100 shadow-[inset_0_2px_4px_rgba(0,0,0,0.15)]" />
+          <div className="absolute inset-[10px] rounded-full bg-gradient-to-br from-zinc-100 to-zinc-200 shadow-[0_1px_3px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.6)]" />
           <div
-            className="absolute top-1 left-1/2 w-1 h-5 bg-zinc-800 rounded-full"
+            className={`absolute top-1 left-1/2 ${indicatorSizes[size]} bg-zinc-800 rounded-full shadow-[0_1px_2px_rgba(0,0,0,0.5)]`}
             style={{
               transform: `translateX(-50%) rotate(${rotation}deg)`,
-              transformOrigin: "center 2rem",
+              transformOrigin: indicatorOrigins[size],
               transition: isDragging ? "none" : "transform 0.1s ease-out",
             }}
           />
