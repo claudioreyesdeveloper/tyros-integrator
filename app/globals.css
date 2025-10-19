@@ -4,22 +4,24 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Smart Pianist color scheme - orange accent on black */
+  /* Reverted to pure black background theme */
   --smart-pianist-orange: oklch(0.65 0.2 45);
   --smart-pianist-orange-light: oklch(0.75 0.22 45);
   --smart-pianist-orange-dark: oklch(0.55 0.18 45);
+  --smart-pianist-teal: oklch(0.6 0.15 200);
+  --smart-pianist-brown: oklch(0.45 0.08 60);
 
   --background: oklch(0 0 0);
-  --foreground: oklch(1 0 0);
-  --card: oklch(0.12 0 0);
-  --card-foreground: oklch(1 0 0);
-  --popover: oklch(0.12 0 0);
-  --popover-foreground: oklch(1 0 0);
+  --foreground: oklch(0.95 0 0);
+  --card: oklch(0.08 0 0);
+  --card-foreground: oklch(0.95 0 0);
+  --popover: oklch(0.08 0 0);
+  --popover-foreground: oklch(0.95 0 0);
   --primary: var(--smart-pianist-orange);
   --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.16 0 0);
-  --secondary-foreground: oklch(1 0 0);
-  --muted: oklch(0.16 0 0);
+  --secondary: oklch(0.15 0 0);
+  --secondary-foreground: oklch(0.95 0 0);
+  --muted: oklch(0.15 0 0);
   --muted-foreground: oklch(0.65 0 0);
   --accent: var(--smart-pianist-orange);
   --accent-foreground: oklch(1 0 0);
@@ -128,7 +130,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-black text-foreground;
     /* Apply iOS system font to body */
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   }
@@ -137,7 +139,8 @@
 /* Smart Pianist design language - orange accent on black background */
 @layer components {
   .glossy-panel {
-    background: linear-gradient(135deg, oklch(0.14 0 0 / 0.95) 0%, oklch(0.1 0 0 / 0.98) 100%);
+    /* Reverted to pure black/dark gray panels */
+    background: linear-gradient(135deg, oklch(0.12 0 0 / 0.95) 0%, oklch(0.08 0 0 / 0.98) 100%);
     border: 2px solid oklch(0.25 0 0);
     border-radius: 0.5rem;
     box-shadow: 0 4px 16px oklch(0 0 0 / 0.8), 0 0 0 1px oklch(1 0 0 / 0.05) inset;
@@ -164,8 +167,9 @@
   }
 
   .premium-card {
-    background: linear-gradient(135deg, oklch(0.12 0 0 / 0.9) 0%, oklch(0.08 0 0 / 0.95) 100%);
-    border: 2px solid oklch(0.22 0 0);
+    /* Reverted to pure black/dark gray cards */
+    background: linear-gradient(135deg, oklch(0.1 0 0 / 0.9) 0%, oklch(0.06 0 0 / 0.95) 100%);
+    border: 2px solid oklch(0.2 0 0);
     border-radius: 0.5rem;
     box-shadow: 0 4px 12px oklch(0 0 0 / 0.7), 0 0 0 1px oklch(1 0 0 / 0.04) inset;
   }
@@ -174,8 +178,9 @@
     width: 3.5rem;
     height: 3.5rem;
     border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, oklch(0.22 0 0), oklch(0.14 0 0), oklch(0.08 0 0));
-    border: 3px solid oklch(0.28 0 0);
+    /* Reverted to pure black/dark gray knobs */
+    background: radial-gradient(circle at 30% 30%, oklch(0.2 0 0), oklch(0.15 0 0), oklch(0.1 0 0));
+    border: 3px solid oklch(0.25 0 0);
     box-shadow: 0 4px 12px oklch(0 0 0 / 0.8), 0 0 0 1px oklch(1 0 0 / 0.08) inset;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -203,9 +208,10 @@
 
   .slider-horizontal {
     height: 0.5rem;
-    background: oklch(0.14 0 0);
+    /* Reverted to pure black/dark gray slider */
+    background: oklch(0.12 0 0);
     border-radius: 0.5rem;
-    border: 2px solid oklch(0.22 0 0);
+    border: 2px solid oklch(0.2 0 0);
     appearance: none;
     cursor: pointer;
     box-shadow: inset 0 2px 4px oklch(0 0 0 / 0.8);

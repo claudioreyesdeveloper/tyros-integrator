@@ -116,7 +116,7 @@ export function RegistrationManager({
           Voice: voice
             ? {
                 Name: voice.voice,
-                CategoryIcon: `/icons/${voice.sub.toLowerCase()}.png`,
+                Category: voice.sub,
                 MSB: Number.parseInt(voice.msb),
                 LSB: Number.parseInt(voice.lsb),
                 PRG: Number.parseInt(voice.prg),

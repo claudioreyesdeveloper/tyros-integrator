@@ -86,8 +86,8 @@ export function HomeScreen({ onSelectVoice, partVoices }: HomeScreenProps) {
                 }}
                 className="premium-card p-6 md:p-7 lg:p-8 flex flex-col items-center gap-4 md:gap-5 lg:gap-6 hover:scale-105 transition-all duration-300 group"
               >
-                <div className="w-20 h-20 md:w-22 md:h-22 lg:w-24 lg:h-24 rounded-full bg-gradient-to-br from-secondary to-secondary/60 flex items-center justify-center border-4 border-primary/40 group-hover:border-primary transition-all shadow-lg shadow-primary/20">
-                  <VoiceIcon subcategory={voice?.sub || ""} className="text-primary" size={48} />
+                <div className="w-28 h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-600/10 flex items-center justify-center border-4 border-amber-500/40 group-hover:border-amber-500 group-hover:shadow-2xl group-hover:shadow-amber-500/30 transition-all shadow-lg shadow-amber-500/20">
+                  <VoiceIcon subcategory={voice?.sub || ""} className="text-amber-500" size={80} />
                 </div>
 
                 <div className="text-center w-full">

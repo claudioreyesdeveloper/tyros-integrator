@@ -121,12 +121,12 @@ export function MixerChannel({
         <div className="bg-zinc-200 rounded-lg p-3 flex flex-col items-center justify-center gap-2 min-h-[80px]">
           {voiceName === "No Voice" ? (
             <>
-              <Music className="w-8 h-8 text-zinc-400" />
+              <Music className="w-12 h-12 text-zinc-400" />
               <span className="text-xs font-medium text-black">No Voice</span>
             </>
           ) : (
             <>
-              <VoiceIcon subcategory={voiceSubcategory} category={voiceCategory} size={24} />
+              <VoiceIcon subcategory={voiceSubcategory} category={voiceCategory} size={40} />
               <span className="text-xs font-medium text-black text-center truncate w-full">{voiceName}</span>
             </>
           )}
@@ -176,7 +176,7 @@ export function MixerChannel({
                 onClick={onSelectVoice}
                 className="w-full bg-[#FFA500] hover:bg-[#FF9500] transition-all px-4 py-3 rounded-lg flex items-center gap-3 font-bold text-black"
               >
-                <VoiceIcon subcategory={voiceSubcategory} category={voiceCategory} size={24} />
+                <VoiceIcon subcategory={voiceSubcategory} category={voiceCategory} size={32} />
                 <span className="text-base">{voiceName}</span>
               </button>
             </div>

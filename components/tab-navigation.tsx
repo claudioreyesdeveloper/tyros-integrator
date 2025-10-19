@@ -1,7 +1,7 @@
 "use client"
 
-import { Home, Music, Sliders, ScrollText, Wrench, Music2, BookMarked } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { Home, Music, Sliders, BookOpen, Layers, Music2, Settings } from "lucide-react"
 
 interface TabNavigationProps {
   activeTab: string
@@ -12,18 +12,18 @@ const tabs = [
   { id: "home", label: "Home", icon: Home },
   { id: "voices", label: "Voices", icon: Music },
   { id: "mixer", label: "Mixer", icon: Sliders },
-  { id: "registration", label: "Registration", icon: BookMarked },
-  { id: "assembly", label: "Assembly", icon: Wrench },
-  { id: "chords", label: "Chords", icon: Music2 },
-  { id: "config", label: "Configuration", icon: ScrollText },
+  { id: "registration", label: "Registration", icon: BookOpen },
+  { id: "assembly", label: "Assembly", icon: Layers },
+  { id: "chords", label: "Composer", icon: Music2 },
+  { id: "config", label: "Configuration", icon: Settings },
 ]
 
 export function TabNavigation({ activeTab, onTabChange }: TabNavigationProps) {
   return (
     <nav className="flex items-center gap-1 md:gap-2 border-b-2 border-primary/30 px-3 md:px-4 lg:px-6 overflow-x-auto">
       {tabs.map((tab) => {
-        const Icon = tab.icon
         const isActive = activeTab === tab.id
+        const Icon = tab.icon
 
         return (
           <button
@@ -35,7 +35,7 @@ export function TabNavigation({ activeTab, onTabChange }: TabNavigationProps) {
               isActive ? "glossy-button text-black shadow-lg" : "text-gray-300 hover:bg-white/10 backdrop-blur-sm",
             )}
           >
-            <Icon className={cn("w-4 h-4 md:w-5 md:h-5 flex-shrink-0", isActive ? "text-black" : "text-gray-400")} />
+            <Icon className="flex-shrink-0" size={20} strokeWidth={2} />
             <span className="premium-text text-left">{tab.label}</span>
             {isActive && (
               <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary shadow-lg shadow-primary/50" />

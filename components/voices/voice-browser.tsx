@@ -7,7 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
 import { VoiceCommandPalette } from "@/components/voices/voice-command-palette"
 import { cn } from "@/lib/utils"
-import { getVoiceIcon, getSubCategoryColor } from "@/lib/voice-icons"
+import { VoiceIcon } from "@/components/ui/voice-icon"
 
 interface VoiceBrowserProps {
   currentPart: number | null
@@ -186,9 +186,6 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
           <ScrollArea className="flex-1">
             <div className="space-y-2.5 pr-3">
               {categories.map((category) => {
-                const IconComponent = getVoiceIcon(category)
-                const iconColor = getCategoryColor(category)
-
                 return (
                   <Button
                     key={category}
@@ -200,19 +197,12 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                         : "bg-gradient-to-br from-zinc-900/80 to-zinc-900/50 hover:from-zinc-800/90 hover:to-zinc-800/60 text-white border-2 border-amber-500/20 hover:border-amber-500/50 hover:shadow-xl hover:shadow-amber-500/20",
                     )}
                   >
-                    <div
-                      className={cn(
-                        "p-2 rounded-xl transition-all",
-                        selectedCategory === category ? "bg-black/20" : "bg-zinc-800/50 group-hover:bg-zinc-700/50",
-                      )}
-                    >
-                      <IconComponent
-                        className={cn(
-                          "w-5 h-5 flex-shrink-0",
-                          selectedCategory === category ? "text-black" : iconColor,
-                        )}
-                      />
-                    </div>
+                    <VoiceIcon
+                      category={category}
+                      subcategory=""
+                      size={48}
+                      className={cn("w-12 h-12", selectedCategory === category ? "opacity-100" : "opacity-80")}
+                    />
                     <span className="flex-1 text-left">{category}</span>
                     <span
                       className={cn(
@@ -240,9 +230,6 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
             {selectedCategory ? (
               <div className="space-y-2.5 pr-3">
                 {subCategories.map((sub) => {
-                  const IconComponent = getVoiceIcon(sub, selectedCategory)
-                  const iconColor = getSubCategoryColor(sub, selectedCategory)
-
                   return (
                     <Button
                       key={sub}
@@ -254,19 +241,12 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                           : "bg-gradient-to-br from-zinc-900/80 to-zinc-900/50 hover:from-zinc-800/90 hover:to-zinc-800/60 text-white border-2 border-amber-500/20 hover:border-amber-500/50 hover:shadow-xl hover:shadow-amber-500/20",
                       )}
                     >
-                      <div
-                        className={cn(
-                          "p-2 rounded-xl transition-all",
-                          selectedSubCategory === sub ? "bg-black/20" : "bg-zinc-800/50 group-hover:bg-zinc-700/50",
-                        )}
-                      >
-                        <IconComponent
-                          className={cn(
-                            "w-5 h-5 flex-shrink-0",
-                            selectedSubCategory === sub ? "text-black" : iconColor,
-                          )}
-                        />
-                      </div>
+                      <VoiceIcon
+                        category={selectedCategory}
+                        subcategory={sub}
+                        size={48}
+                        className={cn("w-12 h-12", selectedSubCategory === sub ? "opacity-100" : "opacity-80")}
+                      />
                       <span className="flex-1 text-left">{sub}</span>
                       <span
                         className={cn(
@@ -300,9 +280,6 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
               <div className="space-y-2.5 pr-3">
                 {voiceList.length > 0 ? (
                   voiceList.map((voice, index) => {
-                    const IconComponent = getVoiceIcon(voice.sub, voice.category)
-                    const iconColor = getSubCategoryColor(voice.sub, voice.category)
-
                     return (
                       <Button
                         key={index}
@@ -314,21 +291,15 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                             : "bg-gradient-to-br from-zinc-900/80 to-zinc-900/50 hover:from-zinc-800/90 hover:to-zinc-800/60 text-white border-2 border-amber-500/20 hover:border-amber-500/50 hover:shadow-xl hover:shadow-amber-500/20",
                         )}
                       >
-                        <div
+                        <VoiceIcon
+                          category={voice.category}
+                          subcategory={voice.sub}
+                          size={40}
                           className={cn(
-                            "p-2 rounded-xl transition-all",
-                            selectedVoice?.voice === voice.voice
-                              ? "bg-black/20"
-                              : "bg-zinc-800/50 group-hover:bg-zinc-700/50",
+                            "w-10 h-10",
+                            selectedVoice?.voice === voice.voice ? "opacity-100" : "opacity-80",
                           )}
-                        >
-                          <IconComponent
-                            className={cn(
-                              "w-5 h-5 flex-shrink-0",
-                              selectedVoice?.voice === voice.voice ? "text-black" : iconColor,
-                            )}
-                          />
-                        </div>
+                        />
                         <div className="flex-1 text-left">{voice.voice}</div>
                       </Button>
                     )
