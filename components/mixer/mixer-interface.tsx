@@ -323,7 +323,7 @@ export function MixerInterface({
                   voiceName={partVoices[ch.channel]?.voice || "No Voice"}
                   onSelectVoice={() => onSelectVoice(ch.channel)}
                   voiceSubcategory={partVoices[ch.channel]?.sub || ""}
-                  voiceCategory={partVoices[ch.channel]?.cat || ""}
+                  voiceCategory={partVoices[ch.channel]?.category || ""}
                 />
               ))}
             </div>
