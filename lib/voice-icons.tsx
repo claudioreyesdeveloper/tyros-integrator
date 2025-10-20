@@ -1,5 +1,5 @@
 import { Piano, Guitar, Mic, Music, Music2, Music3, Music4 } from "lucide-react"
-import cn from "classnames"
+import { cn } from "@/lib/utils"
 
 // Helper component to wrap Lucide icons with consistent sizing
 export function VoiceIconWrapper({ icon: Icon, className = "" }: { icon: any; className?: string }) {

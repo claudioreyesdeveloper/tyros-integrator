@@ -1,0 +1,45 @@
+# Changelog - October 20, 2025
+
+## Summary
+- Reverted from PNG icons to Lucide icons for consistent iconography across the application
+- Significantly increased icon sizes on home screen, voice browser, and mixer for improved visibility and polish
+- Implemented horizontal mixer view displaying all 16 channels with inline controls (no edit dialogs)
+- Added 2-level "flat" voice navigation mode that aggregates subcategories across all main categories
+- Added configuration toggles in Layout Mode for switching between mixer views and voice navigation modes
+- Optimized iPad version with larger touch targets and enhanced touch-friendly controls
+- Cleaned up unused code and removed PNG image references throughout the codebase
+
+## Files Changed
+
+### Icon System Overhaul
+- **components/ui/voice-icon.tsx** - Reverted component to use Lucide icons via getVoiceIcon function instead of PNG image files
+- **components/tab-navigation.tsx** - Updated navigation tabs to use Lucide icons (Home, Music, Sliders, Settings) instead of PNG images
+- **lib/voice-icons.tsx** - Fixed import statement to use local cn utility from @/lib/utils instead of classnames package
+- **components/registration/registration-manager.tsx** - Removed PNG icon path reference from registration data structure
+
+### Visual Enhancements
+- **components/home/home-screen.tsx** - Increased home screen icons from 48px to 80px with enhanced shadows and larger containers for polished appearance
+- **components/voices/voice-browser.tsx** - Reverted voice browser icons to original 48px size for categories/subcategories and 40px for individual voices, added support for 2-level flat navigation mode
+- **components/mixer/mixer-channel.tsx** - Increased mixer channel icons from 32px to 40px and dialog icons to 32px for better visibility
+- **app/globals.css** - Reverted body background to pure black and added comprehensive iPad-specific touch optimizations including larger buttons, sliders, and spacing
+
+### Horizontal Mixer Implementation
+- **components/mixer/mixer-interface.tsx** - Added horizontal mixer view with tabbed interface displaying 16 channels per tab (2 tabs total for 32 channels) and updated header structure
+- **components/mixer/mixer-channel-horizontal.tsx** - Created new horizontal mixer channel component displaying all controls inline: volume slider, pan/reverb/chorus/brightness knobs, and bass/mid/high EQ knobs without edit buttons
+
+### Voice Navigation Enhancement
+- **lib/voice-data.ts** - Added getAllUniqueSubCategories and getVoicesBySubCategory functions to support flat 2-level navigation mode that aggregates subcategories across all main categories
+- **lib/layout-context.tsx** - Added mixerViewMode (vertical/horizontal) and voiceNavigationMode (category/flat) state management with localStorage persistence
+
+### Configuration Updates
+- **components/config/config-panel.tsx** - Added toggle switches in Layout Mode section for mixer view mode (vertical 8 channels vs horizontal 16 channels) and voice navigation mode (3-level category vs 2-level flat)
+
+### iPad Touch Optimization
+- **components/ui/rotary-knob.tsx** - Enhanced touch sensitivity with improved drag detection and added scale transform effect during interaction for better visual feedback on iPad
+- **components/ui/slider.tsx** - Increased slider thumb size to 64px on iPad, enhanced track height, and improved hover/active states for better touch interaction
+
+## Technical Notes
+- All configuration preferences (mixer view mode, voice navigation mode) are persisted to localStorage
+- iPad detection uses existing isIPad flag from layout context
+- Horizontal mixer maintains same control functionality as vertical mixer but displays all parameters inline
+- Flat voice navigation aggregates voices from all categories (Main, Legacy, Mega, EXP, Premium Pack) when filtering by subcategory

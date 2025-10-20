@@ -289,6 +289,12 @@
     height: 120px !important;
   }
 
+  body[data-layout-mode="ipad"] .w-12,
+  body[data-layout-mode="ipad"] .h-12 {
+    width: 96px !important;
+    height: 96px !important;
+  }
+
   body[data-layout-mode="ipad"] [class*="w-[50px]"],
   body[data-layout-mode="ipad"] [class*="h-[50px]"] {
     width: 140px !important;
@@ -296,123 +302,177 @@
   }
 
   body[data-layout-mode="ipad"] .slider-horizontal {
-    height: 12px;
-    border-width: 3px;
+    height: 16px;
+    border-width: 4px;
   }
 
   body[data-layout-mode="ipad"] .slider-horizontal::-webkit-slider-thumb {
-    width: 56px;
-    height: 56px;
-    border-width: 4px;
+    width: 64px;
+    height: 64px;
+    border-width: 5px;
   }
 
   body[data-layout-mode="ipad"] .slider-horizontal::-moz-range-thumb {
-    width: 56px;
-    height: 56px;
-    border-width: 4px;
+    width: 64px;
+    height: 64px;
+    border-width: 5px;
+  }
+
+  body[data-layout-mode="ipad"] input[type="range"] {
+    height: 16px;
+  }
+
+  body[data-layout-mode="ipad"] input[type="range"]::-webkit-slider-track {
+    height: 16px;
+  }
+
+  body[data-layout-mode="ipad"] input[type="range"]::-moz-range-track {
+    height: 16px;
   }
 
   body[data-layout-mode="ipad"] input[type="range"]::-webkit-slider-thumb {
-    width: 56px;
-    height: 56px;
-    border-width: 4px;
+    width: 64px;
+    height: 64px;
+    border-width: 5px;
   }
 
   body[data-layout-mode="ipad"] input[type="range"]::-moz-range-thumb {
-    width: 56px;
-    height: 56px;
-    border-width: 4px;
+    width: 64px;
+    height: 64px;
+    border-width: 5px;
   }
 
   body[data-layout-mode="ipad"] .premium-label {
-    font-size: 20px;
+    font-size: 22px;
   }
 
   body[data-layout-mode="ipad"] .premium-text {
-    font-size: 24px;
+    font-size: 26px;
   }
 
   body[data-layout-mode="ipad"] .gap-2 {
-    gap: 16px;
-  }
-  body[data-layout-mode="ipad"] .gap-3 {
     gap: 20px;
   }
-  body[data-layout-mode="ipad"] .gap-4 {
+  body[data-layout-mode="ipad"] .gap-3 {
     gap: 24px;
   }
-  body[data-layout-mode="ipad"] .gap-5 {
+  body[data-layout-mode="ipad"] .gap-4 {
     gap: 32px;
   }
-  body[data-layout-mode="ipad"] .gap-6 {
+  body[data-layout-mode="ipad"] .gap-5 {
     gap: 40px;
+  }
+  body[data-layout-mode="ipad"] .gap-6 {
+    gap: 48px;
   }
 
   body[data-layout-mode="ipad"] .p-2 {
-    padding: 16px;
-  }
-  body[data-layout-mode="ipad"] .p-3 {
     padding: 20px;
   }
-  body[data-layout-mode="ipad"] .p-4 {
+  body[data-layout-mode="ipad"] .p-3 {
     padding: 24px;
   }
-  body[data-layout-mode="ipad"] .p-5 {
+  body[data-layout-mode="ipad"] .p-4 {
     padding: 32px;
   }
-  body[data-layout-mode="ipad"] .p-6 {
+  body[data-layout-mode="ipad"] .p-5 {
     padding: 40px;
+  }
+  body[data-layout-mode="ipad"] .p-6 {
+    padding: 48px;
   }
 
   body[data-layout-mode="ipad"] .text-xs {
-    font-size: 16px;
-  }
-  body[data-layout-mode="ipad"] .text-sm {
     font-size: 18px;
   }
-  body[data-layout-mode="ipad"] .text-base {
+  body[data-layout-mode="ipad"] .text-sm {
     font-size: 20px;
   }
-  body[data-layout-mode="ipad"] .text-lg {
+  body[data-layout-mode="ipad"] .text-base {
     font-size: 24px;
   }
-  body[data-layout-mode="ipad"] .text-xl {
+  body[data-layout-mode="ipad"] .text-lg {
     font-size: 28px;
   }
+  body[data-layout-mode="ipad"] .text-xl {
+    font-size: 32px;
+  }
   body[data-layout-mode="ipad"] .text-2xl {
-    font-size: 36px;
+    font-size: 40px;
   }
   body[data-layout-mode="ipad"] .text-3xl {
-    font-size: 44px;
+    font-size: 48px;
+  }
+  body[data-layout-mode="ipad"] .text-4xl {
+    font-size: 56px;
+  }
+  body[data-layout-mode="ipad"] .text-5xl {
+    font-size: 64px;
+  }
+  body[data-layout-mode="ipad"] .text-6xl {
+    font-size: 72px;
+  }
+  body[data-layout-mode="ipad"] .text-7xl {
+    font-size: 88px;
+  }
+  body[data-layout-mode="ipad"] .text-8xl {
+    font-size: 104px;
   }
 
   body[data-layout-mode="ipad"] .rounded {
-    border-radius: 12px;
+    border-radius: 14px;
   }
   body[data-layout-mode="ipad"] .rounded-md {
-    border-radius: 16px;
+    border-radius: 18px;
   }
   body[data-layout-mode="ipad"] .rounded-lg {
-    border-radius: 20px;
+    border-radius: 22px;
   }
   body[data-layout-mode="ipad"] .rounded-xl {
-    border-radius: 24px;
+    border-radius: 28px;
+  }
+  body[data-layout-mode="ipad"] .rounded-2xl {
+    border-radius: 32px;
   }
 
   body[data-layout-mode="ipad"] [role="tablist"] {
-    padding: 20px;
-    gap: 24px;
+    padding: 24px;
+    gap: 28px;
   }
 
   body[data-layout-mode="ipad"] [role="tab"] {
-    min-height: 70px;
-    min-width: 70px;
-    font-size: 20px;
-    padding: 16px 24px;
+    min-height: 88px;
+    min-width: 88px;
+    font-size: 24px;
+    padding: 20px 28px;
   }
 
   body[data-layout-mode="ipad"] svg {
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
+  }
+
+  body[data-layout-mode="ipad"] [role="combobox"] {
+    min-height: 72px;
+    font-size: 22px;
+    padding: 20px 24px;
+  }
+
+  body[data-layout-mode="ipad"] [data-radix-scroll-area-viewport] {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  body[data-layout-mode="ipad"] input[type="text"],
+  body[data-layout-mode="ipad"] input[type="number"],
+  body[data-layout-mode="ipad"] input[type="search"] {
+    min-height: 72px;
+    font-size: 22px;
+    padding: 20px 24px;
+  }
+
+  body[data-layout-mode="ipad"] input[type="checkbox"],
+  body[data-layout-mode="ipad"] input[type="radio"] {
+    width: 40px;
+    height: 40px;
   }
 }

@@ -5,11 +5,17 @@ import { createContext, useContext, useState, useEffect, useRef } from "react"
 
 type LayoutMode = "auto" | "desktop" | "ipad"
 type EffectiveMode = "desktop" | "ipad"
+type MixerViewMode = "vertical" | "horizontal"
+type VoiceNavMode = "category" | "flat" // category = 3-level, flat = 2-level
 
 interface LayoutContextType {
   mode: LayoutMode
   effectiveMode: EffectiveMode
   setMode: (mode: LayoutMode) => void
+  mixerViewMode: MixerViewMode
+  setMixerViewMode: (mode: MixerViewMode) => void
+  voiceNavMode: VoiceNavMode
+  setVoiceNavMode: (mode: VoiceNavMode) => void
 }
 
 const LayoutContext = createContext<LayoutContextType | undefined>(undefined)
@@ -17,6 +23,8 @@ const LayoutContext = createContext<LayoutContextType | undefined>(undefined)
 export function LayoutProvider({ children }: { children: React.ReactNode }) {
   const [mode, setMode] = useState<LayoutMode>("auto")
   const [effectiveMode, setEffectiveMode] = useState<EffectiveMode>("desktop")
+  const [mixerViewMode, setMixerViewMode] = useState<MixerViewMode>("vertical")
+  const [voiceNavMode, setVoiceNavMode] = useState<VoiceNavMode>("category")
   const updateTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
@@ -63,7 +71,33 @@ export function LayoutProvider({ children }: { children: React.ReactNode }) {
     }
   }, [effectiveMode])
 
-  return <LayoutContext.Provider value={{ mode, effectiveMode, setMode }}>{children}</LayoutContext.Provider>
+  useEffect(() => {
+    const saved = localStorage.getItem("mixerViewMode")
+    if (saved === "vertical" || saved === "horizontal") {
+      setMixerViewMode(saved)
+    }
+
+    const savedVoiceNav = localStorage.getItem("voiceNavMode")
+    if (savedVoiceNav === "category" || savedVoiceNav === "flat") {
+      setVoiceNavMode(savedVoiceNav)
+    }
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem("mixerViewMode", mixerViewMode)
+  }, [mixerViewMode])
+
+  useEffect(() => {
+    localStorage.setItem("voiceNavMode", voiceNavMode)
+  }, [voiceNavMode])
+
+  return (
+    <LayoutContext.Provider
+      value={{ mode, effectiveMode, setMode, mixerViewMode, setMixerViewMode, voiceNavMode, setVoiceNavMode }}
+    >
+      {children}
+    </LayoutContext.Provider>
+  )
 }
 
 export function useLayout() {

@@ -4,6 +4,7 @@ import type React from "react"
 
 import { useState, useRef } from "react"
 import { MixerChannel } from "./mixer-channel"
+import { MixerChannelHorizontal } from "./mixer-channel-horizontal"
 import { Download, Upload } from "lucide-react"
 import type { Voice } from "@/lib/voice-data"
 import { Button } from "@/components/ui/button"
@@ -53,6 +54,7 @@ interface MixerInterfaceProps {
   onEffectAssigned: (channel: number, effectName: string) => void
   currentBank?: number
   onBankChange?: (bank: number) => void
+  viewMode?: "vertical" | "horizontal" // Added viewMode prop
 }
 
 export function MixerInterface({
@@ -62,6 +64,7 @@ export function MixerInterface({
   onEffectAssigned,
   currentBank: externalCurrentBank,
   onBankChange,
+  viewMode = "vertical", // Default to vertical mode
 }: MixerInterfaceProps) {
   const [internalCurrentBank, setInternalCurrentBank] = useState(0)
   const currentBank = externalCurrentBank !== undefined ? externalCurrentBank : internalCurrentBank
@@ -73,11 +76,14 @@ export function MixerInterface({
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { api } = useMIDI()
 
-  const startChannel = currentBank * 8 + 1
-  const channels = Array.from({ length: 8 }, (_, i) => ({
+  const channelsPerView = viewMode === "horizontal" ? 16 : 8
+  const startChannel = currentBank * channelsPerView + 1
+  const channels = Array.from({ length: channelsPerView }, (_, i) => ({
     channel: startChannel + i,
     partName: PART_NAMES[startChannel + i - 1],
   }))
+
+  const bankNames = viewMode === "horizontal" ? ["Channels 1-16", "Channels 17-32"] : BANK_NAMES
 
   const handleMasterVolumeChange = (value: number) => {
     setMasterVolume(value)
@@ -259,7 +265,7 @@ export function MixerInterface({
       </div>
 
       <div className="flex gap-2 mb-4">
-        {BANK_NAMES.map((name, index) => (
+        {bankNames.map((name, index) => (
           <button
             key={index}
             onClick={() => handleBankChange(index)}
@@ -269,27 +275,60 @@ export function MixerInterface({
           >
             <div className="text-sm">{name}</div>
             <div className="text-[10px] opacity-70 mt-1">
-              (Ch {index * 8 + 1}-{index * 8 + 8})
+              (Ch {index * channelsPerView + 1}-{index * channelsPerView + channelsPerView})
             </div>
           </button>
         ))}
       </div>
 
       <div className="flex-1 overflow-hidden">
-        <div className="h-full overflow-x-auto overflow-y-hidden">
-          <div className="flex justify-center gap-3 h-full pb-2 min-w-max">
-            {channels.map((ch) => (
-              <MixerChannel
-                key={ch.channel}
-                channel={ch.channel}
-                partName={ch.partName}
-                voiceName={partVoices[ch.channel]?.voice || "No Voice"}
-                onSelectVoice={() => onSelectVoice(ch.channel)}
-                voiceSubcategory={partVoices[ch.channel]?.sub || ""}
-              />
-            ))}
+        {viewMode === "vertical" ? (
+          <div className="h-full overflow-x-auto overflow-y-hidden">
+            <div className="flex justify-center gap-3 h-full pb-2 min-w-max">
+              {channels.map((ch) => (
+                <MixerChannel
+                  key={ch.channel}
+                  channel={ch.channel}
+                  partName={ch.partName}
+                  voiceName={partVoices[ch.channel]?.voice || "No Voice"}
+                  onSelectVoice={() => onSelectVoice(ch.channel)}
+                  voiceSubcategory={partVoices[ch.channel]?.sub || ""}
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="h-full overflow-auto bg-black">
+            <div className="min-w-max">
+              <div className="grid grid-cols-[40px_200px_80px_60px_60px_60px_60px_60px_60px_60px_60px] gap-3 items-center py-3 px-2 bg-zinc-900 border-b-2 border-[#FFA500] sticky top-0 z-10">
+                <div className="text-[#FFA500] font-bold text-[10px] text-center">CH</div>
+                <div className="text-[#FFA500] font-bold text-[10px]">Voice</div>
+                <div className="text-[#FFA500] font-bold text-[10px] text-center">Vol</div>
+                <div className="text-[#FFA500] font-bold text-[10px] text-center">Pan</div>
+                <div className="text-[#FFA500] font-bold text-[10px] text-center">Rev</div>
+                <div className="text-[#FFA500] font-bold text-[10px] text-center">Cho</div>
+                <div className="text-[#FFA500] font-bold text-[10px] text-center">Bright</div>
+                <div className="text-[#FFA500] font-bold text-[10px] text-center">Bass</div>
+                <div className="text-[#FFA500] font-bold text-[10px] text-center">Mid</div>
+                <div className="text-[#FFA500] font-bold text-[10px] text-center">High</div>
+                <div className="text-[#FFA500] font-bold text-[10px] text-center">Part</div>
+              </div>
+
+              {/* Channel Rows */}
+              {channels.map((ch) => (
+                <MixerChannelHorizontal
+                  key={ch.channel}
+                  channel={ch.channel}
+                  partName={ch.partName}
+                  voiceName={partVoices[ch.channel]?.voice || "No Voice"}
+                  onSelectVoice={() => onSelectVoice(ch.channel)}
+                  voiceSubcategory={partVoices[ch.channel]?.sub || ""}
+                  voiceCategory={partVoices[ch.channel]?.cat || ""}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

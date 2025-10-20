@@ -54,12 +54,13 @@ export function RotaryKnob({ value, min = 0, max = 127, onChange, label, display
     setStartValue(value)
   }
 
+  const sensitivity = 0.7 // Increased from 0.5 for better touch control
+
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!isDragging) return
 
       const deltaY = startY - e.clientY
-      const sensitivity = 0.5
       const valueChange = deltaY * sensitivity
       const newValue = Math.max(min, Math.min(max, startValue + valueChange))
 
@@ -70,7 +71,6 @@ export function RotaryKnob({ value, min = 0, max = 127, onChange, label, display
       if (!isDragging) return
 
       const deltaY = startY - e.touches[0].clientY
-      const sensitivity = 0.5
       const valueChange = deltaY * sensitivity
       const newValue = Math.max(min, Math.min(max, startValue + valueChange))
 
@@ -102,7 +102,7 @@ export function RotaryKnob({ value, min = 0, max = 127, onChange, label, display
         ref={knobRef}
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
-        className={`${sizeClasses[size]} relative cursor-pointer select-none touch-none`}
+        className={`${sizeClasses[size]} relative cursor-pointer select-none touch-none transition-transform ${isDragging ? "scale-105" : ""}`}
       >
         <div className="absolute inset-0 rounded-full bg-gradient-to-br from-zinc-200 via-zinc-100 to-zinc-300 shadow-[0_4px_12px_rgba(0,0,0,0.4),inset_0_1px_2px_rgba(255,255,255,0.8),inset_0_-2px_4px_rgba(0,0,0,0.2)] border-2 border-zinc-400/50">
           <div className="absolute inset-[6px] rounded-full bg-gradient-to-br from-zinc-300 via-zinc-200 to-zinc-100 shadow-[inset_0_2px_4px_rgba(0,0,0,0.15)]" />

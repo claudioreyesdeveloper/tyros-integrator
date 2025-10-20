@@ -9,6 +9,7 @@ import { RegistrationManager } from "@/components/registration/registration-mana
 import { ConfigPanel } from "@/components/config/config-panel"
 import { AssemblyWorkbench } from "@/components/assembly/assembly-workbench"
 import { ChordSequencer } from "@/components/chords/chord-sequencer"
+import { useLayout } from "@/lib/layout-context" // Import useLayout
 import type { Voice } from "@/lib/voice-data"
 import type { Tyros5Configuration, ChannelPartConfig } from "@/lib/types"
 
@@ -70,6 +71,7 @@ export default function Home() {
   const [mixerBank, setMixerBank] = useState(0)
   const [partVoices, setPartVoices] = useState<Record<number, Voice>>({})
   const [channelEffects, setChannelEffects] = useState<Record<number, string>>({})
+  const { mixerViewMode } = useLayout() // Get mixer view mode from context
 
   const [channelMixer, setChannelMixer] = useState<Record<number, MixerSettings>>({})
   const [channelDSP, setChannelDSP] = useState<Record<number, DSPSettings>>({})
@@ -240,6 +242,7 @@ export default function Home() {
               onEffectAssigned={handleEffectAssigned}
               currentBank={mixerBank}
               onBankChange={setMixerBank}
+              viewMode={mixerViewMode}
             />
           )}
 

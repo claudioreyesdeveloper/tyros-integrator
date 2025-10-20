@@ -51,3 +51,17 @@ export function getSubCategories(voices: Voice[], category: string): string[] {
 export function getVoices(voices: Voice[], category: string, subCategory: string): Voice[] {
   return voices.filter((v) => v.category === category && v.sub === subCategory)
 }
+
+export function getAllSubCategories(voices: Voice[]): string[] {
+  const subs = new Set(voices.map((v) => v.sub))
+  return Array.from(subs).sort()
+}
+
+export function getVoicesBySubCategory(voices: Voice[], subCategory: string): Voice[] {
+  return voices.filter((v) => v.sub === subCategory)
+}
+
+export function getSubCategoryCategoryCount(voices: Voice[], subCategory: string): number {
+  const categories = new Set(voices.filter((v) => v.sub === subCategory).map((v) => v.category))
+  return categories.size
+}
