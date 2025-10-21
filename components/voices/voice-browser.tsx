@@ -189,57 +189,60 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
           </div>
         </div>
 
-        <div className="flex-1 grid grid-cols-2 gap-6 p-6 overflow-hidden">
-          <div className="flex flex-col gap-4">
-            <h3 className="text-xs font-bold text-amber-500/80 uppercase tracking-widest px-3 flex items-center gap-2">
-              <span className="w-1 h-4 bg-gradient-to-b from-amber-500 to-yellow-500 rounded-full"></span>
-              SUB-CATEGORIES
-            </h3>
-            <ScrollArea className="flex-1">
-              <div className="space-y-2.5 pr-3">
-                {allSubCategories.map((sub) => {
-                  return (
-                    <Button
-                      key={sub}
-                      onClick={() => setSelectedSubCategory(sub)}
-                      className={cn(
-                        "w-full justify-start px-6 py-5 rounded-2xl text-sm font-bold transition-all duration-300 flex items-center gap-4 group shadow-lg",
-                        selectedSubCategory === sub
-                          ? "bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 text-black shadow-2xl shadow-amber-500/60 scale-[1.02]"
-                          : "bg-gradient-to-br from-zinc-900/80 to-zinc-900/50 hover:from-zinc-800/90 hover:to-zinc-800/60 text-white border-2 border-amber-500/20 hover:border-amber-500/50 hover:shadow-xl hover:shadow-amber-500/20",
-                      )}
-                    >
-                      <VoiceIcon
-                        category=""
-                        subcategory={sub}
-                        size={48}
-                        className={cn("w-12 h-12", selectedSubCategory === sub ? "opacity-100" : "opacity-80")}
-                      />
-                      <span className="flex-1 text-left">{sub}</span>
-                      <span
-                        className={cn(
-                          "text-xs px-3 py-1.5 rounded-full font-bold",
-                          selectedSubCategory === sub
-                            ? "bg-black/30 text-black"
-                            : "bg-amber-500/20 text-amber-400 group-hover:bg-amber-500/30",
-                        )}
+        <div className="flex-1 flex flex-col gap-6 p-6 overflow-hidden">
+          {!selectedSubCategory ? (
+            <div className="flex flex-col gap-4 flex-1 overflow-hidden">
+              <h3 className="text-xs font-bold text-amber-500/80 uppercase tracking-widest px-3 flex items-center gap-2">
+                <span className="w-1 h-4 bg-gradient-to-b from-amber-500 to-yellow-500 rounded-full"></span>
+                SUB-CATEGORIES
+              </h3>
+              <ScrollArea className="flex-1">
+                <div className="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 pr-3 pb-4">
+                  {allSubCategories.map((sub) => {
+                    return (
+                      <button
+                        key={sub}
+                        onClick={() => setSelectedSubCategory(sub)}
+                        className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-gradient-to-br from-zinc-900/80 to-zinc-900/50 border-2 border-amber-500/20 hover:border-amber-500/50 hover:shadow-xl hover:shadow-amber-500/20 transition-all duration-300 group"
                       >
-                        {getSubCategoryCount(sub)}
-                      </span>
-                    </Button>
-                  )
-                })}
+                        <div className="w-20 h-20 flex items-center justify-center rounded-xl bg-zinc-800/50 group-hover:bg-zinc-800 transition-colors">
+                          <VoiceIcon
+                            category=""
+                            subcategory={sub}
+                            size={56}
+                            className="w-14 h-14 opacity-80 group-hover:opacity-100 transition-opacity"
+                          />
+                        </div>
+                        <div className="text-center">
+                          <div className="text-sm font-bold text-white group-hover:text-amber-400 transition-colors">
+                            {sub}
+                          </div>
+                          <div className="text-xs text-amber-500/60 mt-1 font-semibold">
+                            {getSubCategoryCount(sub)} voices
+                          </div>
+                        </div>
+                      </button>
+                    )
+                  })}
+                </div>
+              </ScrollArea>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4 flex-1 overflow-hidden">
+              <div className="flex items-center gap-3 px-3">
+                <Button
+                  variant="outline"
+                  onClick={() => setSelectedSubCategory(null)}
+                  className="px-4 py-2 bg-zinc-900/90 border-2 border-amber-500/30 hover:border-amber-500 hover:bg-zinc-800 text-white font-semibold rounded-xl transition-all"
+                >
+                  ← Back
+                </Button>
+                <h3 className="text-xs font-bold text-amber-500/80 uppercase tracking-widest flex items-center gap-2">
+                  <span className="w-1 h-4 bg-gradient-to-b from-amber-500 to-yellow-500 rounded-full"></span>
+                  {selectedSubCategory} VOICES
+                </h3>
               </div>
-            </ScrollArea>
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <h3 className="text-xs font-bold text-amber-500/80 uppercase tracking-widest px-3 flex items-center gap-2">
-              <span className="w-1 h-4 bg-gradient-to-b from-amber-500 to-yellow-500 rounded-full"></span>
-              VOICES
-            </h3>
-            <ScrollArea className="flex-1">
-              {selectedSubCategory ? (
+              <ScrollArea className="flex-1">
                 <div className="space-y-2.5 pr-3">
                   {voiceList.length > 0 ? (
                     voiceList.map((voice, index) => {
@@ -276,13 +279,9 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                     </div>
                   )}
                 </div>
-              ) : (
-                <div className="flex items-center justify-center h-full">
-                  <p className="text-center text-zinc-500 py-8 font-medium">Select a sub-category</p>
-                </div>
-              )}
-            </ScrollArea>
-          </div>
+              </ScrollArea>
+            </div>
+          )}
         </div>
       </div>
     )

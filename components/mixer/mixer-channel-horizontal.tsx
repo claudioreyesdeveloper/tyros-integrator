@@ -112,37 +112,37 @@ export function MixerChannelHorizontal({
 
       {/* Pan Knob */}
       <div className="flex justify-center">
-        <RotaryKnob value={pan} onChange={handlePanChange} displayValue={`${pan}`} size="sm" />
+        <RotaryKnob value={pan} onChange={handlePanChange} displayValue={`${pan}`} size="xs" />
       </div>
 
       {/* Reverb Knob */}
       <div className="flex justify-center">
-        <RotaryKnob value={reverb} onChange={handleReverbChange} displayValue={`${reverb}`} size="sm" />
+        <RotaryKnob value={reverb} onChange={handleReverbChange} displayValue={`${reverb}`} size="xs" />
       </div>
 
       {/* Chorus Knob */}
       <div className="flex justify-center">
-        <RotaryKnob value={chorus} onChange={handleChorusChange} displayValue={`${chorus}`} size="sm" />
+        <RotaryKnob value={chorus} onChange={handleChorusChange} displayValue={`${chorus}`} size="xs" />
       </div>
 
       {/* Brightness Knob */}
       <div className="flex justify-center">
-        <RotaryKnob value={brightness} onChange={handleBrightnessChange} displayValue={`${brightness}`} size="sm" />
+        <RotaryKnob value={brightness} onChange={handleBrightnessChange} displayValue={`${brightness}`} size="xs" />
       </div>
 
       {/* Bass Knob */}
       <div className="flex justify-center">
-        <RotaryKnob value={bass} onChange={handleBassChange} displayValue={`${bass}`} size="sm" />
+        <RotaryKnob value={bass} onChange={handleBassChange} displayValue={`${bass}`} size="xs" />
       </div>
 
       {/* Mid Knob */}
       <div className="flex justify-center">
-        <RotaryKnob value={mid} onChange={handleMidChange} displayValue={`${mid}`} size="sm" />
+        <RotaryKnob value={mid} onChange={handleMidChange} displayValue={`${mid}`} size="xs" />
       </div>
 
       {/* High Knob */}
       <div className="flex justify-center">
-        <RotaryKnob value={high} onChange={handleHighChange} displayValue={`${high}`} size="sm" />
+        <RotaryKnob value={high} onChange={handleHighChange} displayValue={`${high}`} size="xs" />
       </div>
 
       {/* Part Name */}

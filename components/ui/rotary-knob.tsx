@@ -10,7 +10,7 @@ interface RotaryKnobProps {
   onChange: (value: number) => void
   label?: string
   displayValue?: string
-  size?: "sm" | "md" | "lg"
+  size?: "xs" | "sm" | "md" | "lg"
 }
 
 export function RotaryKnob({ value, min = 0, max = 127, onChange, label, displayValue, size = "md" }: RotaryKnobProps) {
@@ -23,18 +23,21 @@ export function RotaryKnob({ value, min = 0, max = 127, onChange, label, display
   const rotation = -135 + percentage * 270
 
   const sizeClasses = {
+    xs: "w-10 h-10",
     sm: "w-12 h-12",
     md: "w-16 h-16",
     lg: "w-20 h-20",
   }
 
   const indicatorSizes = {
+    xs: "w-0.5 h-3",
     sm: "w-0.5 h-4",
     md: "w-1 h-5",
     lg: "w-1 h-6",
   }
 
   const indicatorOrigins = {
+    xs: "center 1.25rem",
     sm: "center 1.5rem",
     md: "center 2rem",
     lg: "center 2.5rem",
