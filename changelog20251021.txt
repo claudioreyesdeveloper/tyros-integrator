@@ -1,0 +1,41 @@
+CHANGELOG - October 21, 2025
+============================
+
+SUMMARY
+-------
+Today's work focused on bug fixes and UI improvements:
+1. Fixed deployment error related to Voice type property naming
+2. Redesigned flat voice navigation to use visual grid layout
+3. Optimized horizontal mixer by reducing knob sizes
+
+FILES CHANGED
+-------------
+
+1. components/mixer/mixer-interface.tsx
+   - Fixed TypeScript error by changing Voice property access from 'cat' to 'category'
+
+2. components/voices/voice-browser.tsx
+   - Transformed flat navigation mode to display subcategories as a visual grid of boxes instead of a vertical list
+   - Added grid layout with large icons, subcategory names, and voice counts for better visual browsing
+   - Implemented back button navigation when viewing voices within a subcategory
+
+3. components/ui/rotary-knob.tsx
+   - Added extra small "xs" size option (40px diameter) to the RotaryKnob component
+   - Updated size variants to include xs, sm, md, and lg options
+
+4. components/mixer/mixer-channel-horizontal.tsx
+   - Updated all RotaryKnob components to use the new "xs" size for more compact display
+   - Applied smaller knobs to Pan, Reverb, Chorus, Brightness, Bass, Mid, and High controls
+
+TECHNICAL DETAILS
+-----------------
+- Bug Fix: Corrected Voice interface property reference to match TypeScript definitions
+- UI Enhancement: Grid layout uses responsive design with proper spacing and hover effects
+- Size Optimization: Reduced knob size from 48px (sm) to 40px (xs) in horizontal mixer view
+- Visual Improvement: Subcategory boxes now display with icons, names, and counts in a 4-column grid
+
+IMPACT
+------
+- Deployment now succeeds without TypeScript errors
+- Flat voice navigation provides more intuitive visual browsing experience
+- Horizontal mixer is more compact while maintaining touch-friendly controls
