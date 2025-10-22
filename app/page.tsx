@@ -208,6 +208,15 @@ export default function Home() {
     }
   }
 
+  const handleVoiceAssignedInline = (channel: number, voice: Voice) => {
+    console.log("[v0] Page: handleVoiceAssignedInline called for channel", channel, "with voice", voice)
+    setPartVoices((prev) => {
+      const updated = { ...prev, [channel]: voice }
+      console.log("[v0] Page: Updated partVoices inline", updated)
+      return updated
+    })
+  }
+
   return (
     <div className="min-h-screen flex flex-col relative bg-gradient-to-br from-[oklch(0.14_0.01_270)] to-[oklch(0.10_0.01_270)]">
       <div
@@ -243,6 +252,7 @@ export default function Home() {
               currentBank={mixerBank}
               onBankChange={setMixerBank}
               viewMode={mixerViewMode}
+              onVoiceAssignedInline={handleVoiceAssignedInline}
             />
           )}
 

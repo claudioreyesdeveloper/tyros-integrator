@@ -55,6 +55,7 @@ interface MixerInterfaceProps {
   currentBank?: number
   onBankChange?: (bank: number) => void
   viewMode?: "vertical" | "horizontal" // Added viewMode prop
+  onVoiceAssignedInline?: (channel: number, voice: Voice) => void // Added new prop for inline voice assignment
 }
 
 export function MixerInterface({
@@ -64,7 +65,8 @@ export function MixerInterface({
   onEffectAssigned,
   currentBank: externalCurrentBank,
   onBankChange,
-  viewMode = "vertical", // Default to vertical mode
+  viewMode = "vertical",
+  onVoiceAssignedInline,
 }: MixerInterfaceProps) {
   const [internalCurrentBank, setInternalCurrentBank] = useState(0)
   const currentBank = externalCurrentBank !== undefined ? externalCurrentBank : internalCurrentBank
@@ -322,6 +324,8 @@ export function MixerInterface({
                   partName={ch.partName}
                   voiceName={partVoices[ch.channel]?.voice || "No Voice"}
                   onSelectVoice={() => onSelectVoice(ch.channel)}
+                  onVoiceAssignedInline={onVoiceAssignedInline}
+                  currentVoice={partVoices[ch.channel]}
                   voiceSubcategory={partVoices[ch.channel]?.sub || ""}
                   voiceCategory={partVoices[ch.channel]?.category || ""}
                 />

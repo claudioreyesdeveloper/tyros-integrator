@@ -1,18 +1,22 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { useMIDI } from "@/lib/midi-context"
 import { VoiceIcon } from "@/components/ui/voice-icon"
 import { RotaryKnob } from "@/components/ui/rotary-knob"
 import { Music } from "lucide-react"
+import { InlineVoiceSelector } from "./inline-voice-selector"
+import type { Voice } from "@/lib/voice-data"
 
 interface MixerChannelHorizontalProps {
   channel: number
   partName: string
   voiceName: string
   onSelectVoice: () => void
+  onVoiceAssignedInline?: (channel: number, voice: Voice) => void
   voiceSubcategory?: string
   voiceCategory?: string
+  currentVoice?: Voice
 }
 
 export function MixerChannelHorizontal({
@@ -20,8 +24,10 @@ export function MixerChannelHorizontal({
   partName,
   voiceName,
   onSelectVoice,
+  onVoiceAssignedInline,
   voiceSubcategory = "",
   voiceCategory = "",
+  currentVoice,
 }: MixerChannelHorizontalProps) {
   const { api } = useMIDI()
 
@@ -33,6 +39,9 @@ export function MixerChannelHorizontal({
   const [bass, setBass] = useState(64)
   const [mid, setMid] = useState(64)
   const [high, setHigh] = useState(64)
+
+  const [showInlineSelector, setShowInlineSelector] = useState(false)
+  const voiceButtonRef = useRef<HTMLButtonElement>(null)
 
   const handleVolumeChange = (value: number) => {
     setVolume(value)
@@ -74,79 +83,105 @@ export function MixerChannelHorizontal({
     console.log(`[v0] EQ High CH${channel}:`, value)
   }
 
+  const handleVoiceClick = () => {
+    if (onVoiceAssignedInline) {
+      setShowInlineSelector(true)
+    } else {
+      onSelectVoice()
+    }
+  }
+
+  const handleInlineVoiceSelect = (voice: Voice) => {
+    if (onVoiceAssignedInline) {
+      onVoiceAssignedInline(channel, voice)
+    }
+  }
+
   return (
-    <div className="grid grid-cols-[40px_200px_80px_60px_60px_60px_60px_60px_60px_60px_60px] gap-3 items-center py-3 px-2 border-b border-zinc-800 hover:bg-zinc-900/30 transition-colors">
-      {/* Channel Number */}
-      <div className="text-[#007AFF] font-bold text-sm text-center">{channel}</div>
+    <>
+      <div className="grid grid-cols-[40px_200px_80px_60px_60px_60px_60px_60px_60px_60px_60px] gap-3 items-center py-3 px-2 border-b border-zinc-800 hover:bg-zinc-900/30 transition-colors">
+        {/* Channel Number */}
+        <div className="text-[#007AFF] font-bold text-sm text-center">{channel}</div>
 
-      {/* Voice Name - clickable to select voice */}
-      <button
-        onClick={onSelectVoice}
-        className="text-white text-xs font-medium text-left truncate hover:text-[#007AFF] transition-colors flex items-center gap-2"
-      >
-        {voiceName === "No Voice" ? (
-          <Music className="w-5 h-5 text-zinc-600 flex-shrink-0" />
-        ) : (
-          <VoiceIcon subcategory={voiceSubcategory} category={voiceCategory} size={20} />
-        )}
-        <span className="truncate">{voiceName}</span>
-      </button>
+        {/* Voice Name - clickable to select voice */}
+        <button
+          ref={voiceButtonRef}
+          onClick={handleVoiceClick}
+          className="text-white text-xs font-medium text-left truncate hover:text-[#007AFF] transition-colors flex items-center gap-2"
+        >
+          {voiceName === "No Voice" ? (
+            <Music className="w-5 h-5 text-zinc-600 flex-shrink-0" />
+          ) : (
+            <VoiceIcon subcategory={voiceSubcategory} category={voiceCategory} size={20} />
+          )}
+          <span className="truncate">{voiceName}</span>
+        </button>
 
-      {/* Volume Slider */}
-      <div className="flex flex-col items-center gap-1">
-        <input
-          type="range"
-          min="0"
-          max="127"
-          value={volume}
-          onChange={(e) => handleVolumeChange(Number(e.target.value))}
-          className="w-full h-1.5 bg-zinc-800 rounded-full appearance-none cursor-pointer
-            [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 
-            [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#007AFF] 
-            [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-lg
-            [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:rounded-full 
-            [&::-moz-range-thumb]:bg-[#007AFF] [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
+        {/* Volume Slider */}
+        <div className="flex flex-col items-center gap-1">
+          <input
+            type="range"
+            min="0"
+            max="127"
+            value={volume}
+            onChange={(e) => handleVolumeChange(Number(e.target.value))}
+            className="w-full h-1.5 bg-zinc-800 rounded-full appearance-none cursor-pointer
+              [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 
+              [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#007AFF] 
+              [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-lg
+              [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:rounded-full 
+              [&::-moz-range-thumb]:bg-[#007AFF] [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
+          />
+          <span className="text-white text-[10px] font-bold">{volume}</span>
+        </div>
+
+        {/* Pan Knob */}
+        <div className="flex justify-center">
+          <RotaryKnob value={pan} onChange={handlePanChange} displayValue={`${pan}`} size="xs" />
+        </div>
+
+        {/* Reverb Knob */}
+        <div className="flex justify-center">
+          <RotaryKnob value={reverb} onChange={handleReverbChange} displayValue={`${reverb}`} size="xs" />
+        </div>
+
+        {/* Chorus Knob */}
+        <div className="flex justify-center">
+          <RotaryKnob value={chorus} onChange={handleChorusChange} displayValue={`${chorus}`} size="xs" />
+        </div>
+
+        {/* Brightness Knob */}
+        <div className="flex justify-center">
+          <RotaryKnob value={brightness} onChange={handleBrightnessChange} displayValue={`${brightness}`} size="xs" />
+        </div>
+
+        {/* Bass Knob */}
+        <div className="flex justify-center">
+          <RotaryKnob value={bass} onChange={handleBassChange} displayValue={`${bass}`} size="xs" />
+        </div>
+
+        {/* Mid Knob */}
+        <div className="flex justify-center">
+          <RotaryKnob value={mid} onChange={handleMidChange} displayValue={`${mid}`} size="xs" />
+        </div>
+
+        {/* High Knob */}
+        <div className="flex justify-center">
+          <RotaryKnob value={high} onChange={handleHighChange} displayValue={`${high}`} size="xs" />
+        </div>
+
+        {/* Part Name */}
+        <div className="text-zinc-400 text-xs text-center truncate">{partName}</div>
+      </div>
+
+      {showInlineSelector && (
+        <InlineVoiceSelector
+          currentVoice={currentVoice}
+          onSelectVoice={handleInlineVoiceSelect}
+          onClose={() => setShowInlineSelector(false)}
+          triggerRef={voiceButtonRef}
         />
-        <span className="text-white text-[10px] font-bold">{volume}</span>
-      </div>
-
-      {/* Pan Knob */}
-      <div className="flex justify-center">
-        <RotaryKnob value={pan} onChange={handlePanChange} displayValue={`${pan}`} size="xs" />
-      </div>
-
-      {/* Reverb Knob */}
-      <div className="flex justify-center">
-        <RotaryKnob value={reverb} onChange={handleReverbChange} displayValue={`${reverb}`} size="xs" />
-      </div>
-
-      {/* Chorus Knob */}
-      <div className="flex justify-center">
-        <RotaryKnob value={chorus} onChange={handleChorusChange} displayValue={`${chorus}`} size="xs" />
-      </div>
-
-      {/* Brightness Knob */}
-      <div className="flex justify-center">
-        <RotaryKnob value={brightness} onChange={handleBrightnessChange} displayValue={`${brightness}`} size="xs" />
-      </div>
-
-      {/* Bass Knob */}
-      <div className="flex justify-center">
-        <RotaryKnob value={bass} onChange={handleBassChange} displayValue={`${bass}`} size="xs" />
-      </div>
-
-      {/* Mid Knob */}
-      <div className="flex justify-center">
-        <RotaryKnob value={mid} onChange={handleMidChange} displayValue={`${mid}`} size="xs" />
-      </div>
-
-      {/* High Knob */}
-      <div className="flex justify-center">
-        <RotaryKnob value={high} onChange={handleHighChange} displayValue={`${high}`} size="xs" />
-      </div>
-
-      {/* Part Name */}
-      <div className="text-zinc-400 text-xs text-center truncate">{partName}</div>
-    </div>
+      )}
+    </>
   )
 }
