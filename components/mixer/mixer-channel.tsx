@@ -107,7 +107,7 @@ export function MixerChannel({
         {/* Voice Button */}
         <button
           onClick={onSelectVoice}
-          className="w-full bg-[#FFA500] hover:bg-[#FF9500] transition-all px-3 py-2.5 rounded-lg font-bold text-sm text-black"
+          className="w-full bg-[#007AFF] hover:bg-[#0051D5] transition-all px-3 py-2.5 rounded-lg font-bold text-sm text-white"
         >
           Voice
         </button>
@@ -134,7 +134,7 @@ export function MixerChannel({
 
         {/* Volume Section */}
         <div className="flex flex-col items-center gap-2 py-3">
-          <div className="text-[#FFA500] font-bold text-xs uppercase tracking-wider">Volume</div>
+          <div className="text-[#007AFF] font-bold text-xs uppercase tracking-wider">Volume</div>
           <input
             type="range"
             min="0"
@@ -143,10 +143,10 @@ export function MixerChannel({
             onChange={(e) => handleVolumeChange(Number(e.target.value))}
             className="w-full h-2 bg-zinc-800 rounded-full appearance-none cursor-pointer
               [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 
-              [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#FFA500] 
+              [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#007AFF] 
               [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-lg
               [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full 
-              [&::-moz-range-thumb]:bg-[#FFA500] [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
+              [&::-moz-range-thumb]:bg-[#007AFF] [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
           />
           <div className="text-white font-bold text-sm">{volume}</div>
         </div>
@@ -154,7 +154,7 @@ export function MixerChannel({
         {/* Edit button to open detailed controls popup */}
         <button
           onClick={() => setShowDetails(true)}
-          className="w-full bg-zinc-800 hover:bg-zinc-700 transition-all px-3 py-2 rounded-lg font-bold text-xs text-[#FFA500] border border-zinc-700"
+          className="w-full bg-zinc-800 hover:bg-zinc-700 transition-all px-3 py-2 rounded-lg font-bold text-xs text-[#007AFF] border border-zinc-700"
         >
           Edit
         </button>
@@ -171,10 +171,10 @@ export function MixerChannel({
           <div className="space-y-6 py-4">
             {/* Voice Selection */}
             <div className="space-y-2">
-              <h3 className="text-[#FFA500] font-bold text-sm uppercase tracking-wider">Voice</h3>
+              <h3 className="text-[#007AFF] font-bold text-sm uppercase tracking-wider">Voice</h3>
               <button
                 onClick={onSelectVoice}
-                className="w-full bg-[#FFA500] hover:bg-[#FF9500] transition-all px-4 py-3 rounded-lg flex items-center gap-3 font-bold text-black"
+                className="w-full bg-[#007AFF] hover:bg-[#0051D5] transition-all px-4 py-3 rounded-lg flex items-center gap-3 font-bold text-white"
               >
                 <VoiceIcon subcategory={voiceSubcategory} category={voiceCategory} size={32} />
                 <span className="text-base">{voiceName}</span>
@@ -183,7 +183,7 @@ export function MixerChannel({
 
             {/* Main Controls */}
             <div className="space-y-2">
-              <h3 className="text-[#FFA500] font-bold text-sm uppercase tracking-wider">Main Controls</h3>
+              <h3 className="text-[#007AFF] font-bold text-sm uppercase tracking-wider">Main Controls</h3>
               <div className="grid grid-cols-4 gap-4">
                 <RotaryKnob value={pan} onChange={handlePanChange} label="Pan" displayValue={`${pan}`} size="md" />
                 <RotaryKnob
@@ -212,7 +212,7 @@ export function MixerChannel({
 
             {/* EQ Controls */}
             <div className="space-y-2">
-              <h3 className="text-[#FFA500] font-bold text-sm uppercase tracking-wider">Equalizer</h3>
+              <h3 className="text-[#007AFF] font-bold text-sm uppercase tracking-wider">Equalizer</h3>
               <div className="grid grid-cols-3 gap-4">
                 <RotaryKnob value={bass} onChange={handleBassChange} label="Bass" displayValue={`${bass}`} size="md" />
                 <RotaryKnob value={mid} onChange={handleMidChange} label="Mid" displayValue={`${mid}`} size="md" />

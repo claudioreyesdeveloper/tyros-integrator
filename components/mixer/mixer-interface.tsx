@@ -188,14 +188,14 @@ export function MixerInterface({
       <div className="mb-4 flex flex-col sm:flex-row justify-end gap-2">
         <Button
           onClick={handleOpenMix}
-          className="h-10 px-6 gap-2 text-sm font-bold bg-[#FFA500] hover:bg-[#FF9500] text-black border-none"
+          className="h-10 px-6 gap-2 text-sm font-bold bg-[#007AFF] hover:bg-[#0051D5] text-white border-none"
         >
           <Upload className="w-4 h-4" />
           Open Mix
         </Button>
         <Button
           onClick={handleSaveMix}
-          className="h-10 px-6 gap-2 text-sm font-bold bg-[#FFA500] hover:bg-[#FF9500] text-black border-none"
+          className="h-10 px-6 gap-2 text-sm font-bold bg-[#007AFF] hover:bg-[#0051D5] text-white border-none"
         >
           <Download className="w-4 h-4" />
           Save Mix
@@ -204,7 +204,7 @@ export function MixerInterface({
 
       <div className="mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-black border-2 border-zinc-800 rounded-lg p-4">
-          <h3 className="text-[#FFA500] font-bold text-xs uppercase tracking-wider mb-3">Master Volume</h3>
+          <h3 className="text-[#007AFF] font-bold text-xs uppercase tracking-wider mb-3">Master Volume</h3>
           <div className="flex items-center gap-3">
             <input
               type="range"
@@ -214,17 +214,17 @@ export function MixerInterface({
               onChange={(e) => handleMasterVolumeChange(Number(e.target.value))}
               className="flex-1 h-2 bg-zinc-800 rounded-full appearance-none cursor-pointer
                 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 
-                [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#FFA500] 
+                [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#007AFF] 
                 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-lg
                 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full 
-                [&::-moz-range-thumb]:bg-[#FFA500] [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
+                [&::-moz-range-thumb]:bg-[#007AFF] [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
             />
             <span className="text-white font-bold text-lg w-12 text-right">{masterVolume}</span>
           </div>
         </div>
 
         <div className="bg-black border-2 border-zinc-800 rounded-lg p-4">
-          <h3 className="text-[#FFA500] font-bold text-xs uppercase tracking-wider mb-3">Global Reverb</h3>
+          <h3 className="text-[#007AFF] font-bold text-xs uppercase tracking-wider mb-3">Global Reverb</h3>
           <div className="flex items-center gap-3">
             <input
               type="range"
@@ -234,17 +234,17 @@ export function MixerInterface({
               onChange={(e) => handleGlobalReverbChange(Number(e.target.value))}
               className="flex-1 h-2 bg-zinc-800 rounded-full appearance-none cursor-pointer
                 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 
-                [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#FFA500] 
+                [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#007AFF] 
                 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-lg
                 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full 
-                [&::-moz-range-thumb]:bg-[#FFA500] [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
+                [&::-moz-range-thumb]:bg-[#007AFF] [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
             />
             <span className="text-white font-bold text-lg w-12 text-right">{globalReverb}</span>
           </div>
         </div>
 
         <div className="bg-black border-2 border-zinc-800 rounded-lg p-4">
-          <h3 className="text-[#FFA500] font-bold text-xs uppercase tracking-wider mb-3">Global Chorus</h3>
+          <h3 className="text-[#007AFF] font-bold text-xs uppercase tracking-wider mb-3">Global Chorus</h3>
           <div className="flex items-center gap-3">
             <input
               type="range"
@@ -254,10 +254,10 @@ export function MixerInterface({
               onChange={(e) => handleGlobalChorusChange(Number(e.target.value))}
               className="flex-1 h-2 bg-zinc-800 rounded-full appearance-none cursor-pointer
                 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 
-                [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#FFA500] 
+                [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#007AFF] 
                 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-lg
                 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full 
-                [&::-moz-range-thumb]:bg-[#FFA500] [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
+                [&::-moz-range-thumb]:bg-[#007AFF] [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
             />
             <span className="text-white font-bold text-lg w-12 text-right">{globalChorus}</span>
           </div>
@@ -270,7 +270,7 @@ export function MixerInterface({
             key={index}
             onClick={() => handleBankChange(index)}
             className={`flex-1 px-3 py-3 rounded-lg font-bold text-xs transition-all ${
-              currentBank === index ? "bg-[#FFA500] text-black" : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700"
+              currentBank === index ? "bg-[#007AFF] text-white" : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700"
             }`}
           >
             <div className="text-sm">{name}</div>
@@ -300,18 +300,18 @@ export function MixerInterface({
         ) : (
           <div className="h-full overflow-auto bg-black">
             <div className="min-w-max">
-              <div className="grid grid-cols-[40px_200px_80px_60px_60px_60px_60px_60px_60px_60px_60px] gap-3 items-center py-3 px-2 bg-zinc-900 border-b-2 border-[#FFA500] sticky top-0 z-10">
-                <div className="text-[#FFA500] font-bold text-[10px] text-center">CH</div>
-                <div className="text-[#FFA500] font-bold text-[10px]">Voice</div>
-                <div className="text-[#FFA500] font-bold text-[10px] text-center">Vol</div>
-                <div className="text-[#FFA500] font-bold text-[10px] text-center">Pan</div>
-                <div className="text-[#FFA500] font-bold text-[10px] text-center">Rev</div>
-                <div className="text-[#FFA500] font-bold text-[10px] text-center">Cho</div>
-                <div className="text-[#FFA500] font-bold text-[10px] text-center">Bright</div>
-                <div className="text-[#FFA500] font-bold text-[10px] text-center">Bass</div>
-                <div className="text-[#FFA500] font-bold text-[10px] text-center">Mid</div>
-                <div className="text-[#FFA500] font-bold text-[10px] text-center">High</div>
-                <div className="text-[#FFA500] font-bold text-[10px] text-center">Part</div>
+              <div className="grid grid-cols-[40px_200px_80px_60px_60px_60px_60px_60px_60px_60px_60px] gap-3 items-center py-3 px-2 bg-zinc-900 border-b-2 border-[#007AFF] sticky top-0 z-10">
+                <div className="text-[#007AFF] font-bold text-[10px] text-center">CH</div>
+                <div className="text-[#007AFF] font-bold text-[10px]">Voice</div>
+                <div className="text-[#007AFF] font-bold text-[10px] text-center">Vol</div>
+                <div className="text-[#007AFF] font-bold text-[10px] text-center">Pan</div>
+                <div className="text-[#007AFF] font-bold text-[10px] text-center">Rev</div>
+                <div className="text-[#007AFF] font-bold text-[10px] text-center">Cho</div>
+                <div className="text-[#007AFF] font-bold text-[10px] text-center">Bright</div>
+                <div className="text-[#007AFF] font-bold text-[10px] text-center">Bass</div>
+                <div className="text-[#007AFF] font-bold text-[10px] text-center">Mid</div>
+                <div className="text-[#007AFF] font-bold text-[10px] text-center">High</div>
+                <div className="text-[#007AFF] font-bold text-[10px] text-center">Part</div>
               </div>
 
               {/* Channel Rows */}

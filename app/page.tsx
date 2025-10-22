@@ -209,17 +209,17 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col relative">
+    <div className="min-h-screen flex flex-col relative bg-gradient-to-br from-[oklch(0.14_0.01_270)] to-[oklch(0.10_0.01_270)]">
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-10"
         style={{
           backgroundImage:
             "url(https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_0068-KWOtxG3niqNY0qYM5S7YiwzptMfF9k.png)",
         }}
       />
-      <div className="absolute inset-0 bg-black/60" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[oklch(0.14_0.01_270)]/80 to-[oklch(0.10_0.01_270)]/90 backdrop-blur-sm" />
       <div className="relative z-10 flex flex-col min-h-screen">
-        <header className="border-b border-primary/30">
+        <header className="border-b border-[oklch(0.28_0.02_270)]/50 backdrop-blur-xl">
           <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
         </header>
 

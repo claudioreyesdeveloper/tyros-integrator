@@ -1,4 +1,4 @@
-import { Piano, Guitar, Mic, Music, Music2, Music3, Music4 } from "lucide-react"
+import { Piano, Guitar, Mic, Music, Music2, Music3, Music4, Drum, Waves } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 // Helper component to wrap Lucide icons with consistent sizing
@@ -15,12 +15,10 @@ export function getVoiceIcon(subcategory: string, category?: string) {
   if (sub.includes("harpsichord") || sub.includes("clavi")) return Piano
 
   // Organ
-  if (sub.includes("organ") || sub.includes("jazz organ") || sub.includes("rock organ")) return Piano
+  if (sub.includes("organ") || sub.includes("jazz organ") || sub.includes("rock organ")) return Waves
 
   // Guitar family
-  if (sub.includes("guitar") && !sub.includes("bass")) {
-    return Guitar
-  }
+  if (sub.includes("guitar") && !sub.includes("bass")) return Guitar
   if (sub.includes("nylon") || sub.includes("steel") || sub.includes("12-string")) return Guitar
   if (sub.includes("clean") || sub.includes("muted")) return Guitar
   if (sub.includes("banjo") || sub.includes("mandolin") || sub.includes("ukulele")) return Guitar
@@ -55,7 +53,7 @@ export function getVoiceIcon(subcategory: string, category?: string) {
 
   // Chromatic Percussion
   if (sub.includes("vibraphone") || sub.includes("marimba") || sub.includes("xylophone") || sub.includes("mallet"))
-    return Music
+    return Drum
   if (sub.includes("bell") || sub.includes("glockenspiel") || sub.includes("celesta")) return Music
 
   // Choir & Voice
@@ -63,10 +61,10 @@ export function getVoiceIcon(subcategory: string, category?: string) {
   if (sub.includes("aahs") || sub.includes("oohs") || sub.includes("doo")) return Mic
 
   // Synth sounds
-  if (sub.includes("synth") || sub.includes("lead") || sub.includes("pad")) return Music
-  if (sub.includes("square") || sub.includes("saw") || sub.includes("calliope")) return Music
-  if (sub.includes("warm") || sub.includes("polysynth") || sub.includes("bowed")) return Music
-  if (sub.includes("metallic") || sub.includes("halo") || sub.includes("sweep")) return Music
+  if (sub.includes("synth") || sub.includes("lead") || sub.includes("pad")) return Waves
+  if (sub.includes("square") || sub.includes("saw") || sub.includes("calliope")) return Waves
+  if (sub.includes("warm") || sub.includes("polysynth") || sub.includes("bowed")) return Waves
+  if (sub.includes("metallic") || sub.includes("halo") || sub.includes("sweep")) return Waves
 
   // Accordion & Harmonica
   if (sub.includes("accordion")) return Piano
@@ -78,24 +76,24 @@ export function getVoiceIcon(subcategory: string, category?: string) {
   if (sub.includes("shanai") || sub.includes("ethnic") || sub.includes("world")) return Music4
 
   // Percussion & Drums
-  if (sub.includes("drum") || sub.includes("kit") || sub.includes("standard")) return Music
-  if (sub.includes("room") || sub.includes("power") || sub.includes("electronic")) return Music
-  if (sub.includes("brush") || sub.includes("timpani") || sub.includes("taiko")) return Music
-  if (sub.includes("percussion") || sub.includes("tom") || sub.includes("cymbal")) return Music
-  if (sub.includes("agogo") || sub.includes("steel drum") || sub.includes("woodblock")) return Music
+  if (sub.includes("drum") || sub.includes("kit") || sub.includes("standard")) return Drum
+  if (sub.includes("room") || sub.includes("power") || sub.includes("electronic")) return Drum
+  if (sub.includes("brush") || sub.includes("timpani") || sub.includes("taiko")) return Drum
+  if (sub.includes("percussion") || sub.includes("tom") || sub.includes("cymbal")) return Drum
+  if (sub.includes("agogo") || sub.includes("steel drum") || sub.includes("woodblock")) return Drum
 
   // Category-based fallbacks
   if (cat.includes("piano")) return Piano
-  if (cat.includes("organ")) return Piano
+  if (cat.includes("organ")) return Waves
   if (cat.includes("guitar")) return Guitar
   if (cat.includes("bass")) return Guitar
   if (cat.includes("string")) return Music2
   if (cat.includes("brass")) return Music3
   if (cat.includes("reed") || cat.includes("woodwind")) return Music4
   if (cat.includes("pipe")) return Music4
-  if (cat.includes("synth")) return Music
+  if (cat.includes("synth")) return Waves
   if (cat.includes("ethnic")) return Guitar
-  if (cat.includes("percussion") || cat.includes("drum")) return Music
+  if (cat.includes("percussion") || cat.includes("drum")) return Drum
   if (cat.includes("choir") || cat.includes("voice")) return Mic
   if (cat.includes("chromatic")) return Music
 

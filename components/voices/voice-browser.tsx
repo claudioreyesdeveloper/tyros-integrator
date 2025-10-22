@@ -158,15 +158,15 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
           currentPart={currentPart}
         />
 
-        <div className="p-6 border-b border-amber-500/20 bg-gradient-to-r from-zinc-900/80 via-zinc-900/60 to-zinc-900/80 backdrop-blur-xl space-y-4 shadow-2xl shadow-black/50">
+        <div className="p-6 border-b border-border bg-gradient-to-r from-zinc-900/80 via-zinc-900/60 to-zinc-900/80 backdrop-blur-xl space-y-4 shadow-2xl shadow-black/50">
           <button
             onClick={() => setIsCommandPaletteOpen(true)}
-            className="w-full h-16 px-5 flex items-center gap-3 bg-zinc-900/90 border-2 border-amber-500/30 rounded-2xl shadow-xl shadow-amber-500/10 hover:border-amber-500 hover:shadow-amber-500/30 transition-all group"
+            className="w-full h-16 px-5 flex items-center gap-3 bg-zinc-900/90 border-2 border-border rounded-2xl shadow-xl shadow-black/10 hover:border-primary hover:shadow-primary/30 transition-all group"
           >
-            <span className="text-amber-500/70 group-hover:text-amber-400 transition-colors text-base font-medium">
+            <span className="text-muted-foreground group-hover:text-primary transition-colors text-base font-medium">
               Quick search (⌘K)
             </span>
-            <kbd className="ml-auto px-3 py-1.5 text-xs font-mono text-amber-500/70 bg-zinc-800 rounded border border-amber-500/20">
+            <kbd className="ml-auto px-3 py-1.5 text-xs font-mono text-muted-foreground bg-zinc-800 rounded border border-border">
               ⌘K
             </kbd>
           </button>
@@ -175,7 +175,7 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
             <Button
               variant="outline"
               onClick={onCancel}
-              className="px-6 py-6 bg-zinc-900/90 border-2 border-amber-500/30 hover:border-amber-500 hover:bg-zinc-800 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-amber-500/20"
+              className="px-6 py-6 bg-zinc-900/90 border-2 border-border hover:border-primary hover:bg-zinc-800 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-primary/20"
             >
               Cancel
             </Button>
@@ -192,8 +192,8 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
         <div className="flex-1 flex flex-col gap-6 p-6 overflow-hidden">
           {!selectedSubCategory ? (
             <div className="flex flex-col gap-4 flex-1 overflow-hidden">
-              <h3 className="text-xs font-bold text-amber-500/80 uppercase tracking-widest px-3 flex items-center gap-2">
-                <span className="w-1 h-4 bg-gradient-to-b from-amber-500 to-yellow-500 rounded-full"></span>
+              <h3 className="text-xs font-bold text-primary/80 uppercase tracking-widest px-3 flex items-center gap-2">
+                <span className="w-1 h-4 bg-gradient-to-b from-primary to-primary/70 rounded-full"></span>
                 SUB-CATEGORIES
               </h3>
               <ScrollArea className="flex-1">
@@ -203,21 +203,21 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                       <button
                         key={sub}
                         onClick={() => setSelectedSubCategory(sub)}
-                        className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-gradient-to-br from-zinc-900/80 to-zinc-900/50 border-2 border-amber-500/20 hover:border-amber-500/50 hover:shadow-xl hover:shadow-amber-500/20 transition-all duration-300 group"
+                        className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-gradient-to-br from-zinc-900/80 to-zinc-900/50 border-2 border-border hover:border-primary/50 hover:shadow-xl hover:shadow-primary/20 transition-all duration-300 group"
                       >
                         <div className="w-20 h-20 flex items-center justify-center rounded-xl bg-zinc-800/50 group-hover:bg-zinc-800 transition-colors">
                           <VoiceIcon
                             category=""
                             subcategory={sub}
                             size={56}
-                            className="w-14 h-14 opacity-80 group-hover:opacity-100 transition-opacity"
+                            className="w-14 h-14 opacity-80 group-hover:opacity-100 transition-opacity text-primary"
                           />
                         </div>
                         <div className="text-center">
-                          <div className="text-sm font-bold text-white group-hover:text-amber-400 transition-colors">
+                          <div className="text-sm font-bold text-white group-hover:text-primary transition-colors">
                             {sub}
                           </div>
-                          <div className="text-xs text-amber-500/60 mt-1 font-semibold">
+                          <div className="text-xs text-primary/60 mt-1 font-semibold">
                             {getSubCategoryCount(sub)} voices
                           </div>
                         </div>
@@ -233,12 +233,12 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                 <Button
                   variant="outline"
                   onClick={() => setSelectedSubCategory(null)}
-                  className="px-4 py-2 bg-zinc-900/90 border-2 border-amber-500/30 hover:border-amber-500 hover:bg-zinc-800 text-white font-semibold rounded-xl transition-all"
+                  className="px-4 py-2 bg-zinc-900/90 border-2 border-border hover:border-primary hover:bg-zinc-800 text-white font-semibold rounded-xl transition-all"
                 >
                   ← Back
                 </Button>
-                <h3 className="text-xs font-bold text-amber-500/80 uppercase tracking-widest flex items-center gap-2">
-                  <span className="w-1 h-4 bg-gradient-to-b from-amber-500 to-yellow-500 rounded-full"></span>
+                <h3 className="text-xs font-bold text-primary/80 uppercase tracking-widest flex items-center gap-2">
+                  <span className="w-1 h-4 bg-gradient-to-b from-primary to-primary/70 rounded-full"></span>
                   {selectedSubCategory} VOICES
                 </h3>
               </div>
@@ -253,8 +253,8 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                           className={cn(
                             "w-full justify-start px-6 py-5 rounded-2xl text-sm font-bold transition-all duration-300 flex items-center gap-4 shadow-lg",
                             selectedVoice?.voice === voice.voice && selectedVoice?.msb === voice.msb
-                              ? "bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 text-black shadow-2xl shadow-amber-500/60 scale-[1.02]"
-                              : "bg-gradient-to-br from-zinc-900/80 to-zinc-900/50 hover:from-zinc-800/90 hover:to-zinc-800/60 text-white border-2 border-amber-500/20 hover:border-amber-500/50 hover:shadow-xl hover:shadow-amber-500/20",
+                              ? "bg-gradient-to-r from-primary via-primary/90 to-primary text-white shadow-2xl shadow-primary/60 scale-[1.02]"
+                              : "bg-gradient-to-br from-zinc-900/80 to-zinc-900/50 hover:from-zinc-800/90 hover:to-zinc-800/60 text-white border-2 border-border hover:border-primary/50 hover:shadow-xl hover:shadow-primary/20",
                           )}
                         >
                           <VoiceIcon
@@ -263,12 +263,12 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                             size={40}
                             className={cn(
                               "w-10 h-10",
-                              selectedVoice?.voice === voice.voice ? "opacity-100" : "opacity-80",
+                              selectedVoice?.voice === voice.voice ? "text-white" : "text-primary opacity-80",
                             )}
                           />
                           <div className="flex-1 text-left">
                             <div>{voice.voice}</div>
-                            <div className="text-xs text-amber-500/60 mt-0.5">{voice.category}</div>
+                            <div className="text-xs text-primary/60 mt-0.5">{voice.category}</div>
                           </div>
                         </Button>
                       )
@@ -297,15 +297,15 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
         currentPart={currentPart}
       />
 
-      <div className="p-6 border-b border-amber-500/20 bg-gradient-to-r from-zinc-900/80 via-zinc-900/60 to-zinc-900/80 backdrop-blur-xl space-y-4 shadow-2xl shadow-black/50">
+      <div className="p-6 border-b border-border bg-gradient-to-r from-zinc-900/80 via-zinc-900/60 to-zinc-900/80 backdrop-blur-xl space-y-4 shadow-2xl shadow-black/50">
         <button
           onClick={() => setIsCommandPaletteOpen(true)}
-          className="w-full h-16 px-5 flex items-center gap-3 bg-zinc-900/90 border-2 border-amber-500/30 rounded-2xl shadow-xl shadow-amber-500/10 hover:border-amber-500 hover:shadow-amber-500/30 transition-all group"
+          className="w-full h-16 px-5 flex items-center gap-3 bg-zinc-900/90 border-2 border-border rounded-2xl shadow-xl shadow-black/10 hover:border-primary hover:shadow-primary/30 transition-all group"
         >
-          <span className="text-amber-500/70 group-hover:text-amber-400 transition-colors text-base font-medium">
+          <span className="text-muted-foreground group-hover:text-primary transition-colors text-base font-medium">
             Quick search (⌘K)
           </span>
-          <kbd className="ml-auto px-3 py-1.5 text-xs font-mono text-amber-500/70 bg-zinc-800 rounded border border-amber-500/20">
+          <kbd className="ml-auto px-3 py-1.5 text-xs font-mono text-muted-foreground bg-zinc-800 rounded border border-border">
             ⌘K
           </kbd>
         </button>
@@ -314,7 +314,7 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
           <Button
             variant="outline"
             onClick={onCancel}
-            className="px-6 py-6 bg-zinc-900/90 border-2 border-amber-500/30 hover:border-amber-500 hover:bg-zinc-800 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-amber-500/20"
+            className="px-6 py-6 bg-zinc-900/90 border-2 border-border hover:border-primary hover:bg-zinc-800 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-primary/20"
           >
             Cancel
           </Button>
@@ -330,8 +330,8 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
 
       <div className="flex-1 grid grid-cols-3 gap-6 p-6 overflow-hidden">
         <div className="flex flex-col gap-4">
-          <h3 className="text-xs font-bold text-amber-500/80 uppercase tracking-widest px-3 flex items-center gap-2">
-            <span className="w-1 h-4 bg-gradient-to-b from-amber-500 to-yellow-500 rounded-full"></span>
+          <h3 className="text-xs font-bold text-primary/80 uppercase tracking-widest px-3 flex items-center gap-2">
+            <span className="w-1 h-4 bg-gradient-to-b from-primary to-primary/70 rounded-full"></span>
             CATEGORIES
           </h3>
           <ScrollArea className="flex-1">
@@ -344,23 +344,26 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                     className={cn(
                       "w-full justify-start px-6 py-5 rounded-2xl text-sm font-bold transition-all duration-300 flex items-center gap-4 group shadow-lg",
                       selectedCategory === category
-                        ? "bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 text-black shadow-2xl shadow-amber-500/60 scale-[1.02]"
-                        : "bg-gradient-to-br from-zinc-900/80 to-zinc-900/50 hover:from-zinc-800/90 hover:to-zinc-800/60 text-white border-2 border-amber-500/20 hover:border-amber-500/50 hover:shadow-xl hover:shadow-amber-500/20",
+                        ? "bg-gradient-to-r from-primary via-primary/90 to-primary text-white shadow-2xl shadow-primary/60 scale-[1.02]"
+                        : "bg-gradient-to-br from-zinc-900/80 to-zinc-900/50 hover:from-zinc-800/90 hover:to-zinc-800/60 text-white border-2 border-border hover:border-primary/50 hover:shadow-xl hover:shadow-primary/20",
                     )}
                   >
                     <VoiceIcon
                       category={category}
                       subcategory=""
                       size={48}
-                      className={cn("w-12 h-12", selectedCategory === category ? "opacity-100" : "opacity-80")}
+                      className={cn(
+                        "w-12 h-12",
+                        selectedCategory === category ? "text-white opacity-100" : "text-primary opacity-80",
+                      )}
                     />
                     <span className="flex-1 text-left">{category}</span>
                     <span
                       className={cn(
                         "text-xs px-3 py-1.5 rounded-full font-bold",
                         selectedCategory === category
-                          ? "bg-black/30 text-black"
-                          : "bg-amber-500/20 text-amber-400 group-hover:bg-amber-500/30",
+                          ? "bg-white/20 text-white"
+                          : "bg-primary/20 text-primary group-hover:bg-primary/30",
                       )}
                     >
                       {getCategoryCount(category)}
@@ -373,8 +376,8 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
         </div>
 
         <div className="flex flex-col gap-4">
-          <h3 className="text-xs font-bold text-amber-500/80 uppercase tracking-widest px-3 flex items-center gap-2">
-            <span className="w-1 h-4 bg-gradient-to-b from-amber-500 to-yellow-500 rounded-full"></span>
+          <h3 className="text-xs font-bold text-primary/80 uppercase tracking-widest px-3 flex items-center gap-2">
+            <span className="w-1 h-4 bg-gradient-to-b from-primary to-primary/70 rounded-full"></span>
             SUB-CATEGORIES
           </h3>
           <ScrollArea className="flex-1">
@@ -388,23 +391,26 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                       className={cn(
                         "w-full justify-start px-6 py-5 rounded-2xl text-sm font-bold transition-all duration-300 flex items-center gap-4 group shadow-lg",
                         selectedSubCategory === sub
-                          ? "bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 text-black shadow-2xl shadow-amber-500/60 scale-[1.02]"
-                          : "bg-gradient-to-br from-zinc-900/80 to-zinc-900/50 hover:from-zinc-800/90 hover:to-zinc-800/60 text-white border-2 border-amber-500/20 hover:border-amber-500/50 hover:shadow-xl hover:shadow-amber-500/20",
+                          ? "bg-gradient-to-r from-primary via-primary/90 to-primary text-white shadow-2xl shadow-primary/60 scale-[1.02]"
+                          : "bg-gradient-to-br from-zinc-900/80 to-zinc-900/50 hover:from-zinc-800/90 hover:to-zinc-800/60 text-white border-2 border-border hover:border-primary/50 hover:shadow-xl hover:shadow-primary/20",
                       )}
                     >
                       <VoiceIcon
                         category={selectedCategory}
                         subcategory={sub}
                         size={48}
-                        className={cn("w-12 h-12", selectedSubCategory === sub ? "opacity-100" : "opacity-80")}
+                        className={cn(
+                          "w-12 h-12",
+                          selectedSubCategory === sub ? "text-white opacity-100" : "text-primary opacity-80",
+                        )}
                       />
                       <span className="flex-1 text-left">{sub}</span>
                       <span
                         className={cn(
                           "text-xs px-3 py-1.5 rounded-full font-bold",
                           selectedSubCategory === sub
-                            ? "bg-black/30 text-black"
-                            : "bg-amber-500/20 text-amber-400 group-hover:bg-amber-500/30",
+                            ? "bg-white/20 text-white"
+                            : "bg-primary/20 text-primary group-hover:bg-primary/30",
                         )}
                       >
                         {getSubCategoryCount(sub)}
@@ -422,8 +428,8 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
         </div>
 
         <div className="flex flex-col gap-4">
-          <h3 className="text-xs font-bold text-amber-500/80 uppercase tracking-widest px-3 flex items-center gap-2">
-            <span className="w-1 h-4 bg-gradient-to-b from-amber-500 to-yellow-500 rounded-full"></span>
+          <h3 className="text-xs font-bold text-primary/80 uppercase tracking-widest px-3 flex items-center gap-2">
+            <span className="w-1 h-4 bg-gradient-to-b from-primary to-primary/70 rounded-full"></span>
             VOICES
           </h3>
           <ScrollArea className="flex-1">
@@ -438,8 +444,8 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                         className={cn(
                           "w-full justify-start px-6 py-5 rounded-2xl text-sm font-bold transition-all duration-300 flex items-center gap-4 shadow-lg",
                           selectedVoice?.voice === voice.voice && selectedVoice?.msb === voice.msb
-                            ? "bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 text-black shadow-2xl shadow-amber-500/60 scale-[1.02]"
-                            : "bg-gradient-to-br from-zinc-900/80 to-zinc-900/50 hover:from-zinc-800/90 hover:to-zinc-800/60 text-white border-2 border-amber-500/20 hover:border-amber-500/50 hover:shadow-xl hover:shadow-amber-500/20",
+                            ? "bg-gradient-to-r from-primary via-primary/90 to-primary text-white shadow-2xl shadow-primary/60 scale-[1.02]"
+                            : "bg-gradient-to-br from-zinc-900/80 to-zinc-900/50 hover:from-zinc-800/90 hover:to-zinc-800/60 text-white border-2 border-border hover:border-primary/50 hover:shadow-xl hover:shadow-primary/20",
                         )}
                       >
                         <VoiceIcon
@@ -448,7 +454,7 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                           size={40}
                           className={cn(
                             "w-10 h-10",
-                            selectedVoice?.voice === voice.voice ? "opacity-100" : "opacity-80",
+                            selectedVoice?.voice === voice.voice ? "text-white opacity-100" : "text-primary opacity-80",
                           )}
                         />
                         <div className="flex-1 text-left">{voice.voice}</div>
