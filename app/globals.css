@@ -308,6 +308,23 @@
     border-width: 3px;
   }
 
+  /* Scale down knobs in horizontal mixer for iPad */
+  /* Reduced knob scale from 0.6 to 0.4 for much smaller knobs on iPad */
+  body[data-layout-mode="ipad"] .grid[class*="grid-cols-[40px_200px"] .flex.justify-center > div {
+    transform: scale(0.4);
+  }
+
+  /* Compensate for knob scaling by making text larger inside scaled knobs */
+  /* When knobs are scaled to 0.4, text needs to be 2.5x larger to appear normal size */
+  body[data-layout-mode="ipad"] .grid[class*="grid-cols-[40px_200px"] .flex.justify-center > div .text-xs {
+    font-size: 45px !important;
+    font-weight: 700;
+  }
+
+  body[data-layout-mode="ipad"] .grid[class*="grid-cols-[40px_200px"] .flex.justify-center > div .font-mono {
+    font-size: 40px !important;
+  }
+
   body[data-layout-mode="ipad"] .w-8,
   body[data-layout-mode="ipad"] .h-8 {
     width: 80px !important;

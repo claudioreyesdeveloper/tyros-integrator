@@ -75,11 +75,15 @@ export function LayoutProvider({ children }: { children: React.ReactNode }) {
     const saved = localStorage.getItem("mixerViewMode")
     if (saved === "vertical" || saved === "horizontal") {
       setMixerViewMode(saved)
+    } else {
+      setMixerViewMode("vertical")
     }
 
     const savedVoiceNav = localStorage.getItem("voiceNavMode")
     if (savedVoiceNav === "category" || savedVoiceNav === "flat") {
       setVoiceNavMode(savedVoiceNav)
+    } else {
+      setVoiceNavMode("category")
     }
   }, [])
 
