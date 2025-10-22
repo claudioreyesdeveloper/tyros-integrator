@@ -283,7 +283,7 @@ export function RegistrationManager({
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold premium-text mb-2 bg-gradient-to-r from-primary via-yellow-400 to-primary bg-clip-text text-transparent">
+          <h2 className="text-3xl font-bold premium-text mb-2 bg-gradient-to-r from-primary via-blue-400 to-primary bg-clip-text text-transparent">
             Registration Memory
           </h2>
           <p className="text-sm text-muted-foreground">Save and recall complete performance setups</p>
@@ -303,10 +303,10 @@ export function RegistrationManager({
       <div className="glossy-panel p-4 mb-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <FolderOpen className="w-5 h-5 text-amber-500" />
+            <FolderOpen className="w-5 h-5 text-blue-400" />
             <Label className="text-white font-semibold">Current Bank:</Label>
             <Select value={currentBank} onValueChange={setCurrentBank}>
-              <SelectTrigger className="w-48 bg-zinc-900/50 border-amber-500/30 text-white">
+              <SelectTrigger className="w-48 bg-zinc-900/50 border-blue-500/30 text-white">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -397,14 +397,14 @@ export function RegistrationManager({
 
             {sequenceEnabled && (
               <div className="space-y-4">
-                <div className="flex flex-wrap gap-2 min-h-[60px] p-3 bg-zinc-900/50 rounded-lg border border-amber-500/30">
+                <div className="flex flex-wrap gap-2 min-h-[60px] p-3 bg-zinc-900/50 rounded-lg border border-blue-500/30">
                   {sequence.length === 0 ? (
                     <span className="text-xs text-muted-foreground">Click + on slots to add to sequence</span>
                   ) : (
                     sequence.map((slot, index) => (
                       <div
                         key={index}
-                        className="flex items-center gap-1 bg-amber-500/20 border border-amber-500/50 rounded px-2 py-1"
+                        className="flex items-center gap-1 bg-blue-500/20 border border-blue-500/50 rounded px-2 py-1"
                       >
                         <span className="text-sm font-bold text-white">{slot}</span>
                         <button onClick={() => removeFromSequence(index)} className="text-red-400 hover:text-red-300">
@@ -418,7 +418,7 @@ export function RegistrationManager({
                 <div className="space-y-2">
                   <Label className="text-sm text-white">Sequence End:</Label>
                   <Select value={sequenceEnd} onValueChange={(v) => setSequenceEnd(v as typeof sequenceEnd)}>
-                    <SelectTrigger className="bg-zinc-900/50 border-amber-500/30 text-white">
+                    <SelectTrigger className="bg-zinc-900/50 border-blue-500/30 text-white">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -441,7 +441,7 @@ export function RegistrationManager({
               <h3 className="text-lg font-bold text-white mb-4">Saved Data Summary</h3>
               <div className="space-y-4 text-sm">
                 <div>
-                  <Label className="text-amber-500 font-semibold">Voices:</Label>
+                  <Label className="text-blue-400 font-semibold">Voices:</Label>
                   <div className="mt-2 space-y-1">
                     {registrations[selectedSlot - 1]?.data.voices.slice(0, 4).map((voice, i) => (
                       <div key={i} className="text-white">
@@ -452,7 +452,7 @@ export function RegistrationManager({
                 </div>
 
                 <div>
-                  <Label className="text-amber-500 font-semibold">Style & Tempo:</Label>
+                  <Label className="text-blue-400 font-semibold">Style & Tempo:</Label>
                   <div className="mt-2 text-white">
                     {registrations[selectedSlot - 1]?.data.style || "N/A"} -{" "}
                     {registrations[selectedSlot - 1]?.data.tempo || 120} BPM
@@ -460,14 +460,14 @@ export function RegistrationManager({
                 </div>
 
                 <div>
-                  <Label className="text-amber-500 font-semibold">Effects:</Label>
+                  <Label className="text-blue-400 font-semibold">Effects:</Label>
                   <div className="mt-2 text-white">
                     {registrations[selectedSlot - 1]?.data.effects.length} DSP effects configured
                   </div>
                 </div>
 
                 <div>
-                  <Label className="text-amber-500 font-semibold">Mixer:</Label>
+                  <Label className="text-blue-400 font-semibold">Mixer:</Label>
                   <div className="mt-2 text-white">
                     {registrations[selectedSlot - 1]?.data.mixer.length} channels configured
                   </div>

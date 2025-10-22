@@ -1685,15 +1685,15 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <Music className="w-8 h-8 text-amber-500" />
-          <h1 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-amber-500 to-amber-300 bg-clip-text text-transparent">
+          <Music className="w-8 h-8 text-blue-400" />
+          <h1 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-400 to-blue-300 bg-clip-text text-transparent">
             Tyros Composer
           </h1>
         </div>
 
         <Button
           onClick={() => setShowMobileControls(!showMobileControls)}
-          className="lg:hidden bg-amber-500 hover:bg-amber-600 text-black"
+          className="lg:hidden bg-blue-500 hover:bg-blue-600 text-white"
           size="sm"
         >
           <Settings className="w-4 h-4 mr-2" />
@@ -1702,9 +1702,9 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
       </div>
 
       {/* Style & Category - moved to top */}
-      <div className="bg-zinc-900/50 backdrop-blur-sm rounded-xl p-6 border border-amber-500/20 shadow-xl mb-6">
-        <h3 className="text-lg font-bold text-amber-500 uppercase mb-4 flex items-center gap-2">
-          <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+      <div className="bg-zinc-900/50 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20 shadow-xl mb-6">
+        <h3 className="text-lg font-bold text-blue-400 uppercase mb-4 flex items-center gap-2">
+          <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
           Style & Category
         </h3>
 
@@ -1712,7 +1712,7 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
           <div>
             <label className="text-sm text-gray-400 mb-2 block font-semibold">Category</label>
             <Select value={selectedCategory} onValueChange={handleCategoryChange}>
-              <SelectTrigger className="bg-zinc-800 border-amber-500/30 text-white h-12 text-base">
+              <SelectTrigger className="bg-zinc-800 border-blue-500/30 text-white h-12 text-base">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -1728,7 +1728,7 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
           <div>
             <label className="text-sm text-gray-400 mb-2 block font-semibold">Style</label>
             <Select value={selectedStyle} onValueChange={setSelectedStyle}>
-              <SelectTrigger className="bg-zinc-800 border-amber-500/30 text-white h-12 text-base">
+              <SelectTrigger className="bg-zinc-800 border-blue-500/30 text-white h-12 text-base">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -1748,10 +1748,10 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
           {/* Main Content */}
           <div className="space-y-6">
             {/* Song Timeline */}
-            <div className="bg-zinc-900/50 backdrop-blur-sm rounded-xl p-6 border border-amber-500/20 shadow-xl">
+            <div className="bg-zinc-900/50 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20 shadow-xl">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold text-amber-500 flex items-center gap-2">
-                  <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                <h2 className="text-lg font-bold text-blue-400 flex items-center gap-2">
+                  <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
                   Song Timeline
                 </h2>
                 <div className="flex gap-2">
@@ -1774,7 +1774,7 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
                   <Button
                     onClick={handleAddSection}
                     size="sm"
-                    className="bg-amber-500 hover:bg-amber-600 text-black font-semibold"
+                    className="bg-blue-500 hover:bg-blue-600 text-white font-semibold"
                   >
                     <Plus className="w-4 h-4 mr-1" />
                     <span className={effectiveMode === "ipad" ? "hidden" : ""}>Add Section</span>
@@ -1782,7 +1782,7 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
                 </div>
               </div>
 
-              <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-amber-500/50 scrollbar-track-zinc-800">
+              <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-blue-500/50 scrollbar-track-zinc-800">
                 {sections.map((section) => (
                   <div
                     key={section.id}
@@ -1790,7 +1790,7 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
                     className={cn(
                       "relative rounded-xl cursor-pointer transition-all flex-shrink-0 shadow-lg hover:shadow-2xl",
                       "border-2 hover:scale-105",
-                      activeSection === section.id ? "border-amber-500 ring-2 ring-amber-500/50" : "border-transparent",
+                      activeSection === section.id ? "border-blue-500 ring-2 ring-blue-500/50" : "border-transparent",
                     )}
                     style={{
                       width: "280px",
@@ -1890,7 +1890,7 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
 
             {/* Chord Grid */}
             {activeS && (
-              <div className="bg-zinc-900/50 backdrop-blur-sm rounded-xl p-6 border border-amber-500/20 shadow-xl">
+              <div className="bg-zinc-900/50 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20 shadow-xl">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-6">
                   <div className="flex-1">
                     <div className="text-sm font-semibold text-gray-400">Editing Section</div>
@@ -1952,8 +1952,8 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
                               "hover:bg-green-500/20 border-2 border-dashed border-green-500/50",
                             !chord && !clipboardChord && "hover:bg-blue-500/20",
                             chord && isChordStart && "hover:ring-2 hover:ring-amber-400",
-                            beatIndex % 4 === 0 && "border-l-4 border-l-amber-500",
-                            isDropTarget && "bg-amber-500/30 ring-2 ring-amber-500",
+                            beatIndex % 4 === 0 && "border-l-4 border-l-blue-500",
+                            isDropTarget && "bg-blue-500/30 ring-2 ring-blue-500",
                             isBeingDragged && "opacity-50",
                           )}
                           style={{
@@ -1975,11 +1975,11 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
                               }}
                               onTouchMove={handleChordTouchMove}
                               onTouchEnd={(e) => handleChordTouchEnd(e, activeS.id)}
-                              className="relative w-full h-full flex flex-col bg-gradient-to-br from-orange-500 to-orange-600 text-black cursor-move overflow-hidden"
+                              className="relative w-full h-full flex flex-col bg-gradient-to-br from-blue-500 to-blue-600 text-white cursor-move overflow-hidden"
                             >
                               {/* Drag Handle - Top Left */}
                               <div className="absolute top-3 left-3 opacity-60 pointer-events-none">
-                                <GripVertical className="w-6 h-6 text-black" />
+                                <GripVertical className="w-6 h-6 text-white" />
                               </div>
 
                               {effectiveMode === "desktop" && (
@@ -2000,7 +2000,7 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
                               {/* Chord Name - Center */}
                               <div className="flex-1 flex flex-col items-center justify-center pt-4">
                                 <span className="font-bold text-4xl mb-2">{chord.symbol}</span>
-                                <span className="text-base text-black/70 font-semibold">
+                                <span className="text-base text-white/70 font-semibold">
                                   {resizingChord?.chordId === chord.id && chordResizePreviewDuration !== null
                                     ? chordResizePreviewDuration === 4
                                       ? "1 bar"
@@ -2138,7 +2138,7 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
             )}
 
             {/* Transport Controls */}
-            <div className="bg-zinc-900/50 backdrop-blur-sm rounded-xl p-6 border border-amber-500/20 shadow-xl">
+            <div className="bg-zinc-900/50 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20 shadow-xl">
               <div className="flex flex-wrap items-center gap-4">
                 <Button
                   onClick={isPlaying ? handleStop : handlePlay}
@@ -2176,9 +2176,9 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
                 </Button>
 
                 {isRecording && (
-                  <div className="p-4 bg-gradient-to-r from-amber-500/20 to-amber-600/20 border border-amber-500/50 rounded-lg flex items-center justify-center gap-3 cursor-move shadow-lg">
-                    <Download className="w-5 h-5 text-amber-500" />
-                    <span className="text-sm font-semibold text-amber-500">Drag to DAW</span>
+                  <div className="p-4 bg-gradient-to-r from-blue-500/20 to-blue-600/20 border border-blue-500/50 rounded-lg flex items-center justify-center gap-3 cursor-move shadow-lg">
+                    <Download className="w-5 h-5 text-blue-500" />
+                    <span className="text-sm font-semibold text-blue-500">Drag to DAW</span>
                   </div>
                 )}
               </div>
@@ -2187,9 +2187,9 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
 
           {/* Tyros Control */}
           <div className={cn("space-y-6", "lg:block", showMobileControls ? "block" : "hidden lg:block")}>
-            <div className="bg-zinc-900/50 backdrop-blur-sm rounded-xl p-6 border border-amber-500/20 shadow-xl">
-              <h3 className="text-sm font-bold text-amber-500 uppercase mb-4 flex items-center gap-2">
-                <div className="w-1 h-4 bg-amber-500 rounded-full"></div>
+            <div className="bg-zinc-900/50 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20 shadow-xl">
+              <h3 className="text-sm font-bold text-blue-400 uppercase mb-4 flex items-center gap-2">
+                <div className="w-1 h-4 bg-blue-500 rounded-full"></div>
                 Tyros Control
               </h3>
 
@@ -2233,9 +2233,9 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
             </div>
 
             {/* Tempo */}
-            <div className="bg-zinc-900/50 backdrop-blur-sm rounded-xl p-6 border border-amber-500/20 shadow-xl">
-              <h3 className="text-sm font-bold text-amber-500 uppercase mb-4 flex items-center gap-2">
-                <div className="w-1 h-4 bg-amber-500 rounded-full"></div>
+            <div className="bg-zinc-900/50 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20 shadow-xl">
+              <h3 className="text-sm font-bold text-blue-400 uppercase mb-4 flex items-center gap-2">
+                <div className="w-1 h-4 bg-blue-500 rounded-full"></div>
                 Tempo
               </h3>
 
@@ -2252,7 +2252,7 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
                   type="number"
                   value={tempo}
                   onChange={(e) => setTempo(Number.parseInt(e.target.value) || 120)}
-                  className="flex-1 h-12 bg-zinc-800 border border-amber-500/30 rounded-lg text-center font-bold text-xl text-white shadow-md"
+                  className="flex-1 h-12 bg-zinc-800 border border-blue-500/30 rounded-lg text-center font-bold text-xl text-white shadow-md"
                   min="40"
                   max="240"
                 />
@@ -2279,19 +2279,19 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
           onClick={() => setShowChordWheel(false)}
         >
           <div
-            className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-2xl p-8 max-w-5xl w-full border-2 border-amber-500/30 shadow-2xl max-h-[90vh] overflow-y-auto"
+            className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-2xl p-8 max-w-5xl w-full border-2 border-blue-500/30 shadow-2xl max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="text-2xl font-bold text-amber-500 mb-2 text-center flex items-center justify-center gap-3">
+            <h3 className="text-2xl font-bold text-blue-400 mb-2 text-center flex items-center justify-center gap-3">
               <Music className="w-7 h-7" />
               Chord Builder
             </h3>
             <p className="text-sm text-gray-400 text-center mb-8">Build chords following proper musical theory</p>
 
             {/* Preview */}
-            <div className="p-8 bg-gradient-to-br from-amber-500/20 to-amber-600/20 border-2 border-amber-500 rounded-xl text-center mb-6 shadow-xl">
-              <p className="text-sm text-amber-400 mb-2 font-semibold uppercase tracking-wide">Chord Preview</p>
-              <p className="text-6xl font-bold text-amber-500 mb-2">
+            <div className="p-8 bg-gradient-to-br from-blue-500/20 to-blue-600/20 border-2 border-blue-500 rounded-xl text-center mb-6 shadow-xl">
+              <p className="text-sm text-blue-400 mb-2 font-semibold uppercase tracking-wide">Chord Preview</p>
+              <p className="text-6xl font-bold text-blue-500 mb-2">
                 {selectedRoot.split("/")[0]}
                 {selectedQuality === "Major" && selectedExtension === "none" && ""}
                 {selectedQuality === "Minor" && selectedExtension === "none" && "m"}
@@ -2310,14 +2310,14 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
             </div>
 
             <div className="mb-6">
-              <label className="text-sm font-bold text-amber-500 mb-3 block uppercase tracking-wide">
+              <label className="text-sm font-bold text-blue-400 mb-3 block uppercase tracking-wide">
                 Chord Duration
               </label>
               <Select
                 value={selectedChordDuration.toString()}
                 onValueChange={(value) => setSelectedChordDuration(Number.parseInt(value))}
               >
-                <SelectTrigger className="h-14 bg-zinc-800 border-amber-500/30 text-white text-lg font-semibold">
+                <SelectTrigger className="h-14 bg-zinc-800 border-blue-500/30 text-white text-lg font-semibold">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -2334,13 +2334,13 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
               <Button
                 onClick={() => setShowChordWheel(false)}
                 variant="outline"
-                className="flex-1 h-14 border-amber-500/50 hover:bg-amber-500/10 text-base font-semibold"
+                className="flex-1 h-14 border-blue-500/50 hover:bg-blue-500/10 text-base font-semibold"
               >
                 Cancel
               </Button>
               <Button
                 onClick={handleConfirmChordWheel}
-                className="flex-1 h-14 bg-gradient-to-r from-amber-500 to-amber-600 text-black hover:from-amber-600 hover:to-amber-700 font-bold shadow-lg text-base"
+                className="flex-1 h-14 bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 font-bold shadow-lg text-base"
               >
                 Confirm Chord
               </Button>
@@ -2348,7 +2348,7 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
 
             {/* Root Selection */}
             <div className="mb-8">
-              <label className="text-sm font-bold text-amber-500 mb-3 block uppercase tracking-wide">
+              <label className="text-sm font-bold text-blue-400 mb-3 block uppercase tracking-wide">
                 Step 1: Select Root Note
               </label>
               <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
@@ -2359,7 +2359,7 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
                     className={cn(
                       "font-bold h-16 text-base transition-all shadow-md",
                       selectedRoot === root
-                        ? "bg-gradient-to-br from-amber-500 to-amber-600 text-black scale-105 ring-2 ring-amber-400"
+                        ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white scale-105 ring-2 ring-blue-400"
                         : "bg-zinc-800 text-white hover:bg-zinc-700",
                     )}
                   >
@@ -2371,7 +2371,7 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
 
             {/* Quality Selection */}
             <div className="mb-8">
-              <label className="text-sm font-bold text-amber-500 mb-3 block uppercase tracking-wide">
+              <label className="text-sm font-bold text-blue-400 mb-3 block uppercase tracking-wide">
                 Step 2: Select Chord Quality
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
@@ -2382,7 +2382,7 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
                     className={cn(
                       "font-bold h-16 text-base transition-all shadow-md",
                       selectedQuality === quality
-                        ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white scale-105 ring-2 ring-blue-400"
+                        ? "bg-gradient-to-br from-purple-500 to-purple-600 text-white scale-105 ring-2 ring-purple-400"
                         : "bg-zinc-800 text-white hover:bg-zinc-700",
                     )}
                   >
@@ -2402,7 +2402,7 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
 
             {/* Extension Selection - Contextual based on quality */}
             <div className="mb-8">
-              <label className="text-sm font-bold text-amber-500 mb-3 block uppercase tracking-wide">
+              <label className="text-sm font-bold text-blue-400 mb-3 block uppercase tracking-wide">
                 Step 3: Select Extension/Alteration
               </label>
               <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2">
@@ -2425,7 +2425,7 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
 
             {/* Bass Selection */}
             <div className="mb-8">
-              <label className="text-sm font-bold text-amber-500 mb-3 block uppercase tracking-wide">
+              <label className="text-sm font-bold text-blue-400 mb-3 block uppercase tracking-wide">
                 Step 4: Select Bass Note (Optional)
               </label>
               <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-12 gap-2">
@@ -2456,10 +2456,10 @@ export function ChordSequencer({ chordState, setChordState }: ChordSequencerProp
           onClick={() => setShowStylePartMenu(null)}
         >
           <div
-            className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-xl p-6 max-w-md w-full border-2 border-amber-500/30 shadow-2xl"
+            className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-xl p-6 max-w-md w-full border-2 border-blue-500/30 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="text-xl font-bold text-amber-500 mb-4">Select Style Part</h3>
+            <h3 className="text-xl font-bold text-blue-400 mb-4">Select Style Part</h3>
             <div className="grid grid-cols-2 gap-2">
               {STYLE_PARTS.map((part) => (
                 <Button

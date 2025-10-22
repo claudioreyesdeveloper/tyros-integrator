@@ -36,7 +36,7 @@ export function RegistrationSlot({
       className={cn(
         "glossy-panel p-4 transition-all cursor-pointer",
         isEmpty ? "opacity-70" : "opacity-100",
-        isSelected && "ring-2 ring-amber-500 shadow-xl shadow-amber-500/30",
+        isSelected && "ring-2 ring-blue-500 shadow-xl shadow-blue-500/30",
       )}
     >
       <div className="flex items-center justify-between mb-4">
@@ -44,7 +44,7 @@ export function RegistrationSlot({
           <div
             className={cn(
               "w-10 h-10 rounded-lg flex items-center justify-center shadow-lg font-bold text-lg",
-              isEmpty ? "bg-zinc-700 text-zinc-400" : "bg-gradient-to-br from-amber-500 to-yellow-600 text-black",
+              isEmpty ? "bg-zinc-700 text-zinc-400" : "bg-gradient-to-br from-blue-500 to-blue-600 text-white",
             )}
           >
             {slotNumber}
@@ -56,14 +56,14 @@ export function RegistrationSlot({
             <p className="text-xs text-zinc-400 truncate">{isEmpty ? "Empty" : registration.timestamp}</p>
           </div>
         </div>
-        {!isEmpty && isSelected && <Check className="w-5 h-5 text-amber-500" />}
+        {!isEmpty && isSelected && <Check className="w-5 h-5 text-blue-400" />}
       </div>
 
       <div className="flex gap-2">
         <Button
           variant="outline"
           size="sm"
-          className="flex-1 gap-1 bg-zinc-900/50 border border-amber-500/30 hover:border-amber-500 hover:bg-zinc-800 text-white rounded-lg h-9 text-xs font-semibold"
+          className="flex-1 gap-1 bg-zinc-900/50 border border-blue-500/30 hover:border-blue-500 hover:bg-zinc-800 text-white rounded-lg h-9 text-xs font-semibold"
           onClick={(e) => {
             e.stopPropagation()
             onSave()
