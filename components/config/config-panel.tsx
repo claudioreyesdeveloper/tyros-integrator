@@ -11,7 +11,7 @@ export function ConfigPanel() {
   return (
     <div className="p-4 md:p-6 lg:p-8 space-y-6">
       {/* Layout Mode Selection */}
-      <Card className="p-6 bg-black/40 backdrop-blur-sm border-primary/30">
+      <Card className="p-6 bg-transparent backdrop-blur-sm border-primary/30">
         <h2 className="text-xl font-semibold mb-4 text-white">Layout Mode</h2>
         <p className="text-sm text-gray-300 mb-4">
           Choose how the interface should be displayed. Auto mode detects your device automatically.
@@ -85,7 +85,7 @@ export function ConfigPanel() {
       </Card>
 
       {/* Configuration Actions */}
-      <Card className="p-6 bg-black/40 backdrop-blur-sm border-primary/30">
+      <Card className="p-6 bg-transparent backdrop-blur-sm border-primary/30">
         <h2 className="text-xl font-semibold mb-4 text-white">Configuration Actions</h2>
         <div className="flex gap-3">
           <Button variant="default" className="flex-1">

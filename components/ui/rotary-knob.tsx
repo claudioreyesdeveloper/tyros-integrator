@@ -125,7 +125,7 @@ export function RotaryKnob({ value, min = 0, max = 127, onChange, label, display
         <div className="text-xs font-mono font-bold text-white min-w-[3ch] text-center">{displayValue}</div>
       )}
 
-      {label && <div className="text-[#007AFF] font-bold text-xs uppercase tracking-wider">{label}</div>}
+      {label && <div className="text-amber-500 font-bold text-xs uppercase tracking-wider">{label}</div>}
     </div>
   )
 }

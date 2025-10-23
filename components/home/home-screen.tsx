@@ -4,10 +4,6 @@ import { useState } from "react"
 import type { Voice } from "@/lib/voice-data"
 import { VoiceIcon } from "@/components/ui/voice-icon"
 import { StylesSelector } from "./styles-selector"
-import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Slider } from "@/components/ui/slider"
-import { Play, Square, PlayCircle } from "lucide-react"
 import { tyrosAPI } from "@/lib/tyros-api"
 
 interface HomeScreenProps {
@@ -68,7 +64,7 @@ export function HomeScreen({ onSelectVoice, partVoices }: HomeScreenProps) {
       {/* Content */}
       <div className="w-full h-full flex flex-col items-center justify-center">
         <div className="text-center mb-8 md:mb-10 lg:mb-12">
-          <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-4 drop-shadow-[0_4px_12px_rgba(0,122,255,0.5)] tracking-tight">
+          <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-4 drop-shadow-[0_4px_12px_rgba(255,107,0,0.5)] tracking-tight">
             Welcome
           </h1>
         </div>
@@ -86,8 +82,8 @@ export function HomeScreen({ onSelectVoice, partVoices }: HomeScreenProps) {
                 }}
                 className="premium-card p-6 md:p-7 lg:p-8 flex flex-col items-center gap-4 md:gap-5 lg:gap-6 hover:scale-105 transition-all duration-300 group"
               >
-                <div className="w-28 h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 rounded-2xl bg-gradient-to-br from-blue-500/20 to-blue-600/10 flex items-center justify-center border-4 border-blue-500/40 group-hover:border-blue-500 group-hover:shadow-2xl group-hover:shadow-blue-500/30 transition-all shadow-lg shadow-blue-500/20">
-                  <VoiceIcon subcategory={voice?.sub || ""} className="text-blue-400" size={80} />
+                <div className="w-28 h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-600/10 flex items-center justify-center border-4 border-amber-500/40 group-hover:border-amber-500 group-hover:shadow-2xl group-hover:shadow-amber-500/30 transition-all shadow-lg shadow-amber-500/20">
+                  <VoiceIcon subcategory={voice?.sub || ""} className="text-amber-500" size={80} />
                 </div>
 
                 <div className="text-center w-full">
@@ -103,63 +99,8 @@ export function HomeScreen({ onSelectVoice, partVoices }: HomeScreenProps) {
           })}
         </div>
 
-        <div className="max-w-full md:max-w-lg lg:max-w-md w-full px-4 md:px-0 mb-6">
+        <div className="max-w-7xl w-full mb-6">
           <StylesSelector />
-        </div>
-
-        <div className="max-w-full md:max-w-2xl w-full px-4 md:px-0 mb-6">
-          <div className="premium-card p-6">
-            <h3 className="premium-text text-lg mb-4">Style Controls</h3>
-
-            {/* Transport buttons */}
-            <div className="flex gap-3 mb-6">
-              <Button onClick={handleStart} disabled={isPlaying} className="flex-1">
-                <Play className="w-4 h-4 mr-2" />
-                Start
-              </Button>
-              <Button onClick={handleStop} disabled={!isPlaying} variant="destructive" className="flex-1">
-                <Square className="w-4 h-4 mr-2" />
-                Stop
-              </Button>
-              <Button onClick={handleSyncStart} className="flex-1">
-                <PlayCircle className="w-4 h-4 mr-2" />
-                Sync Start
-              </Button>
-            </div>
-
-            {/* Variation selector */}
-            <div className="mb-6">
-              <label className="text-sm font-medium text-white mb-2 block">Variation</label>
-              <Select value={variation} onValueChange={handleVariationChange}>
-                <SelectTrigger className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {VARIATION_OPTIONS.map((option) => (
-                    <SelectItem key={option} value={option}>
-                      {option}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Tempo slider */}
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <label className="text-sm font-medium text-white">Tempo</label>
-                <span className="text-sm font-semibold text-white">{tempo} BPM</span>
-              </div>
-              <Slider
-                value={[tempo]}
-                onValueChange={handleTempoChange}
-                min={30}
-                max={400}
-                step={1}
-                className="w-full"
-              />
-            </div>
-          </div>
         </div>
 
         <div className="mt-8 md:mt-10 lg:mt-12 flex flex-col md:flex-row items-center gap-4 md:gap-6 text-xs md:text-sm glossy-panel px-6 md:px-8 py-3 md:py-4">

@@ -157,7 +157,7 @@ export function InlineVoiceSelector({ currentVoice, onSelectVoice, onClose, trig
   const dropdownContent = (
     <div
       ref={dropdownRef}
-      className="fixed bg-zinc-900 border-2 border-[#007AFF] rounded-lg shadow-2xl w-[300px] max-h-[400px] flex flex-col"
+      className="fixed bg-black/40 backdrop-blur-md border-2 border-amber-500 rounded-lg shadow-2xl w-[300px] max-h-[400px] flex flex-col"
       style={{
         top: `${position.top}px`,
         left: `${position.left}px`,
@@ -166,11 +166,11 @@ export function InlineVoiceSelector({ currentVoice, onSelectVoice, onClose, trig
       onMouseLeave={handleCategoryLeave}
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-3 border-b border-zinc-800">
+      <div className="flex items-center justify-between p-3 border-b border-amber-500/30">
         <h3 className="text-white font-bold text-sm">Select Voice</h3>
         <button
           onClick={onClose}
-          className="text-zinc-400 hover:text-white transition-colors p-1 rounded hover:bg-zinc-800"
+          className="text-zinc-400 hover:text-white transition-colors p-1 rounded hover:bg-white/10"
         >
           <X className="w-4 h-4" />
         </button>
@@ -186,8 +186,8 @@ export function InlineVoiceSelector({ currentVoice, onSelectVoice, onClose, trig
               <button
                 key={category}
                 onMouseEnter={(e) => handleCategoryHover(category, e)}
-                className={`w-full flex items-center justify-between gap-3 p-3 rounded hover:bg-zinc-800 transition-colors text-left ${
-                  hoveredCategory === category ? "bg-zinc-800" : ""
+                className={`w-full flex items-center justify-between gap-3 p-3 rounded hover:bg-white/10 transition-colors text-left ${
+                  hoveredCategory === category ? "bg-white/10" : ""
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -206,7 +206,7 @@ export function InlineVoiceSelector({ currentVoice, onSelectVoice, onClose, trig
   const submenuContent = hoveredCategory && subCategories.length > 0 && (
     <div
       ref={submenuRef}
-      className="fixed bg-zinc-900 border-2 border-[#007AFF] rounded-lg shadow-2xl w-[300px] max-h-[400px] overflow-y-auto"
+      className="fixed bg-black/40 backdrop-blur-md border-2 border-amber-500 rounded-lg shadow-2xl w-[300px] max-h-[400px] overflow-y-auto"
       style={{
         top: `${submenuPosition.top}px`,
         left: `${submenuPosition.left}px`,
@@ -220,8 +220,8 @@ export function InlineVoiceSelector({ currentVoice, onSelectVoice, onClose, trig
           <button
             key={subCategory}
             onMouseEnter={(e) => handleSubCategoryHover(subCategory, e)}
-            className={`w-full flex items-center justify-between gap-3 p-3 rounded hover:bg-zinc-800 transition-colors text-left ${
-              hoveredSubCategory === subCategory ? "bg-zinc-800" : ""
+            className={`w-full flex items-center justify-between gap-3 p-3 rounded hover:bg-white/10 transition-colors text-left ${
+              hoveredSubCategory === subCategory ? "bg-white/10" : ""
             }`}
           >
             <div className="flex items-center gap-3">
@@ -239,7 +239,7 @@ export function InlineVoiceSelector({ currentVoice, onSelectVoice, onClose, trig
     <div
       key={`${hoveredCategory}-${hoveredSubCategory}`}
       ref={voiceSubmenuRef}
-      className="fixed bg-zinc-900 border-2 border-[#007AFF] rounded-lg shadow-2xl w-[300px] max-h-[400px] overflow-y-auto"
+      className="fixed bg-black/40 backdrop-blur-md border-2 border-amber-500 rounded-lg shadow-2xl w-[300px] max-h-[400px] overflow-y-auto"
       style={{
         top: `${voiceSubmenuPosition.top}px`,
         left: `${voiceSubmenuPosition.left}px`,
@@ -256,8 +256,8 @@ export function InlineVoiceSelector({ currentVoice, onSelectVoice, onClose, trig
             <button
               key={`${voice.category}-${voice.sub}-${voice.voice}`}
               onClick={() => handleVoiceClick(voice)}
-              className={`w-full flex items-center gap-3 p-3 rounded hover:bg-zinc-800 transition-colors text-left ${
-                currentVoice?.voice === voice.voice ? "bg-zinc-800/50" : ""
+              className={`w-full flex items-center gap-3 p-3 rounded hover:bg-white/10 transition-colors text-left ${
+                currentVoice?.voice === voice.voice ? "bg-white/10" : ""
               }`}
             >
               <VoiceIcon category={voice.category} subcategory={voice.sub} size={24} />

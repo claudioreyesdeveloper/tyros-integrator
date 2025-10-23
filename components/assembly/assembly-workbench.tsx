@@ -263,7 +263,7 @@ export function AssemblyWorkbench() {
   }
 
   return (
-    <div className="min-h-screen bg-black p-2 sm:p-4 md:p-6">
+    <div className="min-h-screen bg-transparent p-2 sm:p-4 md:p-6">
       {/* Header Controls */}
       <div className="premium-card p-3 sm:p-6 mb-3 sm:mb-4">
         <div className="space-y-3 sm:space-y-4">
@@ -285,14 +285,14 @@ export function AssemblyWorkbench() {
               onClick={handleUndo}
               disabled={assemblyHistory.length === 0}
               variant="outline"
-              className="h-10 sm:h-12 px-4 sm:px-6 text-xs sm:text-base font-bold border-2 border-amber-500/40 text-amber-400 hover:bg-amber-500/20 disabled:opacity-40 bg-black/40 flex-1 sm:flex-none min-w-[100px]"
+              className="h-10 sm:h-12 px-4 sm:px-6 text-xs sm:text-base font-bold border-2 border-amber-500/40 text-amber-400 hover:bg-amber-500/20 disabled:opacity-40 bg-transparent flex-1 sm:flex-none min-w-[100px]"
             >
               <Undo className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
               Undo
             </Button>
             <Button
               onClick={handleSave}
-              className="glossy-button bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-400 hover:to-cyan-500 h-10 sm:h-12 px-4 sm:px-6 text-xs sm:text-base font-bold flex-1 sm:flex-none min-w-[100px]"
+              className="glossy-button bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-400 hover:to-amber-500 h-10 sm:h-12 px-4 sm:px-6 text-xs sm:text-base font-bold flex-1 sm:flex-none min-w-[100px]"
             >
               <Save className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
               Save
@@ -365,7 +365,7 @@ export function AssemblyWorkbench() {
                     value={sourceCategory}
                     onValueChange={(val) => handleSourceStyleChange(val, STYLE_NAMES[val]?.[0] || "")}
                   >
-                    <SelectTrigger className="bg-black/60 border-2 border-emerald-500/40 text-white font-bold h-10 sm:h-11 rounded-xl text-xs sm:text-sm">
+                    <SelectTrigger className="bg-transparent border-2 border-emerald-500/40 text-white font-bold h-10 sm:h-11 rounded-xl text-xs sm:text-sm">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="bg-zinc-950 border-2 border-emerald-500/40 text-white">
@@ -385,7 +385,7 @@ export function AssemblyWorkbench() {
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-gray-300 uppercase tracking-wider">Style</label>
                   <Select value={sourceStyle} onValueChange={(val) => handleSourceStyleChange(sourceCategory, val)}>
-                    <SelectTrigger className="bg-black/60 border-2 border-emerald-500/40 text-white font-bold h-10 sm:h-11 rounded-xl text-xs sm:text-sm">
+                    <SelectTrigger className="bg-transparent border-2 border-emerald-500/40 text-white font-bold h-10 sm:h-11 rounded-xl text-xs sm:text-sm">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="bg-zinc-950 border-2 border-emerald-500/40 text-white">
@@ -405,7 +405,7 @@ export function AssemblyWorkbench() {
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-gray-300 uppercase tracking-wider">Section</label>
                   <Select value={sourceSection} onValueChange={setSourceSection}>
-                    <SelectTrigger className="bg-black/60 border-2 border-emerald-500/40 text-white font-bold h-10 sm:h-11 rounded-xl text-xs sm:text-sm">
+                    <SelectTrigger className="bg-transparent border-2 border-emerald-500/40 text-white font-bold h-10 sm:h-11 rounded-xl text-xs sm:text-sm">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="bg-zinc-950 border-2 border-emerald-500/40 text-white">
@@ -476,13 +476,13 @@ export function AssemblyWorkbench() {
 
         {/* Target Panel - Mobile */}
         <div className="premium-card p-4 sm:p-6">
-          <div className="border-b border-blue-500/30 pb-3 mb-4">
+          <div className="border-b border-orange-500/30 pb-3 mb-4">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-lg sm:text-2xl font-bold text-blue-400">Target Timeline</h2>
+                <h2 className="text-lg sm:text-2xl font-bold text-orange-400">Target Timeline</h2>
                 <p className="text-xs sm:text-sm text-gray-400 mt-0.5">Drop patterns here</p>
               </div>
-              <div className="text-xs sm:text-sm font-bold text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/30">
+              <div className="text-xs sm:text-sm font-bold text-orange-400 bg-orange-500/10 px-3 py-1.5 rounded-lg border border-orange-500/30">
                 {copiedPatterns.length} copied
               </div>
             </div>
@@ -491,15 +491,15 @@ export function AssemblyWorkbench() {
           <div className="space-y-3 mb-4">
             <label className="text-xs font-bold text-gray-300 uppercase tracking-wider">Target Section</label>
             <Select value={targetSection} onValueChange={setTargetSection}>
-              <SelectTrigger className="bg-black/60 border-2 border-blue-500/40 text-white font-bold h-10 sm:h-11 rounded-xl text-xs sm:text-sm">
+              <SelectTrigger className="bg-transparent border-2 border-orange-500/40 text-white font-bold h-10 sm:h-11 rounded-xl text-xs sm:text-sm">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-zinc-950 border-2 border-blue-500/40 text-white">
+              <SelectContent className="bg-zinc-950 border-2 border-orange-500/40 text-white">
                 {STYLE_SECTIONS.map((section) => (
                   <SelectItem
                     key={section}
                     value={section}
-                    className="text-white font-bold hover:bg-zinc-900 focus:bg-gradient-to-r focus:from-blue-500 focus:to-cyan-500 focus:text-black"
+                    className="text-white font-bold hover:bg-zinc-900 focus:bg-gradient-to-r focus:from-orange-500 focus:to-amber-500 focus:text-black"
                   >
                     {section}
                   </SelectItem>
@@ -534,7 +534,7 @@ export function AssemblyWorkbench() {
                         ? "bg-purple-500/30 border-purple-400 shadow-xl shadow-purple-500/30 animate-pulse"
                         : hasCopiedPattern
                           ? "bg-emerald-500/20 border-emerald-500/60 shadow-lg"
-                          : "bg-zinc-900/50 border-zinc-700 hover:border-blue-500/50",
+                          : "bg-zinc-900/50 border-zinc-700 hover:border-orange-500/50",
                   )}
                 >
                   {hasCopiedPattern ? (
@@ -585,7 +585,7 @@ export function AssemblyWorkbench() {
                   value={sourceCategory}
                   onValueChange={(val) => handleSourceStyleChange(val, STYLE_NAMES[val]?.[0] || "")}
                 >
-                  <SelectTrigger className="bg-black/60 border-2 border-emerald-500/40 text-white font-bold h-11 rounded-xl">
+                  <SelectTrigger className="bg-transparent border-2 border-emerald-500/40 text-white font-bold h-11 rounded-xl">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-zinc-950 border-2 border-emerald-500/40 text-white">
@@ -605,7 +605,7 @@ export function AssemblyWorkbench() {
               <div className="space-y-2">
                 <label className="text-xs font-bold text-gray-300 uppercase tracking-wider">Style</label>
                 <Select value={sourceStyle} onValueChange={(val) => handleSourceStyleChange(sourceCategory, val)}>
-                  <SelectTrigger className="bg-black/60 border-2 border-emerald-500/40 text-white font-bold h-11 rounded-xl">
+                  <SelectTrigger className="bg-transparent border-2 border-emerald-500/40 text-white font-bold h-11 rounded-xl">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-zinc-950 border-2 border-emerald-500/40 text-white">
@@ -625,7 +625,7 @@ export function AssemblyWorkbench() {
               <div className="space-y-2">
                 <label className="text-xs font-bold text-gray-300 uppercase tracking-wider">Section</label>
                 <Select value={sourceSection} onValueChange={setSourceSection}>
-                  <SelectTrigger className="bg-black/60 border-2 border-emerald-500/40 text-white font-bold h-11 rounded-xl">
+                  <SelectTrigger className="bg-transparent border-2 border-emerald-500/40 text-white font-bold h-11 rounded-xl">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-zinc-950 border-2 border-emerald-500/40 text-white">
@@ -698,10 +698,10 @@ export function AssemblyWorkbench() {
 
         {/* Target Panel - Desktop */}
         <div className="premium-card p-6">
-          <div className="border-b border-blue-500/30 pb-4 mb-6">
+          <div className="border-b border-orange-500/30 pb-4 mb-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold text-blue-400">Target Timeline</h2>
-              <div className="text-sm font-bold text-blue-400 bg-blue-500/10 px-4 py-2 rounded-lg border border-blue-500/30">
+              <h2 className="text-2xl font-bold text-orange-400">Target Timeline</h2>
+              <div className="text-sm font-bold text-orange-400 bg-orange-500/10 px-4 py-2 rounded-lg border border-orange-500/30">
                 {copiedPatterns.length} patterns copied
               </div>
             </div>
@@ -709,15 +709,15 @@ export function AssemblyWorkbench() {
             <div className="space-y-2">
               <label className="text-xs font-bold text-gray-300 uppercase tracking-wider">Target Section</label>
               <Select value={targetSection} onValueChange={setTargetSection}>
-                <SelectTrigger className="bg-black/60 border-2 border-blue-500/40 text-white font-bold h-11 rounded-xl">
+                <SelectTrigger className="bg-transparent border-2 border-orange-500/40 text-white font-bold h-11 rounded-xl">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-zinc-950 border-2 border-blue-500/40 text-white">
+                <SelectContent className="bg-zinc-950 border-2 border-orange-500/40 text-white">
                   {STYLE_SECTIONS.map((section) => (
                     <SelectItem
                       key={section}
                       value={section}
-                      className="text-white font-bold hover:bg-zinc-900 focus:bg-gradient-to-r focus:from-blue-500 focus:to-cyan-500 focus:text-black"
+                      className="text-white font-bold hover:bg-zinc-900 focus:bg-gradient-to-r focus:from-orange-500 focus:to-amber-500 focus:text-black"
                     >
                       {section}
                     </SelectItem>
@@ -753,7 +753,7 @@ export function AssemblyWorkbench() {
                         ? "bg-purple-500/30 border-purple-400 shadow-xl shadow-purple-500/30 animate-pulse"
                         : hasCopiedPattern
                           ? "bg-emerald-500/20 border-emerald-500/60 shadow-lg"
-                          : "bg-zinc-900/50 border-zinc-700 hover:border-blue-500/50",
+                          : "bg-zinc-900/50 border-zinc-700 hover:border-orange-500/50",
                   )}
                 >
                   {hasCopiedPattern ? (

@@ -109,14 +109,14 @@ export function VoiceCommandPalette({
 
   if (searchQuery.trim()) {
     if (searchResults.length > 0) {
-      sections.push({ title: "Search Results", icon: Search, color: "text-[#007AFF]", items: searchResults })
+      sections.push({ title: "Search Results", icon: Search, color: "text-amber-500", items: searchResults })
     }
   } else {
     if (favorites.length > 0) {
-      sections.push({ title: "Favorites", icon: Star, color: "text-[#007AFF]", items: favorites.slice(0, 5) })
+      sections.push({ title: "Favorites", icon: Star, color: "text-amber-500", items: favorites.slice(0, 5) })
     }
     if (recentVoices.length > 0) {
-      sections.push({ title: "Recent", icon: Clock, color: "text-blue-500", items: recentVoices.slice(0, 5) })
+      sections.push({ title: "Recent", icon: Clock, color: "text-amber-500", items: recentVoices.slice(0, 5) })
     }
   }
 
@@ -181,9 +181,9 @@ export function VoiceCommandPalette({
           className="w-full max-w-2xl mx-4 pointer-events-auto animate-in slide-in-from-top-4 duration-300"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="bg-zinc-900 border-2 border-[#007AFF]/40 rounded-t-2xl shadow-2xl shadow-[#007AFF]/20">
-            <div className="flex items-center gap-3 px-5 py-4 border-b border-[#007AFF]/20">
-              <Search className="w-5 h-5 text-[#007AFF]/70 flex-shrink-0" />
+          <div className="bg-black/40 backdrop-blur-md border-2 border-amber-500/40 rounded-t-2xl shadow-2xl shadow-amber-500/20">
+            <div className="flex items-center gap-3 px-5 py-4 border-b border-amber-500/20">
+              <Search className="w-5 h-5 text-amber-500/70 flex-shrink-0" />
               <input
                 ref={inputRef}
                 type="text"
@@ -192,13 +192,13 @@ export function VoiceCommandPalette({
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="flex-1 bg-transparent text-white text-lg placeholder:text-zinc-500 outline-none"
               />
-              <kbd className="hidden sm:inline-flex items-center gap-1 px-2 py-1 text-xs font-mono text-[#007AFF]/70 bg-zinc-800 rounded border border-[#007AFF]/20">
+              <kbd className="hidden sm:inline-flex items-center gap-1 px-2 py-1 text-xs font-mono text-amber-500/70 bg-zinc-800 rounded border border-amber-500/20">
                 ESC
               </kbd>
             </div>
           </div>
 
-          <div className="bg-zinc-900 border-x-2 border-b-2 border-[#007AFF]/40 rounded-b-2xl shadow-2xl shadow-[#007AFF]/20 max-h-[60vh] overflow-y-auto">
+          <div className="bg-black/40 backdrop-blur-md border-x-2 border-b-2 border-amber-500/40 rounded-b-2xl shadow-2xl shadow-amber-500/20 max-h-[60vh] overflow-y-auto">
             {allItems.length > 0 ? (
               <div ref={listRef} className="py-2">
                 {sections.map((section, sectionIdx) => {
@@ -221,14 +221,14 @@ export function VoiceCommandPalette({
                             className={cn(
                               "w-full text-left px-5 py-3.5 flex items-center gap-4 transition-all duration-150",
                               selectedIndex === globalIdx
-                                ? "bg-gradient-to-r from-[#007AFF]/30 to-[#007AFF]/20 border-l-4 border-[#007AFF]"
+                                ? "bg-gradient-to-r from-amber-500/30 to-amber-500/20 border-l-4 border-amber-500"
                                 : "hover:bg-zinc-800/50 border-l-4 border-transparent",
                             )}
                           >
                             <VoiceIcon subcategory={voice.sub} category={voice.category} size={24} />
                             <div className="flex-1 min-w-0">
                               <div className="text-white font-semibold text-base truncate">{voice.voice}</div>
-                              <div className="text-[#007AFF]/70 text-sm truncate mt-0.5">
+                              <div className="text-amber-500/70 text-sm truncate mt-0.5">
                                 {voice.category} → {voice.sub}
                               </div>
                             </div>
@@ -238,7 +238,7 @@ export function VoiceCommandPalette({
                               <div>PRG: {voice.prg}</div>
                             </div>
                             {currentPart !== null && selectedIndex === globalIdx && (
-                              <div className="text-xs text-[#007AFF]/70 font-mono">
+                              <div className="text-xs text-amber-500/70 font-mono">
                                 ⌘↵ to assign to {PART_NAMES[currentPart - 1]}
                               </div>
                             )}

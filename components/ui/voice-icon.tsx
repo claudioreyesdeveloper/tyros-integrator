@@ -14,7 +14,7 @@ export function VoiceIcon({ subcategory, category, className = "", size = 20 }: 
 
   return (
     <div className={`flex items-center justify-center ${className}`}>
-      <Icon className="text-[#007AFF]" size={size} strokeWidth={2} />
+      <Icon className="text-amber-500" size={size} strokeWidth={2} />
     </div>
   )
 }

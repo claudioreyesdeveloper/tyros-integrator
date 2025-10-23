@@ -99,15 +99,15 @@ export function MixerChannelHorizontal({
 
   return (
     <>
-      <div className="grid grid-cols-[40px_200px_80px_60px_60px_60px_60px_60px_60px_60px_60px] gap-3 items-center py-3 px-2 border-b border-zinc-800 hover:bg-zinc-900/30 transition-colors">
+      <div className="grid grid-cols-[40px_200px_80px_60px_60px_60px_60px_60px_60px_60px_60px] gap-3 items-center py-3 px-2 border-b border-amber-500/20 hover:bg-amber-500/5 transition-colors">
         {/* Channel Number */}
-        <div className="text-[#007AFF] font-bold text-sm text-center">{channel}</div>
+        <div className="text-amber-500 font-bold text-sm text-center">{channel}</div>
 
         {/* Voice Name - clickable to select voice */}
         <button
           ref={voiceButtonRef}
           onClick={handleVoiceClick}
-          className="text-white text-xs font-medium text-left truncate hover:text-[#007AFF] transition-colors flex items-center gap-2"
+          className="text-white text-xs font-medium text-left truncate hover:text-amber-500 transition-colors flex items-center gap-2"
         >
           {voiceName === "No Voice" ? (
             <Music className="w-5 h-5 text-zinc-600 flex-shrink-0" />
@@ -127,10 +127,10 @@ export function MixerChannelHorizontal({
             onChange={(e) => handleVolumeChange(Number(e.target.value))}
             className="w-full h-1.5 bg-zinc-800 rounded-full appearance-none cursor-pointer
               [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 
-              [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#007AFF] 
+              [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-amber-500 
               [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-lg
               [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:rounded-full 
-              [&::-moz-range-thumb]:bg-[#007AFF] [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
+              [&::-moz-range-thumb]:bg-amber-500 [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
           />
           <span className="text-white text-[10px] font-bold">{volume}</span>
         </div>

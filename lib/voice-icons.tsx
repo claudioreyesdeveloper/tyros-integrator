@@ -105,71 +105,71 @@ export function getSubCategoryColor(subcategory: string, category?: string): str
   const sub = subcategory?.toLowerCase() || ""
   const cat = category?.toLowerCase() || ""
 
-  // Piano & Keyboard - Blue shades
-  if (sub.includes("piano") || sub.includes("epiano")) return "text-blue-400"
-  if (sub.includes("harpsichord") || sub.includes("clavi")) return "text-sky-400"
+  // Piano & Keyboard - Orange shades
+  if (sub.includes("piano") || sub.includes("epiano")) return "text-orange-400"
+  if (sub.includes("harpsichord") || sub.includes("clavi")) return "text-amber-400"
 
-  // Organ - Red/Orange shades
-  if (sub.includes("jazz organ")) return "text-red-400"
+  // Organ - Amber shades
+  if (sub.includes("jazz organ")) return "text-amber-400"
   if (sub.includes("rock organ")) return "text-orange-500"
-  if (sub.includes("organ")) return "text-red-500"
+  if (sub.includes("organ")) return "text-amber-500"
 
-  // Guitar - Amber/Yellow shades
-  if (sub.includes("nylon") || sub.includes("steel")) return "text-amber-400"
-  if (sub.includes("electric") || sub.includes("overdrive")) return "text-yellow-500"
-  if (sub.includes("clean") || sub.includes("muted")) return "text-yellow-400"
+  // Guitar - Orange/Yellow shades
+  if (sub.includes("nylon") || sub.includes("steel")) return "text-orange-400"
+  if (sub.includes("electric") || sub.includes("overdrive")) return "text-amber-500"
+  if (sub.includes("clean") || sub.includes("muted")) return "text-yellow-600"
 
-  // Bass - Green shades
-  if (sub.includes("fingered") || sub.includes("picked")) return "text-green-400"
-  if (sub.includes("fretless") || sub.includes("slap")) return "text-emerald-500"
-  if (sub.includes("bass")) return "text-green-500"
+  // Bass - Amber shades
+  if (sub.includes("fingered") || sub.includes("picked")) return "text-amber-400"
+  if (sub.includes("fretless") || sub.includes("slap")) return "text-orange-500"
+  if (sub.includes("bass")) return "text-amber-500"
 
-  // Strings - Emerald/Teal shades
-  if (sub.includes("violin") || sub.includes("viola")) return "text-emerald-400"
-  if (sub.includes("cello") || sub.includes("contrabass")) return "text-teal-400"
-  if (sub.includes("string") || sub.includes("ensemble")) return "text-teal-500"
+  // Strings - Orange shades
+  if (sub.includes("violin") || sub.includes("viola")) return "text-orange-400"
+  if (sub.includes("cello") || sub.includes("contrabass")) return "text-amber-400"
+  if (sub.includes("string") || sub.includes("ensemble")) return "text-orange-500"
 
-  // Brass - Cyan shades
-  if (sub.includes("trumpet") || sub.includes("cornet")) return "text-cyan-400"
-  if (sub.includes("trombone") || sub.includes("tuba")) return "text-cyan-500"
-  if (sub.includes("horn") || sub.includes("brass")) return "text-sky-500"
+  // Brass - Amber shades
+  if (sub.includes("trumpet") || sub.includes("cornet")) return "text-amber-400"
+  if (sub.includes("trombone") || sub.includes("tuba")) return "text-orange-500"
+  if (sub.includes("horn") || sub.includes("brass")) return "text-amber-500"
 
-  // Woodwind - Indigo/Purple shades
-  if (sub.includes("saxophone") || sub.includes("sax")) return "text-indigo-400"
-  if (sub.includes("flute") || sub.includes("piccolo")) return "text-purple-400"
-  if (sub.includes("clarinet") || sub.includes("oboe")) return "text-violet-400"
+  // Woodwind - Orange shades
+  if (sub.includes("saxophone") || sub.includes("sax")) return "text-orange-400"
+  if (sub.includes("flute") || sub.includes("piccolo")) return "text-amber-400"
+  if (sub.includes("clarinet") || sub.includes("oboe")) return "text-orange-500"
 
-  // Choir & Voice - Pink shades
-  if (sub.includes("choir") || sub.includes("voice")) return "text-pink-400"
-  if (sub.includes("aahs") || sub.includes("oohs")) return "text-rose-400"
+  // Choir & Voice - Amber shades
+  if (sub.includes("choir") || sub.includes("voice")) return "text-amber-400"
+  if (sub.includes("aahs") || sub.includes("oohs")) return "text-orange-400"
 
-  // Synth - Fuchsia/Magenta shades
-  if (sub.includes("lead")) return "text-fuchsia-400"
-  if (sub.includes("pad")) return "text-purple-500"
-  if (sub.includes("synth")) return "text-violet-500"
+  // Synth - Orange shades
+  if (sub.includes("lead")) return "text-orange-400"
+  if (sub.includes("pad")) return "text-amber-500"
+  if (sub.includes("synth")) return "text-orange-500"
 
-  // Percussion - Orange/Lime shades
-  if (sub.includes("drum") || sub.includes("kit")) return "text-orange-400"
-  if (sub.includes("percussion")) return "text-lime-400"
+  // Percussion - Amber shades
+  if (sub.includes("drum") || sub.includes("kit")) return "text-amber-400"
+  if (sub.includes("percussion")) return "text-orange-400"
 
-  // Chromatic - Yellow shades
-  if (sub.includes("vibraphone") || sub.includes("marimba")) return "text-yellow-400"
+  // Chromatic - Orange shades
+  if (sub.includes("vibraphone") || sub.includes("marimba")) return "text-orange-400"
   if (sub.includes("bell") || sub.includes("glockenspiel")) return "text-amber-500"
 
-  // Ethnic - Rose/Pink shades
-  if (sub.includes("sitar") || sub.includes("ethnic")) return "text-rose-500"
+  // Ethnic - Amber shades
+  if (sub.includes("sitar") || sub.includes("ethnic")) return "text-amber-500"
 
   // Category-based fallbacks
-  if (cat.includes("piano")) return "text-blue-400"
-  if (cat.includes("organ")) return "text-red-400"
-  if (cat.includes("guitar")) return "text-amber-400"
-  if (cat.includes("bass")) return "text-green-400"
-  if (cat.includes("string")) return "text-emerald-400"
-  if (cat.includes("brass")) return "text-cyan-400"
-  if (cat.includes("reed") || cat.includes("woodwind")) return "text-indigo-400"
-  if (cat.includes("synth")) return "text-fuchsia-400"
-  if (cat.includes("choir")) return "text-pink-400"
-  if (cat.includes("percussion")) return "text-orange-400"
+  if (cat.includes("piano")) return "text-orange-400"
+  if (cat.includes("organ")) return "text-amber-400"
+  if (cat.includes("guitar")) return "text-orange-400"
+  if (cat.includes("bass")) return "text-amber-400"
+  if (cat.includes("string")) return "text-orange-400"
+  if (cat.includes("brass")) return "text-amber-400"
+  if (cat.includes("reed") || cat.includes("woodwind")) return "text-orange-400"
+  if (cat.includes("synth")) return "text-orange-400"
+  if (cat.includes("choir")) return "text-amber-400"
+  if (cat.includes("percussion")) return "text-amber-400"
 
-  return "text-amber-400"
+  return "text-orange-400"
 }
