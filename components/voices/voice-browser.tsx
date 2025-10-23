@@ -110,6 +110,19 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
     }
   }
 
+  const handleVoiceDoubleClick = (voice: Voice) => {
+    setSelectedVoice(voice)
+    if (currentPart !== null) {
+      api.sendCommand({
+        type: "voice",
+        action: "assign",
+        part: currentPart,
+        voice: voice,
+      })
+      onVoiceAssigned(voice)
+    }
+  }
+
   const handleCommandPaletteSelect = (voice: Voice, action?: string) => {
     setSelectedVoice(voice)
     if (action === "assign" && currentPart !== null) {
@@ -250,6 +263,7 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                         <Button
                           key={index}
                           onClick={() => setSelectedVoice(voice)}
+                          onDoubleClick={() => handleVoiceDoubleClick(voice)}
                           className={cn(
                             "w-full justify-start px-6 py-5 rounded-2xl text-sm font-bold transition-all duration-300 flex items-center gap-4 shadow-lg",
                             selectedVoice?.voice === voice.voice && selectedVoice?.msb === voice.msb
@@ -341,6 +355,7 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                   <Button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
+                    onMouseEnter={() => setSelectedCategory(category)}
                     className={cn(
                       "w-full justify-start px-6 py-5 rounded-2xl text-sm font-bold transition-all duration-300 flex items-center gap-4 group shadow-lg",
                       selectedCategory === category
@@ -388,6 +403,7 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                     <Button
                       key={sub}
                       onClick={() => setSelectedSubCategory(sub)}
+                      onMouseEnter={() => setSelectedSubCategory(sub)}
                       className={cn(
                         "w-full justify-start px-6 py-5 rounded-2xl text-sm font-bold transition-all duration-300 flex items-center gap-4 group shadow-lg",
                         selectedSubCategory === sub
@@ -441,6 +457,7 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                       <Button
                         key={index}
                         onClick={() => setSelectedVoice(voice)}
+                        onDoubleClick={() => handleVoiceDoubleClick(voice)}
                         className={cn(
                           "w-full justify-start px-6 py-5 rounded-2xl text-sm font-bold transition-all duration-300 flex items-center gap-4 shadow-lg",
                           selectedVoice?.voice === voice.voice && selectedVoice?.msb === voice.msb

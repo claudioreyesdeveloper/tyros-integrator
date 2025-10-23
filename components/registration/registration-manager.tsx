@@ -277,16 +277,14 @@ export function RegistrationManager({
   }
 
   return (
-    <div className="h-full flex flex-col p-4 md:p-6 lg:p-8 bg-gradient-to-b from-background to-black overflow-y-auto">
+    <div className="h-full flex flex-col p-4 md:p-6 lg:p-8 bg-transparent overflow-y-auto">
       <input ref={fileInputRef} type="file" accept=".json" onChange={handleFileChange} className="hidden" />
 
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold premium-text mb-2 bg-gradient-to-r from-primary via-blue-400 to-primary bg-clip-text text-transparent">
-            Registration Memory
-          </h2>
-          <p className="text-sm text-muted-foreground">Save and recall complete performance setups</p>
+          <h2 className="text-3xl font-bold premium-text mb-2 text-amber-500">Registration Memory</h2>
+          <p className="text-sm text-white/80">Save and recall complete performance setups</p>
         </div>
         <div className="flex gap-3">
           <Button onClick={handleOpenConfiguration} className="glossy-button gap-2" size="lg">
@@ -300,13 +298,13 @@ export function RegistrationManager({
         </div>
       </div>
 
-      <div className="glossy-panel p-4 mb-6">
+      <div className="bg-black/20 backdrop-blur-sm rounded-xl border border-amber-500/30 p-4 mb-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <FolderOpen className="w-5 h-5 text-blue-400" />
+            <FolderOpen className="w-5 h-5 text-amber-500" />
             <Label className="text-white font-semibold">Current Bank:</Label>
             <Select value={currentBank} onValueChange={setCurrentBank}>
-              <SelectTrigger className="w-48 bg-zinc-900/50 border-blue-500/30 text-white">
+              <SelectTrigger className="w-48 bg-black/40 backdrop-blur-sm border-amber-500/30 text-white">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -319,14 +317,18 @@ export function RegistrationManager({
             </Select>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2 bg-transparent border-amber-500/30 text-white hover:bg-amber-500/10"
+            >
               <Save className="w-4 h-4" />
               New Bank
             </Button>
             <Button
               variant="outline"
               size="sm"
-              className="gap-2 text-red-500 border-red-500/30 hover:bg-red-500/10 bg-transparent"
+              className="gap-2 text-red-400 border-red-500/30 hover:bg-red-500/10 bg-transparent"
             >
               <Trash2 className="w-4 h-4" />
               Delete Bank
@@ -338,7 +340,7 @@ export function RegistrationManager({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         {/* Left Column: Registration Slots */}
         <div className="lg:col-span-2">
-          <div className="glossy-panel p-6">
+          <div className="bg-black/20 backdrop-blur-sm rounded-xl border border-amber-500/30 p-6">
             <h3 className="text-xl font-bold text-white mb-4">Registration Slots</h3>
             <div className="grid grid-cols-2 gap-4">
               {registrations.map((registration, index) => (
@@ -360,15 +362,15 @@ export function RegistrationManager({
 
         {/* Right Column: Controls and Data Summary */}
         <div className="space-y-6">
-          <div className="glossy-panel p-6">
+          <div className="bg-black/20 backdrop-blur-sm rounded-xl border border-amber-500/30 p-6">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <Snowflake className="w-5 h-5 text-blue-400" />
+                <Snowflake className="w-5 h-5 text-amber-500" />
                 <h3 className="text-lg font-bold text-white">Freeze</h3>
               </div>
               <Switch checked={freezeEnabled} onCheckedChange={setFreezeEnabled} />
             </div>
-            <p className="text-xs text-muted-foreground mb-4">
+            <p className="text-xs text-white/70 mb-4">
               Protect selected parameters from being overwritten during recall
             </p>
             <div className="space-y-2">
@@ -385,26 +387,26 @@ export function RegistrationManager({
             </div>
           </div>
 
-          <div className="glossy-panel p-6">
+          <div className="bg-black/20 backdrop-blur-sm rounded-xl border border-amber-500/30 p-6">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <List className="w-5 h-5 text-green-400" />
+                <List className="w-5 h-5 text-amber-500" />
                 <h3 className="text-lg font-bold text-white">Sequence</h3>
               </div>
               <Switch checked={sequenceEnabled} onCheckedChange={setSequenceEnabled} />
             </div>
-            <p className="text-xs text-muted-foreground mb-4">Program automatic slot recall order</p>
+            <p className="text-xs text-white/70 mb-4">Program automatic slot recall order</p>
 
             {sequenceEnabled && (
               <div className="space-y-4">
-                <div className="flex flex-wrap gap-2 min-h-[60px] p-3 bg-zinc-900/50 rounded-lg border border-blue-500/30">
+                <div className="flex flex-wrap gap-2 min-h-[60px] p-3 bg-black/40 backdrop-blur-sm rounded-lg border border-amber-500/30">
                   {sequence.length === 0 ? (
-                    <span className="text-xs text-muted-foreground">Click + on slots to add to sequence</span>
+                    <span className="text-xs text-white/60">Click + on slots to add to sequence</span>
                   ) : (
                     sequence.map((slot, index) => (
                       <div
                         key={index}
-                        className="flex items-center gap-1 bg-blue-500/20 border border-blue-500/50 rounded px-2 py-1"
+                        className="flex items-center gap-1 bg-amber-500/20 border border-amber-500/50 rounded px-2 py-1"
                       >
                         <span className="text-sm font-bold text-white">{slot}</span>
                         <button onClick={() => removeFromSequence(index)} className="text-red-400 hover:text-red-300">
@@ -418,7 +420,7 @@ export function RegistrationManager({
                 <div className="space-y-2">
                   <Label className="text-sm text-white">Sequence End:</Label>
                   <Select value={sequenceEnd} onValueChange={(v) => setSequenceEnd(v as typeof sequenceEnd)}>
-                    <SelectTrigger className="bg-zinc-900/50 border-blue-500/30 text-white">
+                    <SelectTrigger className="bg-black/40 backdrop-blur-sm border-amber-500/30 text-white">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -429,7 +431,12 @@ export function RegistrationManager({
                   </Select>
                 </div>
 
-                <Button variant="outline" size="sm" onClick={clearSequence} className="w-full bg-transparent">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={clearSequence}
+                  className="w-full bg-transparent border-amber-500/30 text-white hover:bg-amber-500/10"
+                >
                   Clear Sequence
                 </Button>
               </div>
@@ -437,11 +444,11 @@ export function RegistrationManager({
           </div>
 
           {selectedSlot && registrations[selectedSlot - 1] && (
-            <div className="glossy-panel p-6">
+            <div className="bg-black/20 backdrop-blur-sm rounded-xl border border-amber-500/30 p-6">
               <h3 className="text-lg font-bold text-white mb-4">Saved Data Summary</h3>
               <div className="space-y-4 text-sm">
                 <div>
-                  <Label className="text-blue-400 font-semibold">Voices:</Label>
+                  <Label className="text-amber-500 font-semibold">Voices:</Label>
                   <div className="mt-2 space-y-1">
                     {registrations[selectedSlot - 1]?.data.voices.slice(0, 4).map((voice, i) => (
                       <div key={i} className="text-white">
@@ -452,7 +459,7 @@ export function RegistrationManager({
                 </div>
 
                 <div>
-                  <Label className="text-blue-400 font-semibold">Style & Tempo:</Label>
+                  <Label className="text-amber-500 font-semibold">Style & Tempo:</Label>
                   <div className="mt-2 text-white">
                     {registrations[selectedSlot - 1]?.data.style || "N/A"} -{" "}
                     {registrations[selectedSlot - 1]?.data.tempo || 120} BPM
@@ -460,14 +467,14 @@ export function RegistrationManager({
                 </div>
 
                 <div>
-                  <Label className="text-blue-400 font-semibold">Effects:</Label>
+                  <Label className="text-amber-500 font-semibold">Effects:</Label>
                   <div className="mt-2 text-white">
                     {registrations[selectedSlot - 1]?.data.effects.length} DSP effects configured
                   </div>
                 </div>
 
                 <div>
-                  <Label className="text-blue-400 font-semibold">Mixer:</Label>
+                  <Label className="text-amber-500 font-semibold">Mixer:</Label>
                   <div className="mt-2 text-white">
                     {registrations[selectedSlot - 1]?.data.mixer.length} channels configured
                   </div>

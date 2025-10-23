@@ -1,6 +1,6 @@
 "use client"
 
-import { Save, Download, Trash2, Plus, Check } from "lucide-react"
+import { Save, Download, Trash2, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
@@ -34,36 +34,24 @@ export function RegistrationSlot({
     <div
       onClick={onSelect}
       className={cn(
-        "glossy-panel p-4 transition-all cursor-pointer",
-        isEmpty ? "opacity-70" : "opacity-100",
-        isSelected && "ring-2 ring-blue-500 shadow-xl shadow-blue-500/30",
+        "premium-card p-6 md:p-8 flex flex-col items-center gap-4 md:gap-6 hover:scale-105 transition-all duration-300 group cursor-pointer",
+        isSelected && "ring-2 ring-amber-500 shadow-xl shadow-amber-500/30",
       )}
     >
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <div
-            className={cn(
-              "w-10 h-10 rounded-lg flex items-center justify-center shadow-lg font-bold text-lg",
-              isEmpty ? "bg-zinc-700 text-zinc-400" : "bg-gradient-to-br from-blue-500 to-blue-600 text-white",
-            )}
-          >
-            {slotNumber}
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="font-bold text-white text-sm truncate">
-              {isEmpty ? `Slot ${slotNumber}` : registration.name}
-            </h3>
-            <p className="text-xs text-zinc-400 truncate">{isEmpty ? "Empty" : registration.timestamp}</p>
-          </div>
-        </div>
-        {!isEmpty && isSelected && <Check className="w-5 h-5 text-blue-400" />}
+      <div className="w-28 h-28 md:w-32 md:h-32 rounded-2xl bg-secondary flex items-center justify-center border-4 border-primary/40 group-hover:border-primary/80 transition-all shadow-2xl shadow-primary/30">
+        <div className={cn("text-6xl font-bold", isEmpty ? "text-zinc-400" : "text-amber-500")}>{slotNumber}</div>
       </div>
 
-      <div className="flex gap-2">
+      <div className="text-center w-full">
+        <h3 className="premium-text text-xl md:text-2xl mb-2">{isEmpty ? `Slot ${slotNumber}` : registration.name}</h3>
+        <p className="text-xs md:text-sm text-muted-foreground">{isEmpty ? "Empty" : registration.timestamp}</p>
+      </div>
+
+      <div className="flex gap-2 w-full">
         <Button
           variant="outline"
           size="sm"
-          className="flex-1 gap-1 bg-zinc-900/50 border border-blue-500/30 hover:border-blue-500 hover:bg-zinc-800 text-white rounded-lg h-9 text-xs font-semibold"
+          className="flex-1 gap-1 bg-transparent border border-amber-500/30 hover:border-amber-500 hover:bg-amber-500/10 text-white rounded-lg h-9 text-xs font-semibold"
           onClick={(e) => {
             e.stopPropagation()
             onSave()

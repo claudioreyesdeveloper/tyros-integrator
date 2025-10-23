@@ -99,7 +99,7 @@ export function MixerChannelHorizontal({
 
   return (
     <>
-      <div className="grid grid-cols-[40px_200px_80px_60px_60px_60px_60px_60px_60px_60px_60px] gap-3 items-center py-3 px-2 border-b border-amber-500/20 hover:bg-amber-500/5 transition-colors">
+      <div className="grid grid-cols-[40px_200px_80px_60px_60px_60px_60px_60px_60px_60px_60px] gap-3 items-center py-4 px-3 mb-2 rounded-lg border-2 border-amber-500/20 bg-gradient-to-br from-[rgba(20,20,20,0.75)] to-[rgba(10,10,10,0.85)] backdrop-blur-sm transition-all duration-200 hover:scale-[1.01] hover:shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:border-amber-500/40">
         {/* Channel Number */}
         <div className="text-amber-500 font-bold text-sm text-center">{channel}</div>
 
