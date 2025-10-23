@@ -9,6 +9,7 @@ import { RegistrationManager } from "@/components/registration/registration-mana
 import { ConfigPanel } from "@/components/config/config-panel"
 import { AssemblyWorkbench } from "@/components/assembly/assembly-workbench"
 import { ChordSequencer } from "@/components/chords/chord-sequencer"
+import { ScoreView } from "@/components/score/score-view"
 import { useLayout } from "@/lib/layout-context" // Import useLayout
 import type { Voice } from "@/lib/voice-data"
 import type { Tyros5Configuration, ChannelPartConfig } from "@/lib/types"
@@ -273,6 +274,8 @@ export default function Home() {
           {activeTab === "assembly" && <AssemblyWorkbench />}
 
           {activeTab === "chords" && <ChordSequencer chordState={chordState} setChordState={setChordState} />}
+
+          {activeTab === "score" && <ScoreView partVoices={partVoices} />}
 
           {activeTab === "config" && <ConfigPanel />}
         </main>
