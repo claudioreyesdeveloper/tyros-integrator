@@ -92,117 +92,105 @@ export function StylesSelector() {
   }
 
   return (
-    <div className="premium-card p-6 flex gap-6 h-full">
-      {/* Icon section - left side */}
-      <div className="flex flex-col items-center justify-center gap-3 min-w-[140px]">
-        <div className="w-24 h-24 rounded-full bg-secondary flex items-center justify-center border-4 border-primary/40 transition-all shadow-lg shadow-primary/20">
-          <Music2 className="w-12 h-12 text-primary" />
+    <div className="premium-card p-4 flex items-center gap-4 h-full">
+      <div className="flex items-center gap-2 min-w-[100px]">
+        <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center border-2 border-primary/40 shadow-lg shadow-primary/20">
+          <Music2 className="w-6 h-6 text-primary" />
         </div>
-        <h3 className="premium-text text-xl">Styles</h3>
+        <h3 className="premium-text text-base font-bold">Styles</h3>
       </div>
 
-      {/* Controls section - right side */}
-      <div className="flex-1 grid grid-cols-2 gap-4">
-        {/* Left column - Style selection */}
-        <div className="space-y-3">
-          <div className="space-y-2">
-            <label className="text-xs premium-label block">Category</label>
-            <Select value={selectedCategory} onValueChange={handleCategoryChange}>
-              <SelectTrigger className="w-full bg-black/20 backdrop-blur-sm border-2 border-primary/30 hover:border-primary/50 focus:border-primary text-white font-semibold h-10 rounded-xl transition-all text-sm">
-                <SelectValue placeholder="Select category" />
-              </SelectTrigger>
-              <SelectContent className="bg-black/90 backdrop-blur-md border-2 border-primary/30 text-white">
-                {categories.map((category) => (
-                  <SelectItem
-                    key={category}
-                    value={category}
-                    className="text-white font-semibold hover:bg-primary/20 focus:bg-primary focus:text-black text-sm"
-                  >
-                    {category}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+      <div className="h-16 w-px bg-primary/20" />
 
-          <div className="space-y-2">
-            <label className="text-xs premium-label block">Style Name</label>
-            <Select value={selectedStyle?.styleName || ""} onValueChange={handleStyleChange}>
-              <SelectTrigger className="w-full bg-black/20 backdrop-blur-sm border-2 border-primary/30 hover:border-primary/50 focus:border-primary text-white font-semibold h-10 rounded-xl transition-all text-sm">
-                <SelectValue placeholder="Select style" />
-              </SelectTrigger>
-              <SelectContent className="bg-black/90 backdrop-blur-md border-2 border-primary/30 text-white">
-                {availableStyles.map((style) => (
-                  <SelectItem
-                    key={style.styleName}
-                    value={style.styleName}
-                    className="text-white font-semibold hover:bg-primary/20 focus:bg-primary focus:text-black text-sm"
-                  >
-                    {style.styleName}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+      <div className="flex-1 flex items-center gap-3">
+        {/* Category dropdown */}
+        <div className="flex-1 min-w-[140px]">
+          <label className="text-[10px] premium-label block mb-1">Category</label>
+          <Select value={selectedCategory} onValueChange={handleCategoryChange}>
+            <SelectTrigger className="w-full bg-black/20 backdrop-blur-sm border border-primary/30 hover:border-primary/50 text-white font-semibold h-9 rounded-lg text-xs">
+              <SelectValue placeholder="Select category" />
+            </SelectTrigger>
+            <SelectContent className="bg-black/90 backdrop-blur-md border-2 border-primary/30 text-white">
+              {categories.map((category) => (
+                <SelectItem
+                  key={category}
+                  value={category}
+                  className="text-white font-semibold hover:bg-primary/20 focus:bg-primary focus:text-black text-xs"
+                >
+                  {category}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
-          <div className="space-y-2">
-            <label className="text-xs premium-label block">Variation</label>
-            <Select value={variation} onValueChange={handleVariationChange}>
-              <SelectTrigger className="w-full bg-black/20 backdrop-blur-sm border-2 border-primary/30 hover:border-primary/50 focus:border-primary text-white font-semibold h-10 rounded-xl transition-all text-sm">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-black/90 backdrop-blur-md border-2 border-primary/30 text-white">
-                {VARIATION_OPTIONS.map((option) => (
-                  <SelectItem
-                    key={option}
-                    value={option}
-                    className="text-white font-semibold hover:bg-primary/20 focus:bg-primary focus:text-black text-sm"
-                  >
-                    {option}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+        {/* Style dropdown */}
+        <div className="flex-1 min-w-[160px]">
+          <label className="text-[10px] premium-label block mb-1">Style Name</label>
+          <Select value={selectedStyle?.styleName || ""} onValueChange={handleStyleChange}>
+            <SelectTrigger className="w-full bg-black/20 backdrop-blur-sm border border-primary/30 hover:border-primary/50 text-white font-semibold h-9 rounded-lg text-xs">
+              <SelectValue placeholder="Select style" />
+            </SelectTrigger>
+            <SelectContent className="bg-black/90 backdrop-blur-md border-2 border-primary/30 text-white">
+              {availableStyles.map((style) => (
+                <SelectItem
+                  key={style.styleName}
+                  value={style.styleName}
+                  className="text-white font-semibold hover:bg-primary/20 focus:bg-primary focus:text-black text-xs"
+                >
+                  {style.styleName}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Variation dropdown */}
+        <div className="flex-1 min-w-[120px]">
+          <label className="text-[10px] premium-label block mb-1">Variation</label>
+          <Select value={variation} onValueChange={handleVariationChange}>
+            <SelectTrigger className="w-full bg-black/20 backdrop-blur-sm border border-primary/30 hover:border-primary/50 text-white font-semibold h-9 rounded-lg text-xs">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="bg-black/90 backdrop-blur-md border-2 border-primary/30 text-white">
+              {VARIATION_OPTIONS.map((option) => (
+                <SelectItem
+                  key={option}
+                  value={option}
+                  className="text-white font-semibold hover:bg-primary/20 focus:bg-primary focus:text-black text-xs"
+                >
+                  {option}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="h-16 w-px bg-primary/20" />
+
+        {/* Transport controls */}
+        <div className="flex flex-col gap-1">
+          <label className="text-[10px] premium-label">Transport</label>
+          <div className="flex gap-1.5">
+            <Button onClick={handleStart} disabled={isPlaying} size="sm" className="h-8 w-8 p-0">
+              <Play className="w-3.5 h-3.5" />
+            </Button>
+            <Button onClick={handleStop} disabled={!isPlaying} variant="destructive" size="sm" className="h-8 w-8 p-0">
+              <Square className="w-3.5 h-3.5" />
+            </Button>
+            <Button onClick={handleSyncStart} size="sm" className="h-8 w-8 p-0">
+              <PlayCircle className="w-3.5 h-3.5" />
+            </Button>
           </div>
         </div>
 
-        {/* Right column - Transport and tempo */}
-        <div className="space-y-3">
-          <div className="space-y-2">
-            <label className="text-xs premium-label block">Transport</label>
-            <div className="flex gap-2">
-              <Button onClick={handleStart} disabled={isPlaying} size="sm" className="flex-1 h-10">
-                <Play className="w-4 h-4" />
-              </Button>
-              <Button
-                onClick={handleStop}
-                disabled={!isPlaying}
-                variant="destructive"
-                size="sm"
-                className="flex-1 h-10"
-              >
-                <Square className="w-4 h-4" />
-              </Button>
-              <Button onClick={handleSyncStart} size="sm" className="flex-1 h-10">
-                <PlayCircle className="w-4 h-4" />
-              </Button>
-            </div>
+        {/* Tempo slider */}
+        <div className="flex-1 min-w-[180px]">
+          <div className="flex justify-between items-center mb-1">
+            <label className="text-[10px] premium-label">Tempo</label>
+            <span className="text-xs font-bold text-primary">{tempo} BPM</span>
           </div>
-
-          <div className="space-y-2">
-            <div className="flex justify-between items-center">
-              <label className="text-xs premium-label">Tempo</label>
-              <span className="text-xs font-semibold text-white">{tempo} BPM</span>
-            </div>
-            <Slider value={[tempo]} onValueChange={handleTempoChange} min={30} max={400} step={1} className="w-full" />
-          </div>
-
-          {selectedStyle && (
-            <div className="pt-2">
-              <p className="text-xs premium-label mb-1">Current Style</p>
-              <p className="text-sm font-semibold text-white truncate">{selectedStyle.styleName}</p>
-            </div>
-          )}
+          <Slider value={[tempo]} onValueChange={handleTempoChange} min={30} max={400} step={1} className="w-full" />
         </div>
       </div>
     </div>

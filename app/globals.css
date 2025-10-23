@@ -141,10 +141,10 @@
 /* Restored Smart Pianist liquid glass design with orange/amber accents */
 @layer components {
   .glossy-panel {
-    background: linear-gradient(135deg, oklch(0.18 0.01 270 / 0.95) 0%, oklch(0.14 0.01 270 / 0.98) 100%);
-    border: 1px solid var(--liquid-amber) / 0.3;
+    background: linear-gradient(135deg, rgba(20, 20, 20, 0.7) 0%, rgba(10, 10, 10, 0.8) 100%);
+    border: 1px solid rgba(245, 158, 11, 0.3);
     border-radius: 12px;
-    box-shadow: 0 8px 32px oklch(0 0 0 / 0.5), 0 0 0 1px var(--liquid-amber) / 0.1 inset, 0 1px 2px oklch(1 0 0 / 0.08)
+    box-shadow: 0 8px 32px oklch(0 0 0 / 0.5), 0 0 0 1px rgba(245, 158, 11, 0.1) inset, 0 1px 2px oklch(1 0 0 / 0.08)
       inset, 0 20px 60px oklch(0 0 0 / 0.3);
     backdrop-filter: blur(20px);
   }
@@ -173,11 +173,10 @@
   }
 
   .premium-card {
-    background: linear-gradient(135deg, oklch(0.17 0.01 270 / 0.9) 0%, oklch(0.13 0.01 270 / 0.95) 100%);
-    border: 1px solid var(--liquid-amber) / 0.4;
+    background: linear-gradient(135deg, rgba(20, 20, 20, 0.75) 0%, rgba(10, 10, 10, 0.85) 100%);
+    border: 1px solid rgba(245, 158, 11, 0.4);
     border-radius: 12px;
-    box-shadow: 0 4px 20px oklch(0 0 0 / 0.4), 0 0 0 1px var(--liquid-amber) / 0.15 inset, 0 12px 40px
-      oklch(0 0 0 / 0.25);
+    box-shadow: 0 4px 20px oklch(0 0 0 / 0.4), 0 0 0 1px rgba(245, 158, 11, 0.15) inset, 0 12px 40px oklch(0 0 0 / 0.25);
     backdrop-filter: blur(16px);
   }
 

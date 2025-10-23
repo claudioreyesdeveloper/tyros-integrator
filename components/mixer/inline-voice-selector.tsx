@@ -11,7 +11,7 @@ interface InlineVoiceSelectorProps {
   currentVoice?: Voice
   onSelectVoice: (voice: Voice) => void
   onClose: () => void
-  triggerRef: React.RefObject<HTMLElement>
+  triggerRef: React.RefObject<HTMLButtonElement>
 }
 
 export function InlineVoiceSelector({ currentVoice, onSelectVoice, onClose, triggerRef }: InlineVoiceSelectorProps) {
