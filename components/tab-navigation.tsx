@@ -20,7 +20,7 @@ const tabs = [
 
 export function TabNavigation({ activeTab, onTabChange }: TabNavigationProps) {
   return (
-    <nav className="flex items-center gap-1 md:gap-2 border-b-2 border-primary/30 px-3 md:px-4 lg:px-6 overflow-x-auto">
+    <nav className="flex items-center gap-1 md:gap-2 border-b-2 border-primary/30 overflow-x-auto">
       {tabs.map((tab) => {
         const isActive = activeTab === tab.id
         const Icon = tab.icon

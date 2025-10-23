@@ -229,7 +229,9 @@ export default function Home() {
       <div className="absolute inset-0 bg-black/10" />
       <div className="relative z-10 flex flex-col min-h-screen">
         <header className="border-b border-amber-500/30 backdrop-blur-md bg-black/20">
-          <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
+          <div className="max-w-7xl mx-auto">
+            <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
+          </div>
         </header>
 
         <main className="flex-1 overflow-auto">
