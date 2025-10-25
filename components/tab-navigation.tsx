@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { Home, Music, Sliders, BookOpen, Layers, Music2, Settings, FileMusic } from "lucide-react"
+import { Home, Music, Sliders, Music2, Settings, FileMusic, Guitar, Repeat } from "lucide-react"
 
 interface TabNavigationProps {
   activeTab: string
@@ -12,9 +12,9 @@ const tabs = [
   { id: "home", label: "Home", icon: Home },
   { id: "voices", label: "Voices", icon: Music },
   { id: "mixer", label: "Mixer", icon: Sliders },
-  { id: "registration", label: "Registration", icon: BookOpen },
   { id: "score", label: "Score", icon: FileMusic },
-  { id: "assembly", label: "Assembly", icon: Layers },
+  { id: "chord-assistant", label: "Chord Assistant", icon: Guitar },
+  { id: "chord-looper", label: "Chord Looper", icon: Repeat },
   { id: "chords", label: "Composer", icon: Music2 },
   { id: "config", label: "Configuration", icon: Settings },
 ]

@@ -5,14 +5,13 @@ import { TabNavigation } from "@/components/tab-navigation"
 import { HomeScreen } from "@/components/home/home-screen"
 import { VoiceBrowser } from "@/components/voices/voice-browser"
 import { MixerInterface } from "@/components/mixer/mixer-interface"
-import { RegistrationManager } from "@/components/registration/registration-manager"
 import { ConfigPanel } from "@/components/config/config-panel"
-import { AssemblyWorkbench } from "@/components/assembly/assembly-workbench"
 import { ChordSequencer } from "@/components/chords/chord-sequencer"
 import { ScoreView } from "@/components/score/score-view"
-import { useLayout } from "@/lib/layout-context" // Import useLayout
+import { ChordAssistant } from "@/components/progressions/chord-assistant"
+import { ChordLooper } from "@/components/progressions/chord-looper"
+import { useLayout } from "@/lib/layout-context"
 import type { Voice } from "@/lib/voice-data"
-import type { Tyros5Configuration, ChannelPartConfig } from "@/lib/types"
 
 type Resolution = "whole" | "half" | "quarter"
 
@@ -72,22 +71,10 @@ export default function Home() {
   const [mixerBank, setMixerBank] = useState(0)
   const [partVoices, setPartVoices] = useState<Record<number, Voice>>({})
   const [channelEffects, setChannelEffects] = useState<Record<number, string>>({})
-  const { mixerViewMode } = useLayout() // Get mixer view mode from context
+  const { mixerViewMode } = useLayout()
 
   const [channelMixer, setChannelMixer] = useState<Record<number, MixerSettings>>({})
   const [channelDSP, setChannelDSP] = useState<Record<number, DSPSettings>>({})
-
-  const [globalSettings, setGlobalSettings] = useState({
-    masterTranspose: 0,
-    tempoLock: false,
-    autoPowerOffOverride: true,
-  })
-
-  const [globalEffects, setGlobalEffects] = useState({
-    masterVolume: 100,
-    reverbSendGlobal: 45,
-    chorusSendGlobal: 30,
-  })
 
   const [chordState, setChordState] = useState<ChordState>({
     sections: [
@@ -97,7 +84,7 @@ export default function Home() {
         bars: 4,
         stylePart: "Intro 1",
         color: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-        chords: [] as Chord[], // Explicitly typed as Chord[]
+        chords: [] as Chord[],
       },
     ],
     activeSection: "section-1",
@@ -142,71 +129,6 @@ export default function Home() {
 
   const handleEffectAssigned = (channel: number, effectName: string) => {
     setChannelEffects((prev) => ({ ...prev, [channel]: effectName }))
-  }
-
-  const handleLoadConfiguration = (config: Tyros5Configuration) => {
-    // Update global settings
-    if (config.GlobalSettings) {
-      setGlobalSettings({
-        masterTranspose: config.GlobalSettings.MasterTranspose || 0,
-        tempoLock: config.GlobalSettings.TempoLock || false,
-        autoPowerOffOverride: config.GlobalSettings.AutoPowerOffOverride || true,
-      })
-    }
-
-    // Update global effects
-    if (config.GlobalEffects) {
-      setGlobalEffects({
-        masterVolume: config.GlobalEffects.MasterVolume || 100,
-        reverbSendGlobal: config.GlobalEffects.ReverbSendGlobal || 45,
-        chorusSendGlobal: config.GlobalEffects.ChorusSendGlobal || 30,
-      })
-    }
-
-    // Update channel parts
-    if (config.ChannelParts) {
-      const newPartVoices: Record<number, Voice> = {}
-      const newChannelMixer: Record<number, MixerSettings> = {}
-      const newChannelDSP: Record<number, DSPSettings> = {}
-
-      config.ChannelParts.forEach((channel: ChannelPartConfig) => {
-        const channelID = channel.ChannelID
-
-        // Load voice if present
-        if (channel.Voice) {
-          newPartVoices[channelID] = {
-            category: "",
-            sub: "",
-            voice: channel.Voice.Name,
-            msb: channel.Voice.MSB.toString(),
-            lsb: channel.Voice.LSB.toString(),
-            prg: channel.Voice.PRG.toString(),
-          }
-        }
-
-        // Load mixer settings
-        if (channel.Mixer) {
-          newChannelMixer[channelID] = {
-            volume: channel.Mixer.Volume,
-            pan: channel.Mixer.Pan,
-            eq: {
-              bass: channel.Mixer.EQ.Bass,
-              mid: channel.Mixer.EQ.Mid,
-              high: channel.Mixer.EQ.High,
-            },
-          }
-        }
-
-        // Load DSP settings
-        if (channel.DSP) {
-          newChannelDSP[channelID] = channel.DSP
-        }
-      })
-
-      setPartVoices(newPartVoices)
-      setChannelMixer(newChannelMixer)
-      setChannelDSP(newChannelDSP)
-    }
   }
 
   const handleVoiceAssignedInline = (channel: number, voice: Voice) => {
@@ -259,19 +181,9 @@ export default function Home() {
             />
           )}
 
-          {activeTab === "registration" && (
-            <RegistrationManager
-              partVoices={partVoices}
-              channelMixer={channelMixer}
-              channelDSP={channelDSP}
-              channelEffects={channelEffects}
-              globalSettings={globalSettings}
-              globalEffects={globalEffects}
-              onLoadConfiguration={handleLoadConfiguration}
-            />
-          )}
+          {activeTab === "chord-assistant" && <ChordAssistant />}
 
-          {activeTab === "assembly" && <AssemblyWorkbench />}
+          {activeTab === "chord-looper" && <ChordLooper />}
 
           {activeTab === "chords" && <ChordSequencer chordState={chordState} setChordState={setChordState} />}
 
