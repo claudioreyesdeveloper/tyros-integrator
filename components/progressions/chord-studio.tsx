@@ -972,202 +972,207 @@ export function ChordStudio() {
         </div>
       </div>
 
-      <div className="flex-1 flex gap-6 p-6 overflow-hidden">
-        {/* Library section - left side */}
-        <div className="w-80 flex flex-col gap-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <Input
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search progressions..."
-              className="pl-10 bg-black/30 border-white/10 text-white placeholder:text-gray-500 h-11"
-            />
-          </div>
+      <div className="flex-1 flex flex-col gap-4 p-4 overflow-hidden">
+        {/* Top section: Library + Progressions in one glossy panel */}
+        <div className="flex-1 glossy-panel p-4 flex gap-4 min-h-0">
+          {/* Library tree - left side */}
+          <div className="w-80 flex flex-col gap-3">
+            <h3 className="text-base font-bold text-white">Library</h3>
 
-          <ScrollArea className="flex-1">
-            <div className="space-y-0.5 pr-2">
-              {Object.keys(treeStructure).map((type) => {
-                const typeId = `type-${type}`
-                const isTypeExpanded = expandedNodes.has(typeId)
-
-                return (
-                  <div key={type}>
-                    <button
-                      onClick={() => toggleNode(typeId)}
-                      className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-white hover:bg-white/5 rounded transition-colors"
-                    >
-                      {isTypeExpanded ? (
-                        <ChevronDown className="w-4 h-4 flex-shrink-0" />
-                      ) : (
-                        <ChevronRight className="w-4 h-4 flex-shrink-0" />
-                      )}
-                      {isTypeExpanded ? (
-                        <FolderOpen className="w-4 h-4 flex-shrink-0 text-amber-400" />
-                      ) : (
-                        <Folder className="w-4 h-4 flex-shrink-0 text-amber-400" />
-                      )}
-                      <span className="truncate">{type}</span>
-                    </button>
-
-                    {isTypeExpanded && (
-                      <div className="ml-4">
-                        {Object.keys(treeStructure[type]).map((subtype) => {
-                          const subtypeId = `subtype-${type}-${subtype}`
-                          const isSubtypeExpanded = expandedNodes.has(subtypeId)
-
-                          return (
-                            <div key={subtype}>
-                              <button
-                                onClick={() => toggleNode(subtypeId)}
-                                className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-white hover:bg-white/5 rounded transition-colors"
-                              >
-                                {isSubtypeExpanded ? (
-                                  <ChevronDown className="w-4 h-4 flex-shrink-0" />
-                                ) : (
-                                  <ChevronRight className="w-4 h-4 flex-shrink-0" />
-                                )}
-                                {isSubtypeExpanded ? (
-                                  <FolderOpen className="w-4 h-4 flex-shrink-0 text-blue-400" />
-                                ) : (
-                                  <Folder className="w-4 h-4 flex-shrink-0 text-blue-400" />
-                                )}
-                                <span className="truncate">{subtype}</span>
-                              </button>
-
-                              {isSubtypeExpanded && (
-                                <div className="ml-4">
-                                  {Object.keys(treeStructure[type][subtype]).map((subSubtype) => {
-                                    const isSelected =
-                                      selectedSubSubtype?.type === type &&
-                                      selectedSubSubtype?.subtype === subtype &&
-                                      selectedSubSubtype?.subSubtype === subSubtype
-
-                                    return (
-                                      <button
-                                        key={subSubtype}
-                                        onClick={() => handleSelectSubSubtype(type, subtype, subSubtype)}
-                                        className={cn(
-                                          "w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded transition-colors",
-                                          isSelected
-                                            ? "bg-primary/20 text-primary font-medium"
-                                            : "text-white hover:bg-white/5",
-                                        )}
-                                      >
-                                        <Folder className="w-4 h-4 flex-shrink-0 text-teal-400" />
-                                        <span className="truncate">{subSubtype}</span>
-                                      </button>
-                                    )
-                                  })}
-                                </div>
-                              )}
-                            </div>
-                          )
-                        })}
-                      </div>
-                    )}
-                  </div>
-                )
-              })}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search progressions..."
+                className="pl-10 bg-black/30 border-white/10 text-white placeholder:text-gray-500 h-11"
+              />
             </div>
-          </ScrollArea>
-        </div>
 
-        {/* Progressions list - middle section */}
-        <div className="flex-1 flex flex-col gap-4">
-          {selectedSubSubtype ? (
-            <>
-              <div className="premium-card p-4">
-                <div className="text-sm text-gray-400 mb-1">Selected Category</div>
-                <div className="text-lg font-bold text-white">
-                  {selectedSubSubtype.type} › {selectedSubSubtype.subtype} › {selectedSubSubtype.subSubtype}
-                </div>
-              </div>
+            <ScrollArea className="flex-1">
+              <div className="space-y-0.5 pr-2">
+                {Object.keys(treeStructure).map((type) => {
+                  const typeId = `type-${type}`
+                  const isTypeExpanded = expandedNodes.has(typeId)
 
-              <ScrollArea className="flex-1">
-                <div className="space-y-3">
-                  {selectedProgressions.map((progression) => (
-                    <div
-                      key={progression.id}
-                      onClick={() => setSelectedProgressionId(progression.id)}
-                      onDoubleClick={() => handleDoubleClickProgression(progression)}
-                      className={cn(
-                        "premium-card p-4 cursor-pointer transition-all relative",
-                        selectedProgressionId === progression.id
-                          ? "ring-2 ring-primary bg-primary/10"
-                          : "hover:bg-white/5",
-                      )}
-                    >
+                  return (
+                    <div key={type}>
                       <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleAudition(progression)
-                        }}
-                        className={cn(
-                          "absolute top-4 right-4 p-2 rounded-lg border transition-all group",
-                          auditioningId === progression.id
-                            ? "bg-primary/40 border-primary scale-110 shadow-lg shadow-primary/50"
-                            : "bg-black/40 hover:bg-primary/20 border-primary/30 hover:border-primary",
-                        )}
-                        title="Audition progression"
+                        onClick={() => toggleNode(typeId)}
+                        className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-white hover:bg-white/5 rounded transition-colors"
                       >
-                        <Ear
-                          className={cn(
-                            "w-5 h-5 transition-all",
-                            auditioningId === progression.id
-                              ? "text-white animate-pulse"
-                              : "text-primary group-hover:scale-110",
-                          )}
-                        />
+                        {isTypeExpanded ? (
+                          <ChevronDown className="w-4 h-4 flex-shrink-0" />
+                        ) : (
+                          <ChevronRight className="w-4 h-4 flex-shrink-0" />
+                        )}
+                        {isTypeExpanded ? (
+                          <FolderOpen className="w-4 h-4 flex-shrink-0 text-amber-400" />
+                        ) : (
+                          <Folder className="w-4 h-4 flex-shrink-0 text-amber-400" />
+                        )}
+                        <span className="truncate">{type}</span>
                       </button>
 
-                      <div className="flex items-start justify-between mb-3 pr-12">
-                        <div>
-                          <h4 className="text-lg font-bold text-white mb-1">
-                            {progression.section} ({progression.variation})
-                          </h4>
-                          <div className="flex items-center gap-3 text-sm text-gray-400">
-                            <span>{progression.key}</span>
-                            <span>•</span>
-                            <span>{progression.tempo} BPM</span>
-                            <span>•</span>
-                            <span>{progression.timeSignature}</span>
-                            <span>•</span>
-                            <span>{progression.bars} bars</span>
-                          </div>
-                        </div>
-                        <span className="text-xs px-3 py-1.5 rounded bg-primary/20 text-primary font-medium">
-                          {progression.section}
-                        </span>
-                      </div>
+                      {isTypeExpanded && (
+                        <div className="ml-4">
+                          {Object.keys(treeStructure[type]).map((subtype) => {
+                            const subtypeId = `subtype-${type}-${subtype}`
+                            const isSubtypeExpanded = expandedNodes.has(subtypeId)
 
-                      <PhraseRibbonDisplay
-                        chordsWithDuration={progression.chordsWithDuration}
-                        timeSignature={progression.timeSignature}
-                        bars={progression.bars}
-                        isCompact={true}
-                        className="mt-3"
-                        onChordClick={(idx) => handleChordClick(progression, idx)}
-                      />
+                            return (
+                              <div key={subtype}>
+                                <button
+                                  onClick={() => toggleNode(subtypeId)}
+                                  className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-white hover:bg-white/5 rounded transition-colors"
+                                >
+                                  {isSubtypeExpanded ? (
+                                    <ChevronDown className="w-4 h-4 flex-shrink-0" />
+                                  ) : (
+                                    <ChevronRight className="w-4 h-4 flex-shrink-0" />
+                                  )}
+                                  {isSubtypeExpanded ? (
+                                    <FolderOpen className="w-4 h-4 flex-shrink-0 text-blue-400" />
+                                  ) : (
+                                    <Folder className="w-4 h-4 flex-shrink-0 text-blue-400" />
+                                  )}
+                                  <span className="truncate">{subtype}</span>
+                                </button>
+
+                                {isSubtypeExpanded && (
+                                  <div className="ml-4">
+                                    {Object.keys(treeStructure[type][subtype]).map((subSubtype) => {
+                                      const isSelected =
+                                        selectedSubSubtype?.type === type &&
+                                        selectedSubSubtype?.subtype === subtype &&
+                                        selectedSubSubtype?.subSubtype === subSubtype
+
+                                      return (
+                                        <button
+                                          key={subSubtype}
+                                          onClick={() => handleSelectSubSubtype(type, subtype, subSubtype)}
+                                          className={cn(
+                                            "w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded transition-colors",
+                                            isSelected
+                                              ? "bg-primary/20 text-primary font-medium"
+                                              : "text-white hover:bg-white/5",
+                                          )}
+                                        >
+                                          <Folder className="w-4 h-4 flex-shrink-0 text-teal-400" />
+                                          <span className="truncate">{subSubtype}</span>
+                                        </button>
+                                      )
+                                    })}
+                                  </div>
+                                )}
+                              </div>
+                            )
+                          })}
+                        </div>
+                      )}
                     </div>
-                  ))}
-                </div>
-              </ScrollArea>
-            </>
-          ) : (
-            <div className="flex-1 flex items-center justify-center">
-              <div className="text-center text-gray-400">
-                <Music2 className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                <p className="text-lg">Select a category from the tree to view progressions</p>
+                  )
+                })}
               </div>
-            </div>
-          )}
+            </ScrollArea>
+          </div>
+
+          {/* Progressions list - right side */}
+          <div className="flex-1 flex flex-col gap-3 min-w-0">
+            {selectedSubSubtype ? (
+              <>
+                <div className="premium-card p-4">
+                  <div className="text-sm text-gray-400 mb-1">Selected Category</div>
+                  <div className="text-lg font-bold text-white">
+                    {selectedSubSubtype.type} › {selectedSubSubtype.subtype} › {selectedSubSubtype.subSubtype}
+                  </div>
+                </div>
+
+                <ScrollArea className="flex-1">
+                  <div className="space-y-3">
+                    {selectedProgressions.map((progression) => (
+                      <div
+                        key={progression.id}
+                        onClick={() => setSelectedProgressionId(progression.id)}
+                        onDoubleClick={() => handleDoubleClickProgression(progression)}
+                        className={cn(
+                          "premium-card p-4 cursor-pointer transition-all relative",
+                          selectedProgressionId === progression.id
+                            ? "ring-2 ring-primary bg-primary/10"
+                            : "hover:bg-white/5",
+                        )}
+                      >
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleAudition(progression)
+                          }}
+                          className={cn(
+                            "absolute top-4 right-4 p-2 rounded-lg border transition-all group",
+                            auditioningId === progression.id
+                              ? "bg-primary/40 border-primary scale-110 shadow-lg shadow-primary/50"
+                              : "bg-black/40 hover:bg-primary/20 border-primary/30 hover:border-primary",
+                          )}
+                          title="Audition progression"
+                        >
+                          <Ear
+                            className={cn(
+                              "w-5 h-5 transition-all",
+                              auditioningId === progression.id
+                                ? "text-white animate-pulse"
+                                : "text-primary group-hover:scale-110",
+                            )}
+                          />
+                        </button>
+
+                        <div className="flex items-start justify-between mb-3 pr-12">
+                          <div>
+                            <h4 className="text-lg font-bold text-white mb-1">
+                              {progression.section} ({progression.variation})
+                            </h4>
+                            <div className="flex items-center gap-3 text-sm text-gray-400">
+                              <span>{progression.key}</span>
+                              <span>•</span>
+                              <span>{progression.tempo} BPM</span>
+                              <span>•</span>
+                              <span>{progression.timeSignature}</span>
+                              <span>•</span>
+                              <span>{progression.bars} bars</span>
+                            </div>
+                          </div>
+                          <span className="text-xs px-3 py-1.5 rounded bg-primary/20 text-primary font-medium">
+                            {progression.section}
+                          </span>
+                        </div>
+
+                        <PhraseRibbonDisplay
+                          chordsWithDuration={progression.chordsWithDuration}
+                          timeSignature={progression.timeSignature}
+                          bars={progression.bars}
+                          isCompact={true}
+                          className="mt-3"
+                          onChordClick={(idx) => handleChordClick(progression, idx)}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </ScrollArea>
+              </>
+            ) : (
+              <div className="flex-1 flex items-center justify-center">
+                <div className="text-center text-gray-400">
+                  <Music2 className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                  <p className="text-lg">Select a category from the tree to view progressions</p>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Timeline section - right side */}
-        <div className="w-96 flex flex-col gap-4">
+        {/* Bottom section: Timeline/Play in separate glossy panel */}
+        <div className="h-80 glossy-panel p-4 flex flex-col gap-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-bold text-white">Timeline</h3>
+            <h3 className="text-base font-bold text-white">Play</h3>
             <div className="flex items-center gap-2">
               <Button
                 onClick={handlePlay}
@@ -1197,7 +1202,7 @@ export function ChordStudio() {
             </div>
           ) : (
             <ScrollArea className="flex-1">
-              <div className="space-y-3 pb-4">
+              <div className="flex gap-3 pb-4">
                 {timelineBlocks.map((block) => (
                   <div
                     key={block.id}
@@ -1207,7 +1212,7 @@ export function ChordStudio() {
                     onDragEnd={handleDragEnd}
                     onDrop={(e) => handleDrop(e, block.id)}
                     className={cn(
-                      "premium-card p-4 transition-all cursor-move relative",
+                      "premium-card p-4 transition-all cursor-move relative flex-shrink-0 w-80",
                       currentBlockId === block.id && "ring-2 ring-primary shadow-2xl shadow-primary/30",
                       draggedBlockId === block.id && "opacity-50",
                       dragOverBlockId === block.id && "ring-2 ring-blue-400",
