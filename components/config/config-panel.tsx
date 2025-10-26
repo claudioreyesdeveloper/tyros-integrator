@@ -6,7 +6,7 @@ import { useLayout } from "@/lib/layout-context"
 import { MidiLogger } from "@/components/logging/midi-logger"
 
 export function ConfigPanel() {
-  const { mode, effectiveMode, setMode, mixerViewMode, setMixerViewMode, voiceNavMode, setVoiceNavMode } = useLayout()
+  const { mode, effectiveMode, setMode } = useLayout()
 
   return (
     <div className="p-4 md:p-6 lg:p-8 space-y-6">
@@ -42,63 +42,6 @@ export function ConfigPanel() {
         <div className="mt-4 text-sm text-gray-400">
           Current mode:{" "}
           <span className="font-semibold text-white">{effectiveMode === "ipad" ? "iPad" : "Desktop"}</span>
-        </div>
-
-        <div className="mt-6 pt-6 border-t border-primary/30">
-          <h3 className="text-base font-semibold mb-3 premium-text">Mixer View</h3>
-          <p className="text-sm text-gray-300 mb-3">
-            Choose between vertical (8 channels) or horizontal (16 channels) mixer layout.
-          </p>
-          <div className="flex gap-3">
-            <Button
-              variant={mixerViewMode === "vertical" ? "default" : "outline"}
-              onClick={() => setMixerViewMode("vertical")}
-              className={
-                mixerViewMode === "vertical" ? "flex-1 glossy-button" : "flex-1 glossy-panel bg-transparent text-white"
-              }
-            >
-              Vertical (8)
-            </Button>
-            <Button
-              variant={mixerViewMode === "horizontal" ? "default" : "outline"}
-              onClick={() => setMixerViewMode("horizontal")}
-              className={
-                mixerViewMode === "horizontal"
-                  ? "flex-1 glossy-button"
-                  : "flex-1 glossy-panel bg-transparent text-white"
-              }
-            >
-              Horizontal (16)
-            </Button>
-          </div>
-        </div>
-
-        {/* Voice Navigation toggle */}
-        <div className="mt-6 pt-6 border-t border-primary/30">
-          <h3 className="text-base font-semibold mb-3 premium-text">Voice Navigation</h3>
-          <p className="text-sm text-gray-300 mb-3">
-            Choose between category-based (3-level) or flat (2-level) voice navigation.
-          </p>
-          <div className="flex gap-3">
-            <Button
-              variant={voiceNavMode === "category" ? "default" : "outline"}
-              onClick={() => setVoiceNavMode("category")}
-              className={
-                voiceNavMode === "category" ? "flex-1 glossy-button" : "flex-1 glossy-panel bg-transparent text-white"
-              }
-            >
-              Category (3-level)
-            </Button>
-            <Button
-              variant={voiceNavMode === "flat" ? "default" : "outline"}
-              onClick={() => setVoiceNavMode("flat")}
-              className={
-                voiceNavMode === "flat" ? "flex-1 glossy-button" : "flex-1 glossy-panel bg-transparent text-white"
-              }
-            >
-              Flat (2-level)
-            </Button>
-          </div>
         </div>
       </Card>
 

@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { Home, Music, Sliders, Music2, Settings, FileMusic, Guitar, Repeat } from "lucide-react"
+import { Home, Music, Sliders, Settings, Guitar } from "lucide-react"
 
 interface TabNavigationProps {
   activeTab: string
@@ -12,10 +12,7 @@ const tabs = [
   { id: "home", label: "Home", icon: Home },
   { id: "voices", label: "Voices", icon: Music },
   { id: "mixer", label: "Mixer", icon: Sliders },
-  { id: "score", label: "Score", icon: FileMusic },
-  { id: "chord-assistant", label: "Chord Assistant", icon: Guitar },
-  { id: "chord-looper", label: "Chord Looper", icon: Repeat },
-  { id: "chords", label: "Composer", icon: Music2 },
+  { id: "chord-studio", label: "Chord Studio", icon: Guitar },
   { id: "config", label: "Configuration", icon: Settings },
 ]
 
@@ -32,8 +29,11 @@ export function TabNavigation({ activeTab, onTabChange }: TabNavigationProps) {
             onClick={() => onTabChange(tab.id)}
             className={cn(
               "flex items-center justify-start gap-2 md:gap-3 px-4 md:px-6 lg:px-8 py-3 md:py-4 lg:py-5 text-xs md:text-sm font-bold transition-all relative rounded-t-lg whitespace-nowrap min-w-fit",
+              "border-2 border-yellow-500/60 hover:border-yellow-400",
               "hover:text-white drop-shadow-lg",
-              isActive ? "glossy-button text-black shadow-lg" : "text-gray-300 hover:bg-white/10 backdrop-blur-sm",
+              isActive
+                ? "glossy-button text-black shadow-lg border-yellow-400"
+                : "text-gray-300 hover:bg-white/10 backdrop-blur-sm",
             )}
           >
             <Icon className="flex-shrink-0" size={20} strokeWidth={2} />

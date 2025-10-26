@@ -8,7 +8,10 @@ import { MixerChannelHorizontal } from "./mixer-channel-horizontal"
 import { Download, Upload } from "lucide-react"
 import type { Voice } from "@/lib/voice-data"
 import { Button } from "@/components/ui/button"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
 import { useMIDI } from "@/lib/midi-context"
+import { useLayout } from "@/lib/layout-context"
 
 const PART_NAMES = [
   "Left",
@@ -65,9 +68,12 @@ export function MixerInterface({
   onEffectAssigned,
   currentBank: externalCurrentBank,
   onBankChange,
-  viewMode = "vertical",
+  viewMode: externalViewMode,
   onVoiceAssignedInline,
 }: MixerInterfaceProps) {
+  const { mixerViewMode, setMixerViewMode } = useLayout()
+  const viewMode = externalViewMode || mixerViewMode
+
   const [internalCurrentBank, setInternalCurrentBank] = useState(0)
   const currentBank = externalCurrentBank !== undefined ? externalCurrentBank : internalCurrentBank
 
@@ -187,21 +193,38 @@ export function MixerInterface({
     <div className="h-full flex flex-col p-4 bg-transparent">
       <input ref={fileInputRef} type="file" accept=".json" onChange={handleFileChange} className="hidden" />
 
-      <div className="mb-4 flex flex-col sm:flex-row justify-end gap-2">
-        <Button
-          onClick={handleOpenMix}
-          className="h-10 px-6 gap-2 text-sm font-bold bg-gradient-to-r from-[#f59e0b] to-[#fb923c] hover:from-[#ea8a00] hover:to-[#f97316] text-white border-none"
-        >
-          <Upload className="w-4 h-4" />
-          Open Mix
-        </Button>
-        <Button
-          onClick={handleSaveMix}
-          className="h-10 px-6 gap-2 text-sm font-bold bg-gradient-to-r from-[#f59e0b] to-[#fb923c] hover:from-[#ea8a00] hover:to-[#f97316] text-white border-none"
-        >
-          <Download className="w-4 h-4" />
-          Save Mix
-        </Button>
+      <div className="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="flex items-center gap-3 premium-card px-4 py-3 rounded-lg">
+          <Label htmlFor="mixer-view-toggle" className="text-sm font-semibold text-white cursor-pointer">
+            Vertical (8)
+          </Label>
+          <Switch
+            id="mixer-view-toggle"
+            checked={viewMode === "horizontal"}
+            onCheckedChange={(checked) => setMixerViewMode(checked ? "horizontal" : "vertical")}
+            className="data-[state=checked]:bg-primary"
+          />
+          <Label htmlFor="mixer-view-toggle" className="text-sm font-semibold text-white cursor-pointer">
+            Horizontal (16)
+          </Label>
+        </div>
+
+        <div className="flex gap-2">
+          <Button
+            onClick={handleOpenMix}
+            className="h-10 px-6 gap-2 text-sm font-bold bg-gradient-to-r from-[#f59e0b] to-[#fb923c] hover:from-[#ea8a00] hover:to-[#f97316] text-white border-none"
+          >
+            <Upload className="w-4 h-4" />
+            Open Mix
+          </Button>
+          <Button
+            onClick={handleSaveMix}
+            className="h-10 px-6 gap-2 text-sm font-bold bg-gradient-to-r from-[#f59e0b] to-[#fb923c] hover:from-[#ea8a00] hover:to-[#f97316] text-white border-none"
+          >
+            <Download className="w-4 h-4" />
+            Save Mix
+          </Button>
+        </div>
       </div>
 
       <div className="mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">

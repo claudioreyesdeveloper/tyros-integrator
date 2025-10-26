@@ -6,42 +6,9 @@ import { HomeScreen } from "@/components/home/home-screen"
 import { VoiceBrowser } from "@/components/voices/voice-browser"
 import { MixerInterface } from "@/components/mixer/mixer-interface"
 import { ConfigPanel } from "@/components/config/config-panel"
-import { ChordSequencer } from "@/components/chords/chord-sequencer"
-import { ScoreView } from "@/components/score/score-view"
-import { ChordAssistant } from "@/components/progressions/chord-assistant"
-import { ChordLooper } from "@/components/progressions/chord-looper"
+import { ChordStudio } from "@/components/progressions/chord-studio"
 import { useLayout } from "@/lib/layout-context"
 import type { Voice } from "@/lib/voice-data"
-
-type Resolution = "whole" | "half" | "quarter"
-
-interface Chord {
-  id: string
-  symbol: string
-  beat: number
-  duration: number
-}
-
-interface Section {
-  id: string
-  name: string
-  bars: number
-  stylePart: string
-  color: string
-  chords: Chord[]
-}
-
-interface ChordState {
-  sections: Section[]
-  activeSection: string
-  resolution: Resolution
-  selectedCategory: string
-  selectedStyle: string
-  tempo: number
-  localControl: boolean
-  clockSource: "internal" | "external"
-  accompaniment: boolean
-}
 
 export interface MixerSettings {
   volume: number
@@ -75,27 +42,6 @@ export default function Home() {
 
   const [channelMixer, setChannelMixer] = useState<Record<number, MixerSettings>>({})
   const [channelDSP, setChannelDSP] = useState<Record<number, DSPSettings>>({})
-
-  const [chordState, setChordState] = useState<ChordState>({
-    sections: [
-      {
-        id: "section-1",
-        name: "Intro",
-        bars: 4,
-        stylePart: "Intro 1",
-        color: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-        chords: [] as Chord[],
-      },
-    ],
-    activeSection: "section-1",
-    resolution: "quarter",
-    selectedCategory: "Pop/Rock",
-    selectedStyle: "8BeatModern",
-    tempo: 120,
-    localControl: true,
-    clockSource: "internal",
-    accompaniment: true,
-  })
 
   const handleSelectVoice = (partNumber: number) => {
     console.log("[v0] Page: handleSelectVoice called for part", partNumber)
@@ -181,13 +127,7 @@ export default function Home() {
             />
           )}
 
-          {activeTab === "chord-assistant" && <ChordAssistant />}
-
-          {activeTab === "chord-looper" && <ChordLooper />}
-
-          {activeTab === "chords" && <ChordSequencer chordState={chordState} setChordState={setChordState} />}
-
-          {activeTab === "score" && <ScoreView partVoices={partVoices} />}
+          {activeTab === "chord-studio" && <ChordStudio />}
 
           {activeTab === "config" && <ConfigPanel />}
         </main>

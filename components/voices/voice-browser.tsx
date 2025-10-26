@@ -14,6 +14,8 @@ import { useMIDI } from "@/lib/midi-context"
 import { useLayout } from "@/lib/layout-context"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
 import { VoiceCommandPalette } from "@/components/voices/voice-command-palette"
 import { cn } from "@/lib/utils"
 import { VoiceIcon } from "@/components/ui/voice-icon"
@@ -54,7 +56,7 @@ const getCategoryColor = (category: string): string => {
 
 export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBrowserProps) {
   const { api } = useMIDI()
-  const { voiceNavMode } = useLayout()
+  const { voiceNavMode, setVoiceNavMode } = useLayout()
   const [voices, setVoices] = useState<Voice[]>([])
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false)
   const [categories, setCategories] = useState<string[]>([])
@@ -172,6 +174,21 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
         />
 
         <div className="p-6 border-b border-border glossy-panel space-y-4 shadow-2xl shadow-black/50">
+          <div className="flex items-center justify-center gap-3 premium-card px-4 py-3 rounded-lg w-fit mx-auto">
+            <Label htmlFor="voice-nav-toggle" className="text-sm font-semibold text-white cursor-pointer">
+              Category (3-level)
+            </Label>
+            <Switch
+              id="voice-nav-toggle"
+              checked={voiceNavMode === "flat"}
+              onCheckedChange={(checked) => setVoiceNavMode(checked ? "flat" : "category")}
+              className="data-[state=checked]:bg-primary"
+            />
+            <Label htmlFor="voice-nav-toggle" className="text-sm font-semibold text-white cursor-pointer">
+              Flat (2-level)
+            </Label>
+          </div>
+
           <button
             onClick={() => setIsCommandPaletteOpen(true)}
             className="w-full h-16 px-5 flex items-center gap-3 premium-card rounded-2xl shadow-xl shadow-black/10 hover:border-primary hover:shadow-primary/30 transition-all group"
@@ -312,6 +329,21 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
       />
 
       <div className="p-6 border-b border-border glossy-panel space-y-4 shadow-2xl shadow-black/50">
+        <div className="flex items-center justify-center gap-3 premium-card px-4 py-3 rounded-lg w-fit mx-auto">
+          <Label htmlFor="voice-nav-toggle-category" className="text-sm font-semibold text-white cursor-pointer">
+            Category (3-level)
+          </Label>
+          <Switch
+            id="voice-nav-toggle-category"
+            checked={voiceNavMode === "flat"}
+            onCheckedChange={(checked) => setVoiceNavMode(checked ? "flat" : "category")}
+            className="data-[state=checked]:bg-primary"
+          />
+          <Label htmlFor="voice-nav-toggle-category" className="text-sm font-semibold text-white cursor-pointer">
+            Flat (2-level)
+          </Label>
+        </div>
+
         <button
           onClick={() => setIsCommandPaletteOpen(true)}
           className="w-full h-16 px-5 flex items-center gap-3 premium-card rounded-2xl shadow-xl shadow-black/10 hover:border-primary hover:shadow-primary/30 transition-all group"
