@@ -1249,8 +1249,8 @@ export function ChordStudio() {
               </div>
             </div>
           ) : (
-            <ScrollArea className="flex-1" ref={scrollContainerRef}>
-              <div className="flex gap-3 pb-4">
+            <div className="flex-1 overflow-y-auto min-h-0" ref={scrollContainerRef}>
+              <div className="grid grid-cols-3 gap-3 pb-4 pr-2">
                 {timelineBlocks.map((block) => (
                   <div
                     key={block.id}
@@ -1264,7 +1264,7 @@ export function ChordStudio() {
                     onTouchMove={handleTouchMove}
                     onTouchEnd={handleTouchEnd}
                     className={cn(
-                      "premium-card p-4 transition-all cursor-move relative flex-shrink-0 w-80",
+                      "premium-card p-4 transition-all cursor-move relative",
                       currentBlockId === block.id && "ring-2 ring-primary shadow-2xl shadow-primary/30",
                       (draggedBlockId === block.id || touchDraggedBlockId === block.id) && "opacity-50",
                       dragOverBlockId === block.id && "ring-2 ring-blue-400",
@@ -1310,7 +1310,7 @@ export function ChordStudio() {
                   </div>
                 ))}
               </div>
-            </ScrollArea>
+            </div>
           )}
         </div>
       </div>
