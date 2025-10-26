@@ -122,7 +122,7 @@ export function VividScore() {
           {/* Left: Logo/Title */}
           <div className="flex items-center gap-2">
             <Music className="h-5 w-5 text-primary" />
-            <h1 className="text-lg font-semibold text-white">VividScore</h1>
+            <h1 className="text-lg font-semibold text-white">Vivid Score</h1>
           </div>
 
           {/* Center: Playback Timeline Strip */}

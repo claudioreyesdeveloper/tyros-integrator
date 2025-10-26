@@ -13,7 +13,7 @@ const tabs = [
   { id: "voices", label: "Voices", icon: Music },
   { id: "mixer", label: "Mixer", icon: Sliders },
   { id: "chord-studio", label: "Chord Studio", icon: Guitar },
-  { id: "vividscore", label: "VividScore", icon: FileMusic },
+  { id: "vividscore", label: "Vivid Score", icon: FileMusic },
   { id: "config", label: "Configuration", icon: Settings },
 ]
 

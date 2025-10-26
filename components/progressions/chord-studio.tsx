@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import {
   Play,
   Square,
@@ -752,6 +752,11 @@ export function ChordStudio() {
   const [dragOverBlockId, setDragOverBlockId] = useState<string | null>(null)
   const [auditioningId, setAuditioningId] = useState<string | null>(null)
 
+  const [touchDraggedBlockId, setTouchDraggedBlockId] = useState<string | null>(null)
+  const touchStartX = useRef<number>(0)
+  const touchStartY = useRef<number>(0)
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+
   const filteredProgressions = searchQuery
     ? MOCK_PROGRESSIONS.filter(
         (p) =>
@@ -907,6 +912,58 @@ export function ChordStudio() {
     setDragOverBlockId(null)
   }
 
+  const handleTouchStart = (e: React.TouchEvent, blockId: string) => {
+    const touch = e.touches[0]
+    touchStartX.current = touch.clientX
+    touchStartY.current = touch.clientY
+    setTouchDraggedBlockId(blockId)
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!touchDraggedBlockId) return
+
+    e.preventDefault() // Prevent scrolling while dragging
+
+    const touch = e.touches[0]
+    const element = document.elementFromPoint(touch.clientX, touch.clientY)
+
+    // Find the closest timeline block element
+    const blockElement = element?.closest("[data-block-id]")
+    if (blockElement) {
+      const blockId = blockElement.getAttribute("data-block-id")
+      if (blockId && blockId !== touchDraggedBlockId) {
+        setDragOverBlockId(blockId)
+      }
+    }
+  }
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!touchDraggedBlockId || !dragOverBlockId) {
+      setTouchDraggedBlockId(null)
+      setDragOverBlockId(null)
+      return
+    }
+
+    // Reorder blocks using the same logic as mouse drag
+    const draggedIndex = timelineBlocks.findIndex((b) => b.id === touchDraggedBlockId)
+    const targetIndex = timelineBlocks.findIndex((b) => b.id === dragOverBlockId)
+
+    if (draggedIndex !== -1 && targetIndex !== -1 && draggedIndex !== targetIndex) {
+      const newBlocks = [...timelineBlocks]
+      const [draggedBlock] = newBlocks.splice(draggedIndex, 1)
+      newBlocks.splice(targetIndex, 0, draggedBlock)
+
+      newBlocks.forEach((block, idx) => {
+        block.position = idx
+      })
+
+      setTimelineBlocks(newBlocks)
+    }
+
+    setTouchDraggedBlockId(null)
+    setDragOverBlockId(null)
+  }
+
   const handleChordClick = (progression: ChordProgression, chordIndex: number) => {
     console.log("[v0] Clicked chord:", progression.chordsWithDuration[chordIndex].chord)
     handleAudition(progression)
@@ -960,15 +1017,6 @@ export function ChordStudio() {
             </div>
           </div>
           <div className="text-xs text-gray-500">Global settings apply to all playback and imports</div>
-        </div>
-      </div>
-
-      <div className="p-6 border-b border-border glossy-panel shadow-2xl shadow-black/50">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-3xl font-bold text-white">Chord Studio</h2>
-            <p className="text-sm text-gray-400 mt-1">Browse progressions and arrange your timeline</p>
-          </div>
         </div>
       </div>
 
@@ -1201,20 +1249,24 @@ export function ChordStudio() {
               </div>
             </div>
           ) : (
-            <ScrollArea className="flex-1">
+            <ScrollArea className="flex-1" ref={scrollContainerRef}>
               <div className="flex gap-3 pb-4">
                 {timelineBlocks.map((block) => (
                   <div
                     key={block.id}
+                    data-block-id={block.id}
                     draggable
                     onDragStart={(e) => handleDragStart(e, block.id)}
                     onDragOver={(e) => handleDragOver(e, block.id)}
                     onDragEnd={handleDragEnd}
                     onDrop={(e) => handleDrop(e, block.id)}
+                    onTouchStart={(e) => handleTouchStart(e, block.id)}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleTouchEnd}
                     className={cn(
                       "premium-card p-4 transition-all cursor-move relative flex-shrink-0 w-80",
                       currentBlockId === block.id && "ring-2 ring-primary shadow-2xl shadow-primary/30",
-                      draggedBlockId === block.id && "opacity-50",
+                      (draggedBlockId === block.id || touchDraggedBlockId === block.id) && "opacity-50",
                       dragOverBlockId === block.id && "ring-2 ring-blue-400",
                     )}
                   >
