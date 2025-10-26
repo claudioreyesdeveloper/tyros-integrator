@@ -7,6 +7,7 @@ import { VoiceBrowser } from "@/components/voices/voice-browser"
 import { MixerInterface } from "@/components/mixer/mixer-interface"
 import { ConfigPanel } from "@/components/config/config-panel"
 import { ChordStudio } from "@/components/progressions/chord-studio"
+import { VividScore } from "@/components/score/vivid-score"
 import { useLayout } from "@/lib/layout-context"
 import type { Voice } from "@/lib/voice-data"
 
@@ -128,6 +129,8 @@ export default function Home() {
           )}
 
           {activeTab === "chord-studio" && <ChordStudio />}
+
+          {activeTab === "vividscore" && <VividScore />}
 
           {activeTab === "config" && <ConfigPanel />}
         </main>

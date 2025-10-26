@@ -5,19 +5,69 @@ import { useState, useRef, useEffect, useMemo } from "react"
 import { createPortal } from "react-dom"
 import { loadVoiceData, getCategories, getSubCategories, getVoices, type Voice } from "@/lib/voice-data"
 import { VoiceIcon } from "@/components/ui/voice-icon"
-import { X, ChevronRight } from "lucide-react"
+import { X, ChevronRight, Search } from "lucide-react"
 
 interface InlineVoiceSelectorProps {
   currentVoice?: Voice
   onSelectVoice: (voice: Voice) => void
   onClose: () => void
   triggerRef: React.RefObject<HTMLButtonElement | null>
+  mode?: "search" | "navigation"
 }
 
-export function InlineVoiceSelector({ currentVoice, onSelectVoice, onClose, triggerRef }: InlineVoiceSelectorProps) {
+function fuzzySearch(query: string, voices: Voice[]): Voice[] {
+  if (!query.trim()) return []
+
+  const lowerQuery = query.toLowerCase()
+  const scored = voices.map((voice) => {
+    const lowerVoice = voice.voice.toLowerCase()
+    let score = 0
+
+    // Exact match gets highest score
+    if (lowerVoice === lowerQuery) {
+      score = 1000
+    }
+    // Starts with query gets high score
+    else if (lowerVoice.startsWith(lowerQuery)) {
+      score = 500
+    }
+    // Contains query gets medium score
+    else if (lowerVoice.includes(lowerQuery)) {
+      score = 250
+    }
+    // Fuzzy match - all characters in order
+    else {
+      let queryIndex = 0
+      for (let i = 0; i < lowerVoice.length && queryIndex < lowerQuery.length; i++) {
+        if (lowerVoice[i] === lowerQuery[queryIndex]) {
+          queryIndex++
+          score += 10
+        }
+      }
+      if (queryIndex !== lowerQuery.length) score = 0
+    }
+
+    return { voice, score }
+  })
+
+  return scored
+    .filter((item) => item.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 50) // Limit to top 50 results
+    .map((item) => item.voice)
+}
+
+export function InlineVoiceSelector({
+  currentVoice,
+  onSelectVoice,
+  onClose,
+  triggerRef,
+  mode = "navigation",
+}: InlineVoiceSelectorProps) {
   const [position, setPosition] = useState({ top: 0, left: 0 })
   const [voices, setVoices] = useState<Voice[]>([])
   const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState("")
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null)
   const [hoveredSubCategory, setHoveredSubCategory] = useState<string | null>(null)
   const [submenuPosition, setSubmenuPosition] = useState({ top: 0, left: 0 })
@@ -27,6 +77,7 @@ export function InlineVoiceSelector({ currentVoice, onSelectVoice, onClose, trig
   const voiceSubmenuRef = useRef<HTMLDivElement>(null)
   const categoryTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const subCategoryTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const searchInputRef = useRef<HTMLInputElement>(null)
 
   const categories = useMemo(() => (voices.length > 0 ? getCategories(voices) : []), [voices])
 
@@ -40,11 +91,19 @@ export function InlineVoiceSelector({ currentVoice, onSelectVoice, onClose, trig
     [hoveredCategory, hoveredSubCategory, voices],
   )
 
+  const searchResults = useMemo(() => fuzzySearch(searchQuery, voices), [searchQuery, voices])
+
   useEffect(() => {
     loadVoiceData().then((data) => {
       setVoices(data)
       setLoading(false)
     })
+  }, [])
+
+  useEffect(() => {
+    if (searchInputRef.current) {
+      searchInputRef.current.focus()
+    }
   }, [])
 
   useEffect(() => {
@@ -157,7 +216,7 @@ export function InlineVoiceSelector({ currentVoice, onSelectVoice, onClose, trig
   const dropdownContent = (
     <div
       ref={dropdownRef}
-      className="fixed bg-black/40 backdrop-blur-md border-2 border-amber-500 rounded-lg shadow-2xl w-[300px] max-h-[400px] flex flex-col"
+      className="fixed bg-black/40 backdrop-blur-md border-2 border-amber-500 rounded-lg shadow-2xl w-[300px] max-h-[500px] flex flex-col"
       style={{
         top: `${position.top}px`,
         left: `${position.left}px`,
@@ -167,7 +226,7 @@ export function InlineVoiceSelector({ currentVoice, onSelectVoice, onClose, trig
     >
       {/* Header */}
       <div className="flex items-center justify-between p-3 border-b border-amber-500/30">
-        <h3 className="text-white font-bold text-sm">Select Voice</h3>
+        <h3 className="text-white font-bold text-sm">{mode === "search" ? "Search Voices" : "Select Voice"}</h3>
         <button
           onClick={onClose}
           className="text-zinc-400 hover:text-white transition-colors p-1 rounded hover:bg-white/10"
@@ -176,10 +235,57 @@ export function InlineVoiceSelector({ currentVoice, onSelectVoice, onClose, trig
         </button>
       </div>
 
+      {mode === "search" && (
+        <div className="p-3 border-b border-amber-500/30">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-500" />
+            <input
+              ref={searchInputRef}
+              type="text"
+              placeholder="Search voices..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-3 py-2 bg-black/30 border border-amber-500/30 rounded-lg text-white text-sm placeholder:text-zinc-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
+            />
+          </div>
+        </div>
+      )}
+
       {/* Content */}
       <div className="flex-1 overflow-y-auto">
         {loading ? (
           <div className="p-8 text-center text-zinc-500 text-sm">Loading...</div>
+        ) : mode === "search" ? (
+          <div className="p-2">
+            {searchQuery.trim() === "" ? (
+              <div className="p-4 text-center text-zinc-500 text-sm">Type to search voices...</div>
+            ) : searchResults.length === 0 ? (
+              <div className="p-4 text-center text-zinc-500 text-sm">No voices found</div>
+            ) : (
+              <>
+                <div className="px-3 py-2 text-xs text-zinc-400">
+                  {searchResults.length} result{searchResults.length !== 1 ? "s" : ""}
+                </div>
+                {searchResults.map((voice) => (
+                  <button
+                    key={`${voice.category}-${voice.sub}-${voice.voice}`}
+                    onClick={() => handleVoiceClick(voice)}
+                    className={`w-full flex items-center gap-3 p-3 rounded hover:bg-white/10 transition-colors text-left ${
+                      currentVoice?.voice === voice.voice ? "bg-white/10" : ""
+                    }`}
+                  >
+                    <VoiceIcon category={voice.category} subcategory={voice.sub} size={24} />
+                    <div className="flex-1 min-w-0">
+                      <div className="text-white text-sm font-medium truncate">{voice.voice}</div>
+                      <div className="text-zinc-500 text-xs truncate">
+                        {voice.category} › {voice.sub}
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </>
+            )}
+          </div>
         ) : (
           <div className="p-2">
             {categories.map((category) => (
@@ -203,7 +309,7 @@ export function InlineVoiceSelector({ currentVoice, onSelectVoice, onClose, trig
     </div>
   )
 
-  const submenuContent = hoveredCategory && subCategories.length > 0 && (
+  const submenuContent = mode === "navigation" && hoveredCategory && subCategories.length > 0 && (
     <div
       ref={submenuRef}
       className="fixed bg-black/40 backdrop-blur-md border-2 border-amber-500 rounded-lg shadow-2xl w-[300px] max-h-[400px] overflow-y-auto"
@@ -235,7 +341,7 @@ export function InlineVoiceSelector({ currentVoice, onSelectVoice, onClose, trig
     </div>
   )
 
-  const voiceSubmenuContent = hoveredCategory && hoveredSubCategory && (
+  const voiceSubmenuContent = mode === "navigation" && hoveredCategory && hoveredSubCategory && (
     <div
       key={`${hoveredCategory}-${hoveredSubCategory}`}
       ref={voiceSubmenuRef}

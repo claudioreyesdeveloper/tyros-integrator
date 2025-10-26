@@ -4,7 +4,7 @@ import { useState, useRef } from "react"
 import { useMIDI } from "@/lib/midi-context"
 import { VoiceIcon } from "@/components/ui/voice-icon"
 import { RotaryKnob } from "@/components/ui/rotary-knob"
-import { Music } from "lucide-react"
+import { Music, Search } from "lucide-react"
 import { InlineVoiceSelector } from "./inline-voice-selector"
 import type { Voice } from "@/lib/voice-data"
 
@@ -41,6 +41,7 @@ export function MixerChannelHorizontal({
   const [high, setHigh] = useState(64)
 
   const [showInlineSelector, setShowInlineSelector] = useState(false)
+  const [selectorMode, setSelectorMode] = useState<"search" | "navigation">("navigation")
   const voiceButtonRef = useRef<HTMLButtonElement>(null)
 
   const handleVolumeChange = (value: number) => {
@@ -85,9 +86,17 @@ export function MixerChannelHorizontal({
 
   const handleVoiceClick = () => {
     if (onVoiceAssignedInline) {
+      setSelectorMode("navigation")
       setShowInlineSelector(true)
     } else {
       onSelectVoice()
+    }
+  }
+
+  const handleSearchClick = () => {
+    if (onVoiceAssignedInline) {
+      setSelectorMode("search")
+      setShowInlineSelector(true)
     }
   }
 
@@ -103,19 +112,27 @@ export function MixerChannelHorizontal({
         {/* Channel Number */}
         <div className="text-amber-500 font-bold text-sm text-center">{channel}</div>
 
-        {/* Voice Name - clickable to select voice */}
-        <button
-          ref={voiceButtonRef}
-          onClick={handleVoiceClick}
-          className="text-white text-xs font-medium text-left truncate hover:text-amber-500 transition-colors flex items-center gap-2"
-        >
-          {voiceName === "No Voice" ? (
-            <Music className="w-5 h-5 text-zinc-600 flex-shrink-0" />
-          ) : (
-            <VoiceIcon subcategory={voiceSubcategory} category={voiceCategory} size={20} />
-          )}
-          <span className="truncate">{voiceName}</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            ref={voiceButtonRef}
+            onClick={handleVoiceClick}
+            className="text-white text-xs font-medium text-left truncate hover:text-amber-500 transition-colors flex items-center gap-2 flex-1 min-w-0"
+          >
+            {voiceName === "No Voice" ? (
+              <Music className="w-5 h-5 text-zinc-600 flex-shrink-0" />
+            ) : (
+              <VoiceIcon subcategory={voiceSubcategory} category={voiceCategory} size={20} />
+            )}
+            <span className="truncate">{voiceName}</span>
+          </button>
+          <button
+            onClick={handleSearchClick}
+            className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded hover:bg-amber-500/20 transition-colors group"
+            title="Search voices"
+          >
+            <Search className="w-4 h-4 text-zinc-400 group-hover:text-amber-500 transition-colors" />
+          </button>
+        </div>
 
         {/* Volume Slider */}
         <div className="flex flex-col items-center gap-1">
@@ -180,6 +197,7 @@ export function MixerChannelHorizontal({
           onSelectVoice={handleInlineVoiceSelect}
           onClose={() => setShowInlineSelector(false)}
           triggerRef={voiceButtonRef}
+          mode={selectorMode}
         />
       )}
     </>

@@ -60,16 +60,16 @@ export function HomeScreen({ onSelectVoice, partVoices }: HomeScreenProps) {
   }
 
   return (
-    <div className="h-full flex flex-col items-center justify-center p-4 md:p-6 lg:p-8">
-      {/* Content */}
-      <div className="w-full h-full flex flex-col items-center justify-center">
-        <div className="text-center mb-8 md:mb-10 lg:mb-12">
-          <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-4 drop-shadow-[0_4px_12px_rgba(255,107,0,0.5)] tracking-tight">
+    <div className="h-full overflow-y-auto p-4 md:p-6">
+      <div className="w-full flex flex-col gap-4">
+        {/* Welcome heading */}
+        <div className="text-center">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 drop-shadow-[0_4px_12px_rgba(255,107,0,0.5)] tracking-tight">
             Welcome
           </h1>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 lg:gap-6 max-w-7xl w-full mb-6 md:mb-7 lg:mb-8">
+        <div className="grid grid-cols-4 gap-3">
           {[1, 2, 3, 4].map((partNumber) => {
             const voice = partVoices[partNumber]
 
@@ -80,18 +80,18 @@ export function HomeScreen({ onSelectVoice, partVoices }: HomeScreenProps) {
                   console.log("[v0] HomeScreen: Selecting voice for part", partNumber)
                   onSelectVoice(partNumber)
                 }}
-                className="premium-card p-6 md:p-7 lg:p-8 flex flex-col items-center gap-4 md:gap-5 lg:gap-6 hover:scale-105 transition-all duration-300 group"
+                className="premium-card p-3 flex flex-col items-center gap-2 hover:scale-[1.02] transition-all duration-300 group"
               >
-                <div className="w-28 h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-600/10 flex items-center justify-center border-4 border-amber-500/40 group-hover:border-amber-500 group-hover:shadow-2xl group-hover:shadow-amber-500/30 transition-all shadow-lg shadow-amber-500/20">
-                  <VoiceIcon subcategory={voice?.sub || ""} className="text-amber-500" size={80} />
+                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-600/10 flex items-center justify-center border-3 border-amber-500/40 group-hover:border-amber-500 group-hover:shadow-xl group-hover:shadow-amber-500/30 transition-all shadow-lg shadow-amber-500/20">
+                  <VoiceIcon subcategory={voice?.sub || ""} className="text-amber-500" size={40} />
                 </div>
 
                 <div className="text-center w-full">
-                  <h3 className="premium-label text-xl md:text-2xl lg:text-2xl mb-2">{PART_NAMES[partNumber - 1]}</h3>
+                  <h3 className="premium-label text-sm mb-1">{PART_NAMES[partNumber - 1]}</h3>
                   {voice ? (
-                    <p className="text-sm md:text-base lg:text-lg font-semibold text-white">{voice.voice}</p>
+                    <p className="text-xs font-semibold text-white truncate">{voice.voice}</p>
                   ) : (
-                    <p className="text-xs md:text-sm text-muted-foreground">No Voice</p>
+                    <p className="text-xs text-muted-foreground">No Voice</p>
                   )}
                 </div>
               </button>
@@ -99,18 +99,16 @@ export function HomeScreen({ onSelectVoice, partVoices }: HomeScreenProps) {
           })}
         </div>
 
-        <div className="max-w-7xl w-full mb-6">
-          <StylesSelector />
-        </div>
+        {/* Styles selector */}
+        <StylesSelector />
 
-        <div className="mt-8 md:mt-10 lg:mt-12 flex flex-col md:flex-row items-center gap-4 md:gap-6 text-xs md:text-sm glossy-panel px-6 md:px-8 py-3 md:py-4">
-          <div className="flex items-center gap-3">
-            <div className="w-3 h-3 rounded-full bg-primary animate-pulse shadow-lg shadow-primary/50" />
+        <div className="flex items-center justify-center gap-8 text-xs glossy-panel px-6 py-3">
+          <div className="flex items-center gap-2">
+            <div className="w-2.5 h-2.5 rounded-full bg-primary animate-pulse shadow-lg shadow-primary/50" />
             <span className="premium-label">MIDI: Connected</span>
           </div>
-          <div className="hidden md:block w-px h-6 bg-border" />
-          <div className="flex items-center gap-3">
-            <div className="w-3 h-3 rounded-full bg-primary shadow-lg shadow-primary/50" />
+          <div className="flex items-center gap-2">
+            <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-lg shadow-primary/50" />
             <span className="premium-label">SmartBridge Ready</span>
           </div>
         </div>

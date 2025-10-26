@@ -73,6 +73,18 @@ UI component that displays MIDI activity logs in real-time.
 - Export logs as JSON
 - Auto-scroll to latest messages
 
+### 4. Config Component (`components/logging/config.tsx`)
+
+UI component that displays MIDI activity logs in real-time.
+
+**Features:**
+- Real-time log display with timestamps
+- Status indicators (Success/Failed)
+- Message type and details
+- Clear logs functionality
+- Export logs as JSON
+- Auto-scroll to latest messages
+
 ## Message Flow
 
 ### Outgoing Messages (App → Keyboard)

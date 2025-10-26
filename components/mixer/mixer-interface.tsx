@@ -77,10 +77,10 @@ export function MixerInterface({
   const [internalCurrentBank, setInternalCurrentBank] = useState(0)
   const currentBank = externalCurrentBank !== undefined ? externalCurrentBank : internalCurrentBank
 
-  const [effectsChannel, setEffectsChannel] = useState<number | null>(null)
   const [masterVolume, setMasterVolume] = useState(100)
   const [globalReverb, setGlobalReverb] = useState(40)
   const [globalChorus, setGlobalChorus] = useState(30)
+
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { api } = useMIDI()
 
@@ -227,87 +227,6 @@ export function MixerInterface({
         </div>
       </div>
 
-      <div className="mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-transparent backdrop-blur-sm border-2 border-[#f59e0b]/30 rounded-lg p-4">
-          <h3 className="text-[#f59e0b] font-bold text-xs uppercase tracking-wider mb-3">Master Volume</h3>
-          <div className="flex items-center gap-3">
-            <input
-              type="range"
-              min="0"
-              max="127"
-              value={masterVolume}
-              onChange={(e) => handleMasterVolumeChange(Number(e.target.value))}
-              className="flex-1 h-2 bg-zinc-800 rounded-full appearance-none cursor-pointer
-                [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 
-                [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#f59e0b] 
-                [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-lg
-                [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full 
-                [&::-moz-range-thumb]:bg-[#f59e0b] [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
-            />
-            <span className="text-white font-bold text-lg w-12 text-right">{masterVolume}</span>
-          </div>
-        </div>
-
-        <div className="bg-transparent backdrop-blur-sm border-2 border-[#f59e0b]/30 rounded-lg p-4">
-          <h3 className="text-[#f59e0b] font-bold text-xs uppercase tracking-wider mb-3">Global Reverb</h3>
-          <div className="flex items-center gap-3">
-            <input
-              type="range"
-              min="0"
-              max="127"
-              value={globalReverb}
-              onChange={(e) => handleGlobalReverbChange(Number(e.target.value))}
-              className="flex-1 h-2 bg-zinc-800 rounded-full appearance-none cursor-pointer
-                [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 
-                [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#f59e0b] 
-                [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-lg
-                [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full 
-                [&::-moz-range-thumb]:bg-[#f59e0b] [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
-            />
-            <span className="text-white font-bold text-lg w-12 text-right">{globalReverb}</span>
-          </div>
-        </div>
-
-        <div className="bg-transparent backdrop-blur-sm border-2 border-[#f59e0b]/30 rounded-lg p-4">
-          <h3 className="text-[#f59e0b] font-bold text-xs uppercase tracking-wider mb-3">Global Chorus</h3>
-          <div className="flex items-center gap-3">
-            <input
-              type="range"
-              min="0"
-              max="127"
-              value={globalChorus}
-              onChange={(e) => handleGlobalChorusChange(Number(e.target.value))}
-              className="flex-1 h-2 bg-zinc-800 rounded-full appearance-none cursor-pointer
-                [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 
-                [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#f59e0b] 
-                [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-lg
-                [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full 
-                [&::-moz-range-thumb]:bg-[#f59e0b] [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
-            />
-            <span className="text-white font-bold text-lg w-12 text-right">{globalChorus}</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex gap-2 mb-4">
-        {bankNames.map((name, index) => (
-          <button
-            key={index}
-            onClick={() => handleBankChange(index)}
-            className={`flex-1 px-3 py-3 rounded-lg font-bold text-xs transition-all ${
-              currentBank === index
-                ? "bg-gradient-to-r from-[#f59e0b] to-[#fb923c] text-white"
-                : "bg-transparent backdrop-blur-sm text-zinc-400 hover:bg-white/10"
-            }`}
-          >
-            <div className="text-sm">{name}</div>
-            <div className="text-[10px] opacity-70 mt-1">
-              (Ch {index * channelsPerView + 1}-{index * channelsPerView + channelsPerView})
-            </div>
-          </button>
-        ))}
-      </div>
-
       <div className="flex-1 overflow-hidden">
         {viewMode === "vertical" ? (
           <div className="h-full overflow-x-auto overflow-y-hidden">
@@ -319,7 +238,9 @@ export function MixerInterface({
                   partName={ch.partName}
                   voiceName={partVoices[ch.channel]?.voice || "No Voice"}
                   onSelectVoice={() => onSelectVoice(ch.channel)}
+                  currentVoice={partVoices[ch.channel]}
                   voiceSubcategory={partVoices[ch.channel]?.sub || ""}
+                  voiceCategory={partVoices[ch.channel]?.category || ""}
                 />
               ))}
             </div>

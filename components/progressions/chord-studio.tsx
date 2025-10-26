@@ -7,11 +7,8 @@ import {
   Play,
   Square,
   RotateCcw,
-  ArrowLeft,
   Search,
-  Plus,
   MoreVertical,
-  Upload,
   ChevronRight,
   ChevronDown,
   Folder,
@@ -724,7 +721,7 @@ function PhraseRibbonDisplay({
   )
 }
 
-type Mode = "library" | "play"
+// Removed Mode type definition
 
 interface TimelineBlock {
   id: string
@@ -733,7 +730,8 @@ interface TimelineBlock {
 }
 
 export function ChordStudio() {
-  const [mode, setMode] = useState<Mode>("library")
+  // const [mode, setMode] = useState<Mode>("library")
+
   const [timelineBlocks, setTimelineBlocks] = useState<TimelineBlock[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set())
@@ -753,6 +751,18 @@ export function ChordStudio() {
   const [draggedBlockId, setDraggedBlockId] = useState<string | null>(null)
   const [dragOverBlockId, setDragOverBlockId] = useState<string | null>(null)
   const [auditioningId, setAuditioningId] = useState<string | null>(null)
+
+  const filteredProgressions = searchQuery
+    ? MOCK_PROGRESSIONS.filter(
+        (p) =>
+          p.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          p.subtype.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          p.subSubtype.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          p.section.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          p.variation.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          p.chords.some((chord) => chord.toLowerCase().includes(searchQuery.toLowerCase())),
+      )
+    : []
 
   const buildTreeStructure = () => {
     const tree: Record<string, any> = {}
@@ -827,13 +837,6 @@ export function ChordStudio() {
       position: timelineBlocks.length,
     }
     setTimelineBlocks([...timelineBlocks, newBlock])
-    setMode("play")
-  }
-
-  const handleBackToLibrary = () => {
-    setMode("library")
-    setIsPlaying(false)
-    setCurrentBar(0)
   }
 
   const handlePlay = () => {
@@ -904,18 +907,6 @@ export function ChordStudio() {
     setDragOverBlockId(null)
   }
 
-  const filteredProgressions = searchQuery
-    ? MOCK_PROGRESSIONS.filter(
-        (p) =>
-          p.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.subtype.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.subSubtype.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.section.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.variation.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.chords.some((chord) => chord.toLowerCase().includes(searchQuery.toLowerCase())),
-      )
-    : []
-
   const handleChordClick = (progression: ChordProgression, chordIndex: number) => {
     console.log("[v0] Clicked chord:", progression.chordsWithDuration[chordIndex].chord)
     handleAudition(progression)
@@ -973,287 +964,240 @@ export function ChordStudio() {
       </div>
 
       <div className="p-6 border-b border-border glossy-panel shadow-2xl shadow-black/50">
-        {mode === "library" ? (
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-3xl font-bold text-white">Chord Studio</h2>
-              <p className="text-sm text-gray-400 mt-1">Browse and select chord progressions</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                onClick={handleImport}
-                variant="outline"
-                className="border-primary/30 text-primary hover:bg-primary/10 bg-transparent"
-              >
-                <Upload className="w-4 h-4 mr-2" />
-                Import MIDI
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button
-                onClick={handleBackToLibrary}
-                variant="ghost"
-                size="sm"
-                className="text-gray-400 hover:text-white hover:bg-white/10"
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Studio
-              </Button>
-              <div className="h-6 w-px bg-border" />
-              <h2 className="text-xl font-bold text-white">Timeline Arranger</h2>
-              <span className="text-xs text-gray-500">
-                Space: Play/Stop • L: Loop • Del: Delete • Shift+Drag: Group • Ctrl+Drag: Copy
-              </span>
-            </div>
-            <Button onClick={() => setMode("library")} size="sm" className="glossy-button">
-              <Plus className="w-4 h-4 mr-2" />
-              Add Section
-            </Button>
-          </div>
-        )}
-      </div>
-
-      {mode === "library" && (
-        <div className="flex-1 flex gap-6 p-6 overflow-hidden">
-          <div className="w-80 flex flex-col gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <Input
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search progressions..."
-                className="pl-10 bg-black/30 border-white/10 text-white placeholder:text-gray-500 h-11"
-              />
-            </div>
-
-            <ScrollArea className="flex-1">
-              <div className="space-y-0.5 pr-2">
-                {Object.keys(treeStructure).map((type) => {
-                  const typeId = `type-${type}`
-                  const isTypeExpanded = expandedNodes.has(typeId)
-
-                  return (
-                    <div key={type}>
-                      <button
-                        onClick={() => toggleNode(typeId)}
-                        className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-white hover:bg-white/5 rounded transition-colors"
-                      >
-                        {isTypeExpanded ? (
-                          <ChevronDown className="w-4 h-4 flex-shrink-0" />
-                        ) : (
-                          <ChevronRight className="w-4 h-4 flex-shrink-0" />
-                        )}
-                        {isTypeExpanded ? (
-                          <FolderOpen className="w-4 h-4 flex-shrink-0 text-amber-400" />
-                        ) : (
-                          <Folder className="w-4 h-4 flex-shrink-0 text-amber-400" />
-                        )}
-                        <span className="truncate">{type}</span>
-                      </button>
-
-                      {isTypeExpanded && (
-                        <div className="ml-4">
-                          {Object.keys(treeStructure[type]).map((subtype) => {
-                            const subtypeId = `subtype-${type}-${subtype}`
-                            const isSubtypeExpanded = expandedNodes.has(subtypeId)
-
-                            return (
-                              <div key={subtype}>
-                                <button
-                                  onClick={() => toggleNode(subtypeId)}
-                                  className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-white hover:bg-white/5 rounded transition-colors"
-                                >
-                                  {isSubtypeExpanded ? (
-                                    <ChevronDown className="w-4 h-4 flex-shrink-0" />
-                                  ) : (
-                                    <ChevronRight className="w-4 h-4 flex-shrink-0" />
-                                  )}
-                                  {isSubtypeExpanded ? (
-                                    <FolderOpen className="w-4 h-4 flex-shrink-0 text-blue-400" />
-                                  ) : (
-                                    <Folder className="w-4 h-4 flex-shrink-0 text-blue-400" />
-                                  )}
-                                  <span className="truncate">{subtype}</span>
-                                </button>
-
-                                {isSubtypeExpanded && (
-                                  <div className="ml-4">
-                                    {Object.keys(treeStructure[type][subtype]).map((subSubtype) => {
-                                      const isSelected =
-                                        selectedSubSubtype?.type === type &&
-                                        selectedSubSubtype?.subtype === subtype &&
-                                        selectedSubSubtype?.subSubtype === subSubtype
-
-                                      return (
-                                        <button
-                                          key={subSubtype}
-                                          onClick={() => handleSelectSubSubtype(type, subtype, subSubtype)}
-                                          className={cn(
-                                            "w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded transition-colors",
-                                            isSelected
-                                              ? "bg-primary/20 text-primary font-medium"
-                                              : "text-white hover:bg-white/5",
-                                          )}
-                                        >
-                                          <Folder className="w-4 h-4 flex-shrink-0 text-teal-400" />
-                                          <span className="truncate">{subSubtype}</span>
-                                        </button>
-                                      )
-                                    })}
-                                  </div>
-                                )}
-                              </div>
-                            )
-                          })}
-                        </div>
-                      )}
-                    </div>
-                  )
-                })}
-              </div>
-            </ScrollArea>
-          </div>
-
-          <div className="flex-1 flex flex-col gap-4">
-            {selectedSubSubtype ? (
-              <>
-                <div className="premium-card p-4">
-                  <div className="text-sm text-gray-400 mb-1">Selected Category</div>
-                  <div className="text-lg font-bold text-white">
-                    {selectedSubSubtype.type} › {selectedSubSubtype.subtype} › {selectedSubSubtype.subSubtype}
-                  </div>
-                </div>
-
-                <ScrollArea className="flex-1">
-                  <div className="space-y-3">
-                    {selectedProgressions.map((progression) => (
-                      <div
-                        key={progression.id}
-                        onClick={() => setSelectedProgressionId(progression.id)}
-                        onDoubleClick={() => handleDoubleClickProgression(progression)}
-                        className={cn(
-                          "premium-card p-4 cursor-pointer transition-all relative",
-                          selectedProgressionId === progression.id
-                            ? "ring-2 ring-primary bg-primary/10"
-                            : "hover:bg-white/5",
-                        )}
-                      >
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            handleAudition(progression)
-                          }}
-                          className={cn(
-                            "absolute top-4 right-4 p-2 rounded-lg border transition-all group",
-                            auditioningId === progression.id
-                              ? "bg-primary/40 border-primary scale-110 shadow-lg shadow-primary/50"
-                              : "bg-black/40 hover:bg-primary/20 border-primary/30 hover:border-primary",
-                          )}
-                          title="Audition progression"
-                        >
-                          <Ear
-                            className={cn(
-                              "w-5 h-5 transition-all",
-                              auditioningId === progression.id
-                                ? "text-white animate-pulse"
-                                : "text-primary group-hover:scale-110",
-                            )}
-                          />
-                        </button>
-
-                        <div className="flex items-start justify-between mb-3 pr-12">
-                          <div>
-                            <h4 className="text-lg font-bold text-white mb-1">
-                              {progression.section} ({progression.variation})
-                            </h4>
-                            <div className="flex items-center gap-3 text-sm text-gray-400">
-                              <span>{progression.key}</span>
-                              <span>•</span>
-                              <span>{progression.tempo} BPM</span>
-                              <span>•</span>
-                              <span>{progression.timeSignature}</span>
-                              <span>•</span>
-                              <span>{progression.bars} bars</span>
-                            </div>
-                          </div>
-                          <span className="text-xs px-3 py-1.5 rounded bg-primary/20 text-primary font-medium">
-                            {progression.section}
-                          </span>
-                        </div>
-
-                        <PhraseRibbonDisplay
-                          chordsWithDuration={progression.chordsWithDuration}
-                          timeSignature={progression.timeSignature}
-                          bars={progression.bars}
-                          isCompact={true}
-                          className="mt-3"
-                          onChordClick={(idx) => handleChordClick(progression, idx)}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </ScrollArea>
-              </>
-            ) : (
-              <div className="flex-1 flex items-center justify-center">
-                <div className="text-center text-gray-400">
-                  <Music2 className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                  <p className="text-lg">Select a category from the tree to view progressions</p>
-                </div>
-              </div>
-            )}
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-3xl font-bold text-white">Chord Studio</h2>
+            <p className="text-sm text-gray-400 mt-1">Browse progressions and arrange your timeline</p>
           </div>
         </div>
-      )}
+      </div>
 
-      {mode === "play" && (
-        <div className="flex-1 flex flex-col p-6 gap-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <h3 className="text-lg font-bold text-white">Timeline Range</h3>
-              <div className="h-6 w-px bg-border/50" />
-              <div className="flex items-center gap-2">
-                <Button
-                  onClick={handlePlay}
-                  size="sm"
-                  className={cn("w-24 h-10", isPlaying ? "glossy-button" : "premium-card")}
-                >
-                  {isPlaying ? <Square className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}
-                  {isPlaying ? "Pause" : "Play"}
-                </Button>
+      <div className="flex-1 flex gap-6 p-6 overflow-hidden">
+        {/* Library section - left side */}
+        <div className="w-80 flex flex-col gap-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search progressions..."
+              className="pl-10 bg-black/30 border-white/10 text-white placeholder:text-gray-500 h-11"
+            />
+          </div>
 
-                <Button onClick={handleStop} size="sm" className="premium-card h-10 w-10 p-0">
-                  <Square className="w-4 h-4" />
-                </Button>
+          <ScrollArea className="flex-1">
+            <div className="space-y-0.5 pr-2">
+              {Object.keys(treeStructure).map((type) => {
+                const typeId = `type-${type}`
+                const isTypeExpanded = expandedNodes.has(typeId)
 
-                <Button
-                  onClick={() => setIsLooping(!isLooping)}
-                  size="sm"
-                  className={cn("h-10 w-10 p-0", isLooping ? "glossy-button" : "premium-card")}
-                >
-                  <RotateCcw className="w-4 h-4" />
-                </Button>
+                return (
+                  <div key={type}>
+                    <button
+                      onClick={() => toggleNode(typeId)}
+                      className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-white hover:bg-white/5 rounded transition-colors"
+                    >
+                      {isTypeExpanded ? (
+                        <ChevronDown className="w-4 h-4 flex-shrink-0" />
+                      ) : (
+                        <ChevronRight className="w-4 h-4 flex-shrink-0" />
+                      )}
+                      {isTypeExpanded ? (
+                        <FolderOpen className="w-4 h-4 flex-shrink-0 text-amber-400" />
+                      ) : (
+                        <Folder className="w-4 h-4 flex-shrink-0 text-amber-400" />
+                      )}
+                      <span className="truncate">{type}</span>
+                    </button>
+
+                    {isTypeExpanded && (
+                      <div className="ml-4">
+                        {Object.keys(treeStructure[type]).map((subtype) => {
+                          const subtypeId = `subtype-${type}-${subtype}`
+                          const isSubtypeExpanded = expandedNodes.has(subtypeId)
+
+                          return (
+                            <div key={subtype}>
+                              <button
+                                onClick={() => toggleNode(subtypeId)}
+                                className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-white hover:bg-white/5 rounded transition-colors"
+                              >
+                                {isSubtypeExpanded ? (
+                                  <ChevronDown className="w-4 h-4 flex-shrink-0" />
+                                ) : (
+                                  <ChevronRight className="w-4 h-4 flex-shrink-0" />
+                                )}
+                                {isSubtypeExpanded ? (
+                                  <FolderOpen className="w-4 h-4 flex-shrink-0 text-blue-400" />
+                                ) : (
+                                  <Folder className="w-4 h-4 flex-shrink-0 text-blue-400" />
+                                )}
+                                <span className="truncate">{subtype}</span>
+                              </button>
+
+                              {isSubtypeExpanded && (
+                                <div className="ml-4">
+                                  {Object.keys(treeStructure[type][subtype]).map((subSubtype) => {
+                                    const isSelected =
+                                      selectedSubSubtype?.type === type &&
+                                      selectedSubSubtype?.subtype === subtype &&
+                                      selectedSubSubtype?.subSubtype === subSubtype
+
+                                    return (
+                                      <button
+                                        key={subSubtype}
+                                        onClick={() => handleSelectSubSubtype(type, subtype, subSubtype)}
+                                        className={cn(
+                                          "w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded transition-colors",
+                                          isSelected
+                                            ? "bg-primary/20 text-primary font-medium"
+                                            : "text-white hover:bg-white/5",
+                                        )}
+                                      >
+                                        <Folder className="w-4 h-4 flex-shrink-0 text-teal-400" />
+                                        <span className="truncate">{subSubtype}</span>
+                                      </button>
+                                    )
+                                  })}
+                                </div>
+                              )}
+                            </div>
+                          )
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </ScrollArea>
+        </div>
+
+        {/* Progressions list - middle section */}
+        <div className="flex-1 flex flex-col gap-4">
+          {selectedSubSubtype ? (
+            <>
+              <div className="premium-card p-4">
+                <div className="text-sm text-gray-400 mb-1">Selected Category</div>
+                <div className="text-lg font-bold text-white">
+                  {selectedSubSubtype.type} › {selectedSubSubtype.subtype} › {selectedSubSubtype.subSubtype}
+                </div>
+              </div>
+
+              <ScrollArea className="flex-1">
+                <div className="space-y-3">
+                  {selectedProgressions.map((progression) => (
+                    <div
+                      key={progression.id}
+                      onClick={() => setSelectedProgressionId(progression.id)}
+                      onDoubleClick={() => handleDoubleClickProgression(progression)}
+                      className={cn(
+                        "premium-card p-4 cursor-pointer transition-all relative",
+                        selectedProgressionId === progression.id
+                          ? "ring-2 ring-primary bg-primary/10"
+                          : "hover:bg-white/5",
+                      )}
+                    >
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleAudition(progression)
+                        }}
+                        className={cn(
+                          "absolute top-4 right-4 p-2 rounded-lg border transition-all group",
+                          auditioningId === progression.id
+                            ? "bg-primary/40 border-primary scale-110 shadow-lg shadow-primary/50"
+                            : "bg-black/40 hover:bg-primary/20 border-primary/30 hover:border-primary",
+                        )}
+                        title="Audition progression"
+                      >
+                        <Ear
+                          className={cn(
+                            "w-5 h-5 transition-all",
+                            auditioningId === progression.id
+                              ? "text-white animate-pulse"
+                              : "text-primary group-hover:scale-110",
+                          )}
+                        />
+                      </button>
+
+                      <div className="flex items-start justify-between mb-3 pr-12">
+                        <div>
+                          <h4 className="text-lg font-bold text-white mb-1">
+                            {progression.section} ({progression.variation})
+                          </h4>
+                          <div className="flex items-center gap-3 text-sm text-gray-400">
+                            <span>{progression.key}</span>
+                            <span>•</span>
+                            <span>{progression.tempo} BPM</span>
+                            <span>•</span>
+                            <span>{progression.timeSignature}</span>
+                            <span>•</span>
+                            <span>{progression.bars} bars</span>
+                          </div>
+                        </div>
+                        <span className="text-xs px-3 py-1.5 rounded bg-primary/20 text-primary font-medium">
+                          {progression.section}
+                        </span>
+                      </div>
+
+                      <PhraseRibbonDisplay
+                        chordsWithDuration={progression.chordsWithDuration}
+                        timeSignature={progression.timeSignature}
+                        bars={progression.bars}
+                        isCompact={true}
+                        className="mt-3"
+                        onChordClick={(idx) => handleChordClick(progression, idx)}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </>
+          ) : (
+            <div className="flex-1 flex items-center justify-center">
+              <div className="text-center text-gray-400">
+                <Music2 className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                <p className="text-lg">Select a category from the tree to view progressions</p>
               </div>
             </div>
-            <span className="text-xs text-gray-500">{timelineBlocks.length} section(s) in timeline</span>
+          )}
+        </div>
+
+        {/* Timeline section - right side */}
+        <div className="w-96 flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-bold text-white">Timeline</h3>
+            <div className="flex items-center gap-2">
+              <Button
+                onClick={handlePlay}
+                size="sm"
+                className={cn("w-20 h-9", isPlaying ? "glossy-button" : "premium-card")}
+              >
+                {isPlaying ? <Square className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}
+                {isPlaying ? "Stop" : "Play"}
+              </Button>
+
+              <Button
+                onClick={() => setIsLooping(!isLooping)}
+                size="sm"
+                className={cn("h-9 w-9 p-0", isLooping ? "glossy-button" : "premium-card")}
+              >
+                <RotateCcw className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
 
           {timelineBlocks.length === 0 ? (
-            <div className="flex-1 flex items-center justify-center">
+            <div className="flex-1 flex items-center justify-center premium-card p-6">
               <div className="text-center">
-                <p className="text-gray-400 text-lg mb-4">No sections in timeline</p>
-                <Button onClick={() => setMode("library")} className="glossy-button">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Section from Studio
-                </Button>
+                <p className="text-gray-400 text-sm mb-2">No sections in timeline</p>
+                <p className="text-xs text-gray-500">Double-click a progression to add it</p>
               </div>
             </div>
           ) : (
             <ScrollArea className="flex-1">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-4">
+              <div className="space-y-3 pb-4">
                 {timelineBlocks.map((block) => (
                   <div
                     key={block.id}
@@ -1263,43 +1207,18 @@ export function ChordStudio() {
                     onDragEnd={handleDragEnd}
                     onDrop={(e) => handleDrop(e, block.id)}
                     className={cn(
-                      "premium-card p-5 transition-all cursor-move relative",
+                      "premium-card p-4 transition-all cursor-move relative",
                       currentBlockId === block.id && "ring-2 ring-primary shadow-2xl shadow-primary/30",
                       draggedBlockId === block.id && "opacity-50",
                       dragOverBlockId === block.id && "ring-2 ring-blue-400",
                     )}
                   >
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        handleAudition(block.progression)
-                      }}
-                      className={cn(
-                        "absolute top-3 right-3 p-2 rounded-lg border transition-all group z-10",
-                        auditioningId === block.progression.id
-                          ? "bg-primary/40 border-primary scale-110 shadow-lg shadow-primary/50"
-                          : "bg-black/40 hover:bg-primary/20 border-primary/30 hover:border-primary",
-                      )}
-                      title="Audition progression"
-                    >
-                      <Ear
-                        className={cn(
-                          "w-4 h-4 transition-all",
-                          auditioningId === block.progression.id
-                            ? "text-white animate-pulse"
-                            : "text-primary group-hover:scale-110",
-                        )}
-                      />
-                    </button>
-
-                    <div className="flex items-start justify-between mb-3 pr-12">
+                    <div className="flex items-start justify-between mb-3">
                       <div className="flex-1 min-w-0 pr-2">
                         <h4 className="text-xs font-bold text-primary truncate uppercase tracking-wide">
-                          {block.progression.type}
+                          {block.progression.section}
                         </h4>
-                        <p className="text-[10px] text-gray-400 truncate mt-0.5">
-                          {block.progression.subtype} › {block.progression.subSubtype}
-                        </p>
+                        <p className="text-[10px] text-gray-400 truncate mt-0.5">{block.progression.variation}</p>
                       </div>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -1316,29 +1235,20 @@ export function ChordStudio() {
                       </DropdownMenu>
                     </div>
 
-                    <div className="text-base font-bold text-white mb-4">
-                      {block.progression.section}{" "}
-                      <span className="text-sm text-gray-400">({block.progression.variation})</span>
-                    </div>
-
                     <PhraseRibbonDisplay
                       chordsWithDuration={block.progression.chordsWithDuration}
                       timeSignature={block.progression.timeSignature}
                       bars={block.progression.bars}
                       currentChordIndex={currentBlockId === block.id ? currentChordIndex : -1}
                       isPlaying={isPlaying && currentBlockId === block.id}
-                      isCompact={false}
-                      className="mb-4"
+                      isCompact={true}
+                      className="mb-3"
                       onChordClick={(idx) => handleChordClick(block.progression, idx)}
                     />
 
-                    <div className="flex items-center justify-between text-[10px] text-gray-400 pt-3 border-t border-white/10">
-                      <span className="font-medium">
-                        {block.progression.key} • {block.progression.timeSignature}
-                      </span>
-                      <span className="font-medium">
-                        {block.progression.tempo} BPM • {block.progression.bars} bars
-                      </span>
+                    <div className="flex items-center justify-between text-[10px] text-gray-400 pt-2 border-t border-white/10">
+                      <span>{block.progression.key}</span>
+                      <span>{block.progression.bars} bars</span>
                     </div>
                   </div>
                 ))}
@@ -1346,7 +1256,7 @@ export function ChordStudio() {
             </ScrollArea>
           )}
         </div>
-      )}
+      </div>
     </div>
   )
 }

@@ -1,17 +1,21 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { useMIDI } from "@/lib/midi-context"
 import { RotaryKnob } from "@/components/ui/rotary-knob"
 import { VoiceIcon } from "@/components/ui/voice-icon"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Music } from "lucide-react"
+import { InlineVoiceSelector } from "./inline-voice-selector"
+import type { Voice } from "@/lib/voice-data"
 
 interface MixerChannelProps {
   channel: number
   partName: string
   voiceName: string
   onSelectVoice: () => void
+  onVoiceAssignedInline?: (channel: number, voice: Voice) => void
+  currentVoice?: Voice
   voiceSubcategory?: string
   voiceCategory?: string
 }
@@ -21,11 +25,15 @@ export function MixerChannel({
   partName,
   voiceName,
   onSelectVoice,
+  onVoiceAssignedInline,
+  currentVoice,
   voiceSubcategory = "",
   voiceCategory = "",
 }: MixerChannelProps) {
   const { api } = useMIDI()
   const [showDetails, setShowDetails] = useState(false)
+  const [showInlineSelector, setShowInlineSelector] = useState(false)
+  const voiceButtonRef = useRef<HTMLButtonElement>(null)
 
   const [volume, setVolume] = useState(100)
   const [pan, setPan] = useState(64)
@@ -101,12 +109,27 @@ export function MixerChannel({
     console.log(`[v0] EQ High CH${channel}:`, value)
   }
 
+  const handleVoiceClick = () => {
+    if (onVoiceAssignedInline) {
+      setShowInlineSelector(true)
+    } else {
+      onSelectVoice()
+    }
+  }
+
+  const handleInlineVoiceSelect = (voice: Voice) => {
+    if (onVoiceAssignedInline) {
+      onVoiceAssignedInline(channel, voice)
+    }
+  }
+
   return (
     <>
       <div className="bg-transparent backdrop-blur-sm border-2 border-zinc-800 rounded-lg p-3 flex flex-col gap-3 w-[140px] h-full">
         {/* Voice Button */}
         <button
-          onClick={onSelectVoice}
+          ref={voiceButtonRef}
+          onClick={handleVoiceClick}
           className="w-full bg-amber-500 hover:bg-amber-600 transition-all px-3 py-2.5 rounded-lg font-bold text-sm text-white"
         >
           Voice
@@ -222,6 +245,16 @@ export function MixerChannel({
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Inline Voice Selector */}
+      {showInlineSelector && (
+        <InlineVoiceSelector
+          currentVoice={currentVoice}
+          onSelectVoice={handleInlineVoiceSelect}
+          onClose={() => setShowInlineSelector(false)}
+          triggerRef={voiceButtonRef}
+        />
+      )}
     </>
   )
 }
