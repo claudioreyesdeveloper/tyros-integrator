@@ -30,7 +30,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { useToast } from "@/hooks/use-toast"
+// import { useToast } from "@/hooks/use-toast"
 import { useMIDI } from "@/lib/midi-context"
 import { cn } from "@/lib/utils"
 import * as TabsPrimitive from "@radix-ui/react-tabs"
@@ -146,7 +146,7 @@ interface ChordEvent {
 
 export function StyleEditor() {
   const { api } = useMIDI()
-  const { toast } = useToast()
+  // const { toast } = useToast()
 
   const [sourceCategory, setSourceCategory] = useState("Pop & Rock")
   const [sourceStyle, setSourceStyle] = useState("Canadian Rock")
@@ -234,10 +234,7 @@ export function StyleEditor() {
       style,
     })
 
-    toast({
-      title: "Source Style Loaded",
-      description: `${category} - ${style} loaded for assembly`,
-    })
+    console.log(`[Style Editor] Source Style Loaded: ${category} - ${style}`)
   }
 
   const handlePlayStop = () => {
@@ -429,11 +426,9 @@ export function StyleEditor() {
     setAssemblyHistory((prev) => [...prev, action])
     setCommitStatus("ready")
 
-    toast({
-      title: "Pattern Copied",
-      description: `${source.section} - ${source.track} → ${target.section} - ${target.track}`,
-      duration: 3000,
-    })
+    console.log(
+      `[Style Editor] Pattern Copied: ${source.section} - ${source.track} → ${target.section} - ${target.track}`,
+    )
   }
 
   const handleConfirmCopy = () => {
@@ -459,10 +454,7 @@ export function StyleEditor() {
     setAssemblyHistory((prev) => prev.slice(0, -1))
     setLastAction(assemblyHistory[assemblyHistory.length - 2] || null)
 
-    toast({
-      title: "Action Reverted",
-      description: "Last pattern copy has been undone",
-    })
+    console.log("[Style Editor] Action Reverted: Last pattern copy has been undone")
   }
 
   const handleCommitSave = async () => {
@@ -478,11 +470,7 @@ export function StyleEditor() {
     setLastAction(null)
     setCopiedParts({})
 
-    toast({
-      title: "Style Saved!",
-      description: "New hybrid style has been saved to Tyros5 User Style memory",
-      duration: 5000,
-    })
+    console.log("[Style Editor] Style Saved! New hybrid style has been saved to Tyros5 User Style memory")
 
     setTimeout(() => setCommitStatus("ready"), 3000)
   }
@@ -600,10 +588,7 @@ export function StyleEditor() {
     a.click()
     URL.revokeObjectURL(url)
 
-    toast({
-      title: "MIDI Exported",
-      description: "Chord progression exported as MIDI file",
-    })
+    console.log("[Style Editor] MIDI Exported: Chord progression exported as MIDI file")
   }
 
   const createMIDIFile = (chords: ChordEvent[]): Uint8Array => {
@@ -618,10 +603,7 @@ export function StyleEditor() {
     console.log(`[Style Editor] Change style section to ${section} (index: ${sectionIdx})`)
     // TODO: Backend should implement style section change via MIDI
 
-    toast({
-      title: "Style Section Changed",
-      description: `Now playing: ${section}`,
-    })
+    console.log(`[Style Editor] Style Section Changed: Now playing: ${section}`)
   }
 
   return (
