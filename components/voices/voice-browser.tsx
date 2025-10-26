@@ -180,7 +180,7 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
             </Label>
             <Switch
               id="voice-nav-toggle"
-              checked={voiceNavMode === "flat"}
+              checked={true}
               onCheckedChange={(checked) => setVoiceNavMode(checked ? "flat" : "category")}
               className="data-[state=checked]:bg-primary"
             />
@@ -335,7 +335,7 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
           </Label>
           <Switch
             id="voice-nav-toggle-category"
-            checked={voiceNavMode === "flat"}
+            checked={false}
             onCheckedChange={(checked) => setVoiceNavMode(checked ? "flat" : "category")}
             className="data-[state=checked]:bg-primary"
           />
