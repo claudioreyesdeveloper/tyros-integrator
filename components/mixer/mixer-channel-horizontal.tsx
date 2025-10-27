@@ -4,7 +4,7 @@ import { useState, useRef } from "react"
 import { useMIDI } from "@/lib/midi-context"
 import { VoiceIcon } from "@/components/ui/voice-icon"
 import { RotaryKnob } from "@/components/ui/rotary-knob"
-import { Music, Search, Sparkles } from "lucide-react"
+import { Music, Search, Sliders } from "lucide-react"
 import { InlineVoiceSelector } from "./inline-voice-selector"
 import { EffectsPopup } from "./effects-popup"
 import type { Voice } from "@/lib/voice-data"
@@ -18,6 +18,8 @@ interface MixerChannelHorizontalProps {
   voiceSubcategory?: string
   voiceCategory?: string
   currentVoice?: Voice
+  isSelected?: boolean
+  onChannelClick?: () => void
 }
 
 export function MixerChannelHorizontal({
@@ -29,6 +31,8 @@ export function MixerChannelHorizontal({
   voiceSubcategory = "",
   voiceCategory = "",
   currentVoice,
+  isSelected = false,
+  onChannelClick,
 }: MixerChannelHorizontalProps) {
   const { api } = useMIDI()
 
@@ -110,7 +114,14 @@ export function MixerChannelHorizontal({
 
   return (
     <>
-      <div className="grid grid-cols-[40px_200px_80px_60px_60px_60px_60px_60px_60px_60px_60px_50px] gap-3 items-center py-4 px-3 mb-2 rounded-lg border-2 border-amber-500/20 bg-gradient-to-br from-[rgba(20,20,20,0.75)] to-[rgba(10,10,10,0.85)] backdrop-blur-sm transition-all duration-200 hover:scale-[1.01] hover:shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:border-amber-500/40">
+      <div
+        onClick={onChannelClick}
+        className={`grid grid-cols-[40px_200px_80px_60px_60px_60px_60px_60px_60px_60px_60px_50px] gap-3 items-center py-4 px-3 mb-2 rounded-lg border-2 backdrop-blur-sm transition-all duration-200 cursor-pointer ${
+          isSelected
+            ? "border-amber-500 bg-gradient-to-br from-[rgba(245,158,11,0.15)] to-[rgba(217,119,6,0.1)] shadow-[0_0_30px_rgba(245,158,11,0.4)] scale-[1.02]"
+            : "border-amber-500/20 bg-gradient-to-br from-[rgba(20,20,20,0.75)] to-[rgba(10,10,10,0.85)] hover:scale-[1.01] hover:shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:border-amber-500/40"
+        }`}
+      >
         {/* Channel Number */}
         <div className="text-amber-500 font-bold text-sm text-center">{channel}</div>
 
@@ -196,10 +207,10 @@ export function MixerChannelHorizontal({
         <div className="flex justify-center">
           <button
             onClick={() => setShowEffects(true)}
-            className="w-8 h-8 flex items-center justify-center rounded-lg bg-purple-600 hover:bg-purple-700 transition-all group"
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-amber-500 hover:bg-amber-600 transition-all group"
             title="Effects"
           >
-            <Sparkles className="w-4 h-4 text-white" />
+            <Sliders className="w-4 h-4 text-white" />
           </button>
         </div>
       </div>

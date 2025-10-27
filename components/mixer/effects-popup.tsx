@@ -96,7 +96,7 @@ export function EffectsPopup({ channel, partName, open, onOpenChange }: EffectsP
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0 glossy-panel border-2 border-border">
+      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto p-0 glossy-panel border-2 border-border">
         {/* Header */}
         <div className="bg-gradient-to-r from-zinc-900 to-zinc-800 text-white text-center py-3 border-b-2 border-border">
           <h2 className="text-xl font-bold tracking-wider text-amber-500">MIXING CONSOLE</h2>

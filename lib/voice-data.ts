@@ -65,3 +65,8 @@ export function getSubCategoryCategoryCount(voices: Voice[], subCategory: string
   const categories = new Set(voices.filter((v) => v.sub === subCategory).map((v) => v.category))
   return categories.size
 }
+
+export function getPremiumPackSubCategories(voices: Voice[]): string[] {
+  const subs = new Set(voices.filter((v) => v.category === "Premium Pack").map((v) => v.sub))
+  return Array.from(subs).sort()
+}

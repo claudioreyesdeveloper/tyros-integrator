@@ -5,7 +5,7 @@ import { useMIDI } from "@/lib/midi-context"
 import { RotaryKnob } from "@/components/ui/rotary-knob"
 import { VoiceIcon } from "@/components/ui/voice-icon"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Music, Sparkles } from "lucide-react"
+import { Music, Sliders } from "lucide-react"
 import { InlineVoiceSelector } from "./inline-voice-selector"
 import { EffectsPopup } from "./effects-popup"
 import type { Voice } from "@/lib/voice-data"
@@ -112,11 +112,7 @@ export function MixerChannel({
   }
 
   const handleVoiceClick = () => {
-    if (onVoiceAssignedInline) {
-      setShowInlineSelector(true)
-    } else {
-      onSelectVoice()
-    }
+    onSelectVoice()
   }
 
   const handleInlineVoiceSelect = (voice: Voice) => {
@@ -179,10 +175,10 @@ export function MixerChannel({
         {/* Effects Button */}
         <button
           onClick={() => setShowEffects(true)}
-          className="w-full bg-purple-600 hover:bg-purple-700 transition-all px-3 py-2 rounded-lg font-bold text-xs text-white flex items-center justify-center gap-2"
+          className="w-full bg-amber-500 hover:bg-amber-600 transition-all px-3 py-2 rounded-lg font-bold text-xs text-white flex items-center justify-center gap-2"
           title="Effects"
         >
-          <Sparkles className="w-4 h-4" />
+          <Sliders className="w-4 h-4" />
           Effects
         </button>
 

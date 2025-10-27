@@ -5,11 +5,9 @@ import type React from "react"
 import { useState, useRef } from "react"
 import { MixerChannel } from "./mixer-channel"
 import { MixerChannelHorizontal } from "./mixer-channel-horizontal"
-import { Download, Upload } from "lucide-react"
+import { Download, Upload, Settings, LayoutGrid, LayoutList } from "lucide-react"
 import type { Voice } from "@/lib/voice-data"
 import { Button } from "@/components/ui/button"
-import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
 import { useMIDI } from "@/lib/midi-context"
 import { useLayout } from "@/lib/layout-context"
 
@@ -48,8 +46,6 @@ const PART_NAMES = [
   "Song 16",
 ]
 
-const BANK_NAMES = ["Keyboard/Multi Pads", "Style Parts", "Song Tracks 1", "Song Tracks 2"]
-
 interface MixerInterfaceProps {
   onSelectVoice: (partNumber: number) => void
   partVoices: Record<number, Voice>
@@ -57,8 +53,8 @@ interface MixerInterfaceProps {
   onEffectAssigned: (channel: number, effectName: string) => void
   currentBank?: number
   onBankChange?: (bank: number) => void
-  viewMode?: "vertical" | "horizontal" // Added viewMode prop
-  onVoiceAssignedInline?: (channel: number, voice: Voice) => void // Added new prop for inline voice assignment
+  viewMode?: "vertical" | "horizontal"
+  onVoiceAssignedInline?: (channel: number, voice: Voice) => void
 }
 
 export function MixerInterface({
@@ -71,54 +67,21 @@ export function MixerInterface({
   viewMode: externalViewMode,
   onVoiceAssignedInline,
 }: MixerInterfaceProps) {
-  const { mixerViewMode, setMixerViewMode } = useLayout()
-  const viewMode = externalViewMode || mixerViewMode
-
   const [internalCurrentBank, setInternalCurrentBank] = useState(0)
   const currentBank = externalCurrentBank !== undefined ? externalCurrentBank : internalCurrentBank
-
-  const [masterVolume, setMasterVolume] = useState(100)
-  const [globalReverb, setGlobalReverb] = useState(40)
-  const [globalChorus, setGlobalChorus] = useState(30)
+  const { mixerViewMode, setMixerViewMode } = useLayout()
+  const viewMode = externalViewMode || mixerViewMode
+  const [selectedChannel, setSelectedChannel] = useState<number | null>(null)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { api } = useMIDI()
 
-  const channelsPerView = viewMode === "horizontal" ? 16 : 8
+  const channelsPerView = 8
   const startChannel = currentBank * channelsPerView + 1
   const channels = Array.from({ length: channelsPerView }, (_, i) => ({
     channel: startChannel + i,
     partName: PART_NAMES[startChannel + i - 1],
   }))
-
-  const bankNames = viewMode === "horizontal" ? ["Channels 1-16", "Channels 17-32"] : BANK_NAMES
-
-  const handleMasterVolumeChange = (value: number) => {
-    setMasterVolume(value)
-    api.sendCommand({
-      type: "mixer",
-      action: "master-volume",
-      value,
-    })
-  }
-
-  const handleGlobalReverbChange = (value: number) => {
-    setGlobalReverb(value)
-    api.sendCommand({
-      type: "mixer",
-      action: "global-reverb",
-      value,
-    })
-  }
-
-  const handleGlobalChorusChange = (value: number) => {
-    setGlobalChorus(value)
-    api.sendCommand({
-      type: "mixer",
-      action: "global-chorus",
-      value,
-    })
-  }
 
   const handleBankChange = (bank: number) => {
     if (onBankChange) {
@@ -126,17 +89,13 @@ export function MixerInterface({
     } else {
       setInternalCurrentBank(bank)
     }
+    setSelectedChannel(null)
   }
 
   const handleSaveMix = () => {
     const mixConfiguration = {
       version: "1.0",
       timestamp: new Date().toISOString(),
-      globalSettings: {
-        masterVolume,
-        globalReverb,
-        globalChorus,
-      },
       channels: Object.entries(partVoices).map(([channel, voice]) => ({
         channel: Number(channel),
         partName: PART_NAMES[Number(channel) - 1],
@@ -169,15 +128,6 @@ export function MixerInterface({
       try {
         const content = e.target?.result as string
         const config = JSON.parse(content)
-
-        console.log("[v0] Loaded mix configuration:", config)
-
-        if (config.globalSettings) {
-          setMasterVolume(config.globalSettings.masterVolume || 100)
-          setGlobalReverb(config.globalSettings.globalReverb || 40)
-          setGlobalChorus(config.globalSettings.globalChorus || 30)
-        }
-
         alert("Mix configuration loaded successfully!")
       } catch (error) {
         console.error("[v0] Error parsing mix file:", error)
@@ -190,102 +140,114 @@ export function MixerInterface({
   }
 
   return (
-    <div className="h-full flex flex-col p-4 bg-transparent">
+    <div className="h-full flex flex-col bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950">
       <input ref={fileInputRef} type="file" accept=".json" onChange={handleFileChange} className="hidden" />
 
-      <div className="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div className="flex items-center gap-3 premium-card px-4 py-3 rounded-lg">
-          <Label
-            htmlFor="mixer-view-toggle"
-            className={`text-sm font-semibold cursor-pointer transition-colors ${
-              viewMode === "vertical" ? "text-amber-500" : "text-zinc-400"
-            }`}
-          >
-            Vertical (8)
-          </Label>
-          <Switch
-            id="mixer-view-toggle"
-            checked={viewMode === "horizontal"}
-            onCheckedChange={(checked) => setMixerViewMode(checked ? "horizontal" : "vertical")}
-            className="data-[state=checked]:bg-amber-500 data-[state=unchecked]:bg-zinc-700"
-          />
-          <Label
-            htmlFor="mixer-view-toggle"
-            className={`text-sm font-semibold cursor-pointer transition-colors ${
-              viewMode === "horizontal" ? "text-amber-500" : "text-zinc-400"
-            }`}
-          >
-            Horizontal (16)
-          </Label>
-        </div>
+      <div className="border-b border-white/10 bg-black/40 backdrop-blur-xl">
+        <div className="flex items-center justify-between px-6 py-4">
+          <div className="flex items-center gap-2">
+            {[0, 1, 2, 3].map((bank) => (
+              <button
+                key={bank}
+                onClick={() => handleBankChange(bank)}
+                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                  currentBank === bank
+                    ? "bg-amber-500 text-black shadow-lg shadow-amber-500/50"
+                    : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                {bank * 8 + 1}-{bank * 8 + 8}
+              </button>
+            ))}
+          </div>
 
-        <div className="flex gap-2">
-          <Button
-            onClick={handleOpenMix}
-            className="h-10 px-6 gap-2 text-sm font-bold bg-gradient-to-r from-[#f59e0b] to-[#fb923c] hover:from-[#ea8a00] hover:to-[#f97316] text-white border-none"
-          >
-            <Upload className="w-4 h-4" />
-            Open Mix
-          </Button>
-          <Button
-            onClick={handleSaveMix}
-            className="h-10 px-6 gap-2 text-sm font-bold bg-gradient-to-r from-[#f59e0b] to-[#fb923c] hover:from-[#ea8a00] hover:to-[#f97316] text-white border-none"
-          >
-            <Download className="w-4 h-4" />
-            Save Mix
-          </Button>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 mr-4 bg-white/5 rounded-lg p-1">
+              <button
+                onClick={() => setMixerViewMode("vertical")}
+                className={`p-2 rounded transition-all ${
+                  viewMode === "vertical"
+                    ? "bg-amber-500 text-black"
+                    : "text-white/60 hover:text-white hover:bg-white/10"
+                }`}
+                title="Vertical View"
+              >
+                <LayoutGrid className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setMixerViewMode("horizontal")}
+                className={`p-2 rounded transition-all ${
+                  viewMode === "horizontal"
+                    ? "bg-amber-500 text-black"
+                    : "text-white/60 hover:text-white hover:bg-white/10"
+                }`}
+                title="Horizontal View"
+              >
+                <LayoutList className="w-4 h-4" />
+              </button>
+            </div>
+
+            <Button
+              onClick={handleOpenMix}
+              variant="outline"
+              size="sm"
+              className="bg-white/5 border-white/10 text-white hover:bg-white/10"
+            >
+              <Upload className="w-4 h-4 mr-2" />
+              Load
+            </Button>
+            <Button
+              onClick={handleSaveMix}
+              variant="outline"
+              size="sm"
+              className="bg-white/5 border-white/10 text-white hover:bg-white/10"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Save
+            </Button>
+            <Button variant="outline" size="sm" className="bg-white/5 border-white/10 text-white hover:bg-white/10">
+              <Settings className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
       </div>
 
-      <div className="flex-1 overflow-hidden">
-        {viewMode === "vertical" ? (
-          <div className="h-full overflow-x-auto overflow-y-hidden">
-            <div className="flex justify-center gap-3 h-full pb-2 min-w-max">
-              {channels.map((ch) => (
-                <MixerChannel
-                  key={ch.channel}
-                  channel={ch.channel}
-                  partName={ch.partName}
-                  voiceName={partVoices[ch.channel]?.voice || "No Voice"}
-                  onSelectVoice={() => onSelectVoice(ch.channel)}
-                  currentVoice={partVoices[ch.channel]}
-                  voiceSubcategory={partVoices[ch.channel]?.sub || ""}
-                  voiceCategory={partVoices[ch.channel]?.category || ""}
-                />
-              ))}
-            </div>
+      <div className="flex-1 overflow-auto p-6">
+        {viewMode === "horizontal" ? (
+          <div className="space-y-2">
+            {channels.map((ch) => (
+              <MixerChannelHorizontal
+                key={ch.channel}
+                channel={ch.channel}
+                partName={ch.partName}
+                voiceName={partVoices[ch.channel]?.voice || "No Voice"}
+                onSelectVoice={() => onSelectVoice(ch.channel)}
+                currentVoice={partVoices[ch.channel]}
+                voiceSubcategory={partVoices[ch.channel]?.sub || ""}
+                voiceCategory={partVoices[ch.channel]?.category || ""}
+                onVoiceAssignedInline={onVoiceAssignedInline}
+                isSelected={selectedChannel === ch.channel}
+                onChannelClick={() => setSelectedChannel(ch.channel)}
+              />
+            ))}
           </div>
         ) : (
-          <div className="h-full overflow-auto bg-transparent">
-            <div className="min-w-max">
-              <div className="grid grid-cols-[40px_200px_80px_60px_60px_60px_60px_60px_60px_60px_60px] gap-3 items-center py-3 px-2 bg-transparent backdrop-blur-sm border-b-2 border-[#f59e0b] sticky top-0 z-10">
-                <div className="text-[#f59e0b] font-bold text-[10px] text-center">CH</div>
-                <div className="text-[#f59e0b] font-bold text-[10px]">Voice</div>
-                <div className="text-[#f59e0b] font-bold text-[10px] text-center">Vol</div>
-                <div className="text-[#f59e0b] font-bold text-[10px] text-center">Pan</div>
-                <div className="text-[#f59e0b] font-bold text-[10px] text-center">Rev</div>
-                <div className="text-[#f59e0b] font-bold text-[10px] text-center">Cho</div>
-                <div className="text-[#f59e0b] font-bold text-[10px] text-center">Bright</div>
-                <div className="text-[#f59e0b] font-bold text-[10px] text-center">Bass</div>
-                <div className="text-[#f59e0b] font-bold text-[10px] text-center">Mid</div>
-                <div className="text-[#f59e0b] font-bold text-[10px] text-center">High</div>
-                <div className="text-[#f59e0b] font-bold text-[10px] text-center">Part</div>
-              </div>
-
-              {channels.map((ch) => (
-                <MixerChannelHorizontal
-                  key={ch.channel}
-                  channel={ch.channel}
-                  partName={ch.partName}
-                  voiceName={partVoices[ch.channel]?.voice || "No Voice"}
-                  onSelectVoice={() => onSelectVoice(ch.channel)}
-                  onVoiceAssignedInline={onVoiceAssignedInline}
-                  currentVoice={partVoices[ch.channel]}
-                  voiceSubcategory={partVoices[ch.channel]?.sub || ""}
-                  voiceCategory={partVoices[ch.channel]?.category || ""}
-                />
-              ))}
-            </div>
+          <div className="flex gap-4 h-full">
+            {channels.map((ch) => (
+              <MixerChannel
+                key={ch.channel}
+                channel={ch.channel}
+                partName={ch.partName}
+                voiceName={partVoices[ch.channel]?.voice || "No Voice"}
+                onSelectVoice={() => onSelectVoice(ch.channel)}
+                currentVoice={partVoices[ch.channel]}
+                voiceSubcategory={partVoices[ch.channel]?.sub || ""}
+                voiceCategory={partVoices[ch.channel]?.category || ""}
+                onVoiceAssignedInline={onVoiceAssignedInline}
+                isSelected={selectedChannel === ch.channel}
+                onChannelClick={() => setSelectedChannel(ch.channel)}
+              />
+            ))}
           </div>
         )}
       </div>

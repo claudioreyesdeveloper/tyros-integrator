@@ -8,6 +8,7 @@ import {
   getVoices,
   getAllSubCategories,
   getVoicesBySubCategory,
+  getPremiumPackSubCategories, // Import new function
   type Voice,
 } from "@/lib/voice-data"
 import { useMIDI } from "@/lib/midi-context"
@@ -70,12 +71,14 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
   const [selectedVoice, setSelectedVoice] = useState<Voice | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [allSubCategories, setAllSubCategories] = useState<string[]>([])
+  const [premiumPackSubCategories, setPremiumPackSubCategories] = useState<string[]>([])
 
   useEffect(() => {
     loadVoiceData().then((data) => {
       setVoices(data)
       setCategories(getCategories(data))
       setAllSubCategories(getAllSubCategories(data))
+      setPremiumPackSubCategories(getPremiumPackSubCategories(data))
       setIsLoading(false)
     })
   }, [])
@@ -179,7 +182,8 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
         <VoiceImportPopup
           isOpen={isImportPopupOpen}
           onClose={() => setIsImportPopupOpen(false)}
-          subCategories={allSubCategories}
+          subCategories={premiumPackSubCategories}
+          voices={voices}
         />
 
         <div className="p-6 border-b border-border glossy-panel space-y-4 shadow-2xl shadow-black/50">
@@ -244,7 +248,7 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
               </h3>
               <ScrollArea className="flex-1">
                 <div className="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 pr-3 pb-4">
-                  {allSubCategories.map((sub) => {
+                  {premiumPackSubCategories.map((sub) => {
                     return (
                       <button
                         key={sub}
@@ -349,7 +353,8 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
       <VoiceImportPopup
         isOpen={isImportPopupOpen}
         onClose={() => setIsImportPopupOpen(false)}
-        subCategories={allSubCategories}
+        subCategories={premiumPackSubCategories}
+        voices={voices}
       />
 
       <div className="p-6 border-b border-border glossy-panel space-y-4 shadow-2xl shadow-black/50">
