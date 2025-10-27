@@ -244,8 +244,6 @@ export function MixerInterface({
                 voiceSubcategory={partVoices[ch.channel]?.sub || ""}
                 voiceCategory={partVoices[ch.channel]?.category || ""}
                 onVoiceAssignedInline={onVoiceAssignedInline}
-                isSelected={selectedChannel === ch.channel}
-                onChannelClick={() => setSelectedChannel(ch.channel)}
               />
             ))}
           </div>
