@@ -15,6 +15,7 @@ import {
   FolderOpen,
   Music2,
   Ear,
+  Download,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -820,6 +821,11 @@ export function ChordStudio() {
     setSelectedProgressionId(null)
   }
 
+  const handleDragToDAW = (progression: ChordProgression) => {
+    console.log("[v0] Drag progression to DAW:", progression.id)
+    // TODO: Implement MIDI export functionality
+  }
+
   const handleAudition = (progression: ChordProgression) => {
     console.log("[v0] Auditioning progression:", progression.id)
     setAuditioningId(progression.id)
@@ -967,6 +973,11 @@ export function ChordStudio() {
   const handleChordClick = (progression: ChordProgression, chordIndex: number) => {
     console.log("[v0] Clicked chord:", progression.chordsWithDuration[chordIndex].chord)
     handleAudition(progression)
+  }
+
+  const handleDragTimelineToDAW = () => {
+    console.log("[v0] Drag entire timeline to DAW")
+    // TODO: Implement timeline MIDI export functionality
   }
 
   return (
@@ -1150,30 +1161,43 @@ export function ChordStudio() {
                             : "hover:bg-white/5",
                         )}
                       >
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            handleAudition(progression)
-                          }}
-                          className={cn(
-                            "absolute top-4 right-4 p-2 rounded-lg border transition-all group",
-                            auditioningId === progression.id
-                              ? "bg-primary/40 border-primary scale-110 shadow-lg shadow-primary/50"
-                              : "bg-black/40 hover:bg-primary/20 border-primary/30 hover:border-primary",
-                          )}
-                          title="Audition progression"
-                        >
-                          <Ear
-                            className={cn(
-                              "w-5 h-5 transition-all",
-                              auditioningId === progression.id
-                                ? "text-white animate-pulse"
-                                : "text-primary group-hover:scale-110",
-                            )}
-                          />
-                        </button>
+                        <div className="absolute top-4 right-4 flex items-center gap-2">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleDragToDAW(progression)
+                            }}
+                            className="p-2 rounded-lg border bg-black/40 hover:bg-amber-500/20 border-amber-500/30 hover:border-amber-500 transition-all group"
+                            title="Drag to DAW"
+                          >
+                            <Download className="w-5 h-5 text-amber-500 group-hover:scale-110 transition-all" />
+                          </button>
 
-                        <div className="flex items-start justify-between mb-3 pr-12">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleAudition(progression)
+                            }}
+                            className={cn(
+                              "p-2 rounded-lg border transition-all group",
+                              auditioningId === progression.id
+                                ? "bg-primary/40 border-primary scale-110 shadow-lg shadow-primary/50"
+                                : "bg-black/40 hover:bg-primary/20 border-primary/30 hover:border-primary",
+                            )}
+                            title="Audition progression"
+                          >
+                            <Ear
+                              className={cn(
+                                "w-5 h-5 transition-all",
+                                auditioningId === progression.id
+                                  ? "text-white animate-pulse"
+                                  : "text-primary group-hover:scale-110",
+                              )}
+                            />
+                          </button>
+                        </div>
+
+                        <div className="flex items-start justify-between mb-3 pr-24">
                           <div>
                             <h4 className="text-lg font-bold text-white mb-1">
                               {progression.section} ({progression.variation})
@@ -1222,6 +1246,18 @@ export function ChordStudio() {
           <div className="flex items-center justify-between">
             <h3 className="text-base font-bold text-white">Play</h3>
             <div className="flex items-center gap-2">
+              {timelineBlocks.length > 0 && (
+                <Button
+                  onClick={handleDragTimelineToDAW}
+                  size="sm"
+                  className="h-9 px-3 premium-card hover:bg-amber-500/20 border-amber-500/30 hover:border-amber-500"
+                  title="Export timeline to DAW"
+                >
+                  <Download className="w-4 h-4 mr-2 text-amber-500" />
+                  <span className="text-amber-500">Export</span>
+                </Button>
+              )}
+
               <Button
                 onClick={handlePlay}
                 size="sm"
