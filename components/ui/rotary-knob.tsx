@@ -11,9 +11,19 @@ interface RotaryKnobProps {
   label?: string
   displayValue?: string
   size?: "xs" | "sm" | "md" | "lg"
+  color?: "default" | "blue"
 }
 
-export function RotaryKnob({ value, min = 0, max = 127, onChange, label, displayValue, size = "md" }: RotaryKnobProps) {
+export function RotaryKnob({
+  value,
+  min = 0,
+  max = 127,
+  onChange,
+  label,
+  displayValue,
+  size = "md",
+  color = "default",
+}: RotaryKnobProps) {
   const knobRef = useRef<HTMLDivElement>(null)
   const [isDragging, setIsDragging] = useState(false)
   const [startY, setStartY] = useState(0)
@@ -99,6 +109,21 @@ export function RotaryKnob({ value, min = 0, max = 127, onChange, label, display
     }
   }, [isDragging, startY, startValue, min, max, onChange])
 
+  const knobGradient =
+    color === "blue"
+      ? "bg-gradient-to-br from-slate-700 via-slate-600 to-slate-800"
+      : "bg-gradient-to-br from-zinc-200 via-zinc-100 to-zinc-300"
+
+  const knobInnerGradient =
+    color === "blue"
+      ? "bg-gradient-to-br from-slate-600 via-slate-500 to-slate-700"
+      : "bg-gradient-to-br from-zinc-300 via-zinc-200 to-zinc-100"
+
+  const knobCenterGradient =
+    color === "blue" ? "bg-gradient-to-br from-slate-500 to-slate-600" : "bg-gradient-to-br from-zinc-100 to-zinc-200"
+
+  const labelColor = color === "blue" ? "text-blue-300" : "text-amber-500"
+
   return (
     <div className="flex flex-col items-center gap-2">
       <div
@@ -107,9 +132,15 @@ export function RotaryKnob({ value, min = 0, max = 127, onChange, label, display
         onTouchStart={handleTouchStart}
         className={`${sizeClasses[size]} relative cursor-pointer select-none touch-none transition-transform ${isDragging ? "scale-105" : ""}`}
       >
-        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-zinc-200 via-zinc-100 to-zinc-300 shadow-[0_4px_12px_rgba(0,0,0,0.4),inset_0_1px_2px_rgba(255,255,255,0.8),inset_0_-2px_4px_rgba(0,0,0,0.2)] border-2 border-zinc-400/50">
-          <div className="absolute inset-[6px] rounded-full bg-gradient-to-br from-zinc-300 via-zinc-200 to-zinc-100 shadow-[inset_0_2px_4px_rgba(0,0,0,0.15)]" />
-          <div className="absolute inset-[10px] rounded-full bg-gradient-to-br from-zinc-100 to-zinc-200 shadow-[0_1px_3px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.6)]" />
+        <div
+          className={`absolute inset-0 rounded-full ${knobGradient} shadow-[0_4px_12px_rgba(0,0,0,0.4),inset_0_1px_2px_rgba(255,255,255,0.8),inset_0_-2px_4px_rgba(0,0,0,0.2)] border-2 border-zinc-400/50`}
+        >
+          <div
+            className={`absolute inset-[6px] rounded-full ${knobInnerGradient} shadow-[inset_0_2px_4px_rgba(0,0,0,0.15)]`}
+          />
+          <div
+            className={`absolute inset-[10px] rounded-full ${knobCenterGradient} shadow-[0_1px_3px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.6)]`}
+          />
           <div
             className={`absolute top-1 left-1/2 ${indicatorSizes[size]} bg-zinc-800 rounded-full shadow-[0_1px_2px_rgba(0,0,0,0.5)]`}
             style={{
@@ -125,7 +156,7 @@ export function RotaryKnob({ value, min = 0, max = 127, onChange, label, display
         <div className="text-xs font-mono font-bold text-white min-w-[3ch] text-center">{displayValue}</div>
       )}
 
-      {label && <div className="text-amber-500 font-bold text-xs uppercase tracking-wider">{label}</div>}
+      {label && <div className={`${labelColor} font-bold text-xs uppercase tracking-wider text-center`}>{label}</div>}
     </div>
   )
 }

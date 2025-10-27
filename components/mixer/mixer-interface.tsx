@@ -195,16 +195,26 @@ export function MixerInterface({
 
       <div className="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center gap-3 premium-card px-4 py-3 rounded-lg">
-          <Label htmlFor="mixer-view-toggle" className="text-sm font-semibold text-white cursor-pointer">
+          <Label
+            htmlFor="mixer-view-toggle"
+            className={`text-sm font-semibold cursor-pointer transition-colors ${
+              viewMode === "vertical" ? "text-amber-500" : "text-zinc-400"
+            }`}
+          >
             Vertical (8)
           </Label>
           <Switch
             id="mixer-view-toggle"
             checked={viewMode === "horizontal"}
             onCheckedChange={(checked) => setMixerViewMode(checked ? "horizontal" : "vertical")}
-            className="data-[state=checked]:bg-primary"
+            className="data-[state=checked]:bg-amber-500 data-[state=unchecked]:bg-zinc-700"
           />
-          <Label htmlFor="mixer-view-toggle" className="text-sm font-semibold text-white cursor-pointer">
+          <Label
+            htmlFor="mixer-view-toggle"
+            className={`text-sm font-semibold cursor-pointer transition-colors ${
+              viewMode === "horizontal" ? "text-amber-500" : "text-zinc-400"
+            }`}
+          >
             Horizontal (16)
           </Label>
         </div>

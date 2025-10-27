@@ -5,8 +5,9 @@ import { useMIDI } from "@/lib/midi-context"
 import { RotaryKnob } from "@/components/ui/rotary-knob"
 import { VoiceIcon } from "@/components/ui/voice-icon"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Music } from "lucide-react"
+import { Music, Sparkles } from "lucide-react"
 import { InlineVoiceSelector } from "./inline-voice-selector"
+import { EffectsPopup } from "./effects-popup"
 import type { Voice } from "@/lib/voice-data"
 
 interface MixerChannelProps {
@@ -33,6 +34,7 @@ export function MixerChannel({
   const { api } = useMIDI()
   const [showDetails, setShowDetails] = useState(false)
   const [showInlineSelector, setShowInlineSelector] = useState(false)
+  const [showEffects, setShowEffects] = useState(false)
   const voiceButtonRef = useRef<HTMLButtonElement>(null)
 
   const [volume, setVolume] = useState(100)
@@ -174,6 +176,16 @@ export function MixerChannel({
           <div className="text-white font-bold text-sm">{volume}</div>
         </div>
 
+        {/* Effects Button */}
+        <button
+          onClick={() => setShowEffects(true)}
+          className="w-full bg-purple-600 hover:bg-purple-700 transition-all px-3 py-2 rounded-lg font-bold text-xs text-white flex items-center justify-center gap-2"
+          title="Effects"
+        >
+          <Sparkles className="w-4 h-4" />
+          Effects
+        </button>
+
         {/* Edit button to open detailed controls popup */}
         <button
           onClick={() => setShowDetails(true)}
@@ -245,6 +257,9 @@ export function MixerChannel({
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Effects Popup */}
+      <EffectsPopup channel={channel} partName={partName} open={showEffects} onOpenChange={setShowEffects} />
 
       {/* Inline Voice Selector */}
       {showInlineSelector && (

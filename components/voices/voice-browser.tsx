@@ -16,8 +16,8 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { VoiceCommandPalette } from "@/components/voices/voice-command-palette"
+import { VoiceImportPopup } from "@/components/voices/voice-import-popup"
 import { cn } from "@/lib/utils"
 import { VoiceIcon } from "@/components/ui/voice-icon"
 import { Upload } from "lucide-react"
@@ -61,7 +61,7 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
   const { voiceNavMode, setVoiceNavMode } = useLayout()
   const [voices, setVoices] = useState<Voice[]>([])
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false)
-  const [keyboardType, setKeyboardType] = useState<string>("Tyros")
+  const [isImportPopupOpen, setIsImportPopupOpen] = useState(false)
   const [categories, setCategories] = useState<string[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [subCategories, setSubCategories] = useState<string[]>([])
@@ -176,24 +176,18 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
           currentPart={currentPart}
         />
 
+        <VoiceImportPopup
+          isOpen={isImportPopupOpen}
+          onClose={() => setIsImportPopupOpen(false)}
+          subCategories={allSubCategories}
+        />
+
         <div className="p-6 border-b border-border glossy-panel space-y-4 shadow-2xl shadow-black/50">
           <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <Button onClick={() => console.log("[v0] Import voice file")} className="glossy-button h-10 px-6">
-                <Upload className="w-4 h-4 mr-2" />
-                Import
-              </Button>
-              <Select value={keyboardType} onValueChange={setKeyboardType}>
-                <SelectTrigger className="w-32 h-10 bg-black/30 border-white/10 text-white">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="PSR">PSR</SelectItem>
-                  <SelectItem value="Tyros">Tyros</SelectItem>
-                  <SelectItem value="Genos">Genos</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <Button onClick={() => setIsImportPopupOpen(true)} className="glossy-button h-10 px-6">
+              <Upload className="w-4 h-4 mr-2" />
+              Import
+            </Button>
 
             <div className="flex items-center gap-3 premium-card px-4 py-3 rounded-lg">
               <Label htmlFor="voice-nav-toggle" className="text-sm font-semibold text-white cursor-pointer">
@@ -316,7 +310,9 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
                             size={40}
                             className={cn(
                               "w-10 h-10",
-                              selectedVoice?.voice === voice.voice ? "text-black" : "text-primary opacity-80",
+                              selectedVoice?.voice === voice.voice
+                                ? "text-black opacity-100"
+                                : "text-primary opacity-80",
                             )}
                           />
                           <div className="flex-1 text-left">
@@ -350,24 +346,18 @@ export function VoiceBrowser({ currentPart, onVoiceAssigned, onCancel }: VoiceBr
         currentPart={currentPart}
       />
 
+      <VoiceImportPopup
+        isOpen={isImportPopupOpen}
+        onClose={() => setIsImportPopupOpen(false)}
+        subCategories={allSubCategories}
+      />
+
       <div className="p-6 border-b border-border glossy-panel space-y-4 shadow-2xl shadow-black/50">
         <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <Button onClick={() => console.log("[v0] Import voice file")} className="glossy-button h-10 px-6">
-              <Upload className="w-4 h-4 mr-2" />
-              Import
-            </Button>
-            <Select value={keyboardType} onValueChange={setKeyboardType}>
-              <SelectTrigger className="w-32 h-10 bg-black/30 border-white/10 text-white">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="PSR">PSR</SelectItem>
-                <SelectItem value="Tyros">Tyros</SelectItem>
-                <SelectItem value="Genos">Genos</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <Button onClick={() => setIsImportPopupOpen(true)} className="glossy-button h-10 px-6">
+            <Upload className="w-4 h-4 mr-2" />
+            Import
+          </Button>
 
           <div className="flex items-center gap-3 premium-card px-4 py-3 rounded-lg">
             <Label htmlFor="voice-nav-toggle-category" className="text-sm font-semibold text-white cursor-pointer">
